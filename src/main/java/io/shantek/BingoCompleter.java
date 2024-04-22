@@ -17,6 +17,7 @@ public class BingoCompleter implements TabCompleter {
             List<String> complete = new ArrayList<>();
             if (player.hasPermission("shantek.ultimatebingo.start")){
                 complete.add("start");
+                complete.add("startunique");
             }
             if (player.hasPermission("shantek.ultimatebingo.stop")){
                 complete.add("stop");

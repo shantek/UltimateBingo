@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
 
@@ -19,15 +20,17 @@ public class BingoManager{
     Map<UUID, Inventory> bingoGUIs;
     private int bingoCards;
     private UltimateBingo ultimateBingo;
-    private BingoCommand bingoCommand;
     private int[] slots;
     public boolean started;
 
-    public BingoManager(UltimateBingo megaBingo){
-        this.ultimateBingo = megaBingo;
+    private BingoCommand bingoCommand;
+
+    public BingoManager(UltimateBingo ultimateBingo, BingoCommand bingoCommand){
+        this.ultimateBingo = ultimateBingo;
+        this.bingoCommand = bingoCommand;
     }
 
-    public void createBingoCards(){
+    public void createUniqueBingoCards(){
         started = true;
         playerBingoCards = new HashMap<>();
         bingoGUIs = new HashMap<>();
@@ -59,6 +62,42 @@ public class BingoManager{
             bingoGUIs.put(playerId, bingoGUI);
         }
     }
+
+    public void createBingoCards(){
+        started = true;
+        playerBingoCards = new HashMap<>();
+        bingoGUIs = new HashMap<>();
+
+        slots = new int[]{10,11,12,13,19,20,21,22,28,29,30,31,37,38,39,40};
+
+        // Generate materials and shuffle them
+        List<Material> generatedMaterials = generateMaterials();
+        Collections.shuffle(generatedMaterials);
+
+        for (Player player : Bukkit.getOnlinePlayers()){
+            UUID playerId = player.getUniqueId();
+            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo");
+
+            List<ItemStack> cards = new ArrayList<>();
+
+            for(int i = 0; i < generatedMaterials.size() && i < slots.length; i++) {
+                Material material = generatedMaterials.get(i);
+                ItemStack item = new ItemStack(material);
+                bingoGUI.setItem(slots[i], item);
+                cards.add(item);  // Add item to cards list
+            }
+
+            playerBingoCards.put(playerId, cards);
+            for (ItemStack card : playerBingoCards.get(playerId)){
+                System.out.println(card);
+            }
+
+            player.openInventory(bingoGUI);
+            bingoGUIs.put(playerId, bingoGUI);
+        }
+    }
+
+
     public List<Material> generateMaterials(){
         Map<Integer, List<Material>> materials = ultimateBingo.getMaterialList().getMaterials();
         Random random = new Random();
@@ -102,7 +141,12 @@ public class BingoManager{
 
                 String removedUnderscore = completedMaterial.name().toLowerCase().replace('_', ' ');
                 player.sendMessage(ChatColor.GREEN + "You completed the " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " item in your bingo card!");
-                Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
+
+                for (Player target : Bukkit.getOnlinePlayers()) {
+                    if (!target.equals(player)) { // Exclude the player who triggered the event
+                        target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
+                    }
+                }
 
                 player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 10, 5);
 
@@ -179,5 +223,36 @@ public class BingoManager{
 
     public boolean isStarted() {
         return started;
+    }
+
+    public void resetPlayers(){
+        for (Player player : Bukkit.getOnlinePlayers()){
+            // Reset health to max health (20.0 is full health)
+            player.setHealth(20.0);
+
+            // Reset food level to max (20 is full hunger)
+            player.setFoodLevel(20);
+
+            // Reset saturation to max (5.0F is full saturation)
+            player.setSaturation(5.0F);
+
+            // Reset exhaustion to 0 (no exhaustion)
+            player.setExhaustion(0.0F);
+
+            // Reset remaining potion effects
+            for (PotionEffect effect : player.getActivePotionEffects()){
+                player.removePotionEffect(effect.getType());
+            }
+
+            // Clear inventory
+            player.getInventory().clear();
+
+            // Clear armor
+            player.getInventory().setArmorContents(new ItemStack[4]);
+
+            // Reset XP and levels
+            player.setExp(0);
+            player.setLevel(0);
+        }
     }
 }

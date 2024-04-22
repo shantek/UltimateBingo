@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="UltimateBingo:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/UltimateBingo_jar</output-path>
+    <root id="archive" name="UltimateBingo.jar">
+      <element id="module-output" name="UltimateBingo" />
+    </root>
+  </artifact>
+</component>

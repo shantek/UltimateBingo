@@ -34,7 +34,14 @@ public class BingoCommand implements CommandExecutor {
                     if (bingoStarted) {
                         player.sendMessage(ChatColor.RED + "Bingo has already started!");
                     } else {
-                        startBingo();
+                        startBingo(false);
+                    }
+                }
+                if (args[0].equalsIgnoreCase("startunique") && player.hasPermission("shantek.ultimatebingo.start")){
+                    if (bingoStarted) {
+                        player.sendMessage(ChatColor.RED + "Bingo has already started!");
+                    } else {
+                        startBingo(true);
                     }
                 }
                 if (args[0].equalsIgnoreCase("settings") && player.hasPermission("shantek.ultimatebingo.settings")){
@@ -67,12 +74,19 @@ public class BingoCommand implements CommandExecutor {
         return false;
     }
 
-    public void startBingo() {
+    public void startBingo(boolean uniquecard) {
 
         bingoStarted = true;
         bingoManager.setBingoCards(16);
         ultimateBingo.getMaterialList().createMaterials();
-        bingoManager.createBingoCards();
+
+        bingoManager.resetPlayers();
+
+        if (uniquecard) {
+            bingoManager.createUniqueBingoCards();
+        } else {
+            bingoManager.createBingoCards();
+        }
         for (Player target : Bukkit.getOnlinePlayers()) {
             target.sendMessage(ChatColor.GREEN + "Bingo has started! Check your bingo cards with /bingo!");
         }
@@ -90,13 +104,10 @@ public class BingoCommand implements CommandExecutor {
         }
     }
 
-    public void endGame(){
+    public void endGame() {
         bingoStarted = false;
-        if (bingoManager.getPlayerBingoCards() != null && bingoManager.getBingoGUIs() != null){
-            bingoManager.clearData();
-            Bukkit.broadcastMessage(ChatColor.GREEN + " Bingo has ended. Thanks for playing!");
-
-        }
+        ultimateBingo.bingoManager.clearData();
+        Bukkit.broadcastMessage(ChatColor.GREEN + " Bingo has ended. Thanks for playing!");
     }
 
     public void openBingo(Player sender){

@@ -13,14 +13,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class UltimateBingo extends JavaPlugin {
-    private BingoManager bingoManager;
+    public BingoManager bingoManager;
     private MaterialList materialList;
+
 
     @Override
     public void onEnable() {
 
-        bingoManager = new BingoManager(this);
+
         materialList = new MaterialList(this);
+
         SettingsManager settingsManager = new SettingsManager(this);
 
         BingoCraftListener bingoCraftListener = new BingoCraftListener(this);
@@ -28,6 +30,7 @@ public final class UltimateBingo extends JavaPlugin {
         BingoInventoryOpenListener bingoInventoryOpenListener = new BingoInventoryOpenListener(this);
         SettingsListener settingsListener = new SettingsListener(materialList, settingsManager);
 
+        bingoManager = new BingoManager(this, new BingoCommand(this, settingsManager, bingoManager));
 
         getCommand("bingo").setExecutor(new BingoCommand(this, settingsManager, bingoManager));
         getCommand("bingo").setTabCompleter(new BingoCompleter());
@@ -41,6 +44,7 @@ public final class UltimateBingo extends JavaPlugin {
         materialList.createMaterials();
 
     }
+
 
     public BingoManager getBingoManager() {
         return bingoManager;
