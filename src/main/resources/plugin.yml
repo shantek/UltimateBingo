@@ -1,0 +1,7 @@
+name: UltimateBingo
+version: '${project.version}'
+main: io.shantek.UltimateBingo
+api-version: '1.20'
+commands:
+  bingo:
+    description: Opens your current bingo cards, add start or stop to start or stop bingo. Configure settings with settings
