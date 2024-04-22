@@ -15,13 +15,13 @@ public class BingoCompleter implements TabCompleter {
 
         if (args.length == 1 && commandSender instanceof Player player){
             List<String> complete = new ArrayList<>();
-            if (player.hasPermission("megabingo.start")){
+            if (player.hasPermission("shantek.ultimatebingo.start")){
                 complete.add("start");
             }
-            if (player.hasPermission("megabingo.stop")){
+            if (player.hasPermission("shantek.ultimatebingo.stop")){
                 complete.add("stop");
             }
-            if (player.hasPermission("megabingo.settings")){
+            if (player.hasPermission("shantek.ultimatebingo.settings")){
                 complete.add("settings");
             }
 

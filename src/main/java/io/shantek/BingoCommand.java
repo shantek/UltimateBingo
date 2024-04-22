@@ -26,14 +26,18 @@ public class BingoCommand implements CommandExecutor {
         if (commandSender instanceof Player player){
 
             if (args.length == 1){
-                if (args[0].equalsIgnoreCase("stop") && player.hasPermission("megabingo.stop")){
+                if (args[0].equalsIgnoreCase("stop") && player.hasPermission("shantek.ultimatebingo.stop")){
                     stopBingo(player);
                 }
 
-                if (args[0].equalsIgnoreCase("start") && player.hasPermission("megabingo.start")){
-                    startBingo();
+                if (args[0].equalsIgnoreCase("start") && player.hasPermission("shantek.ultimatebingo.start")){
+                    if (bingoStarted) {
+                        player.sendMessage(ChatColor.RED + "Bingo has already started!");
+                    } else {
+                        startBingo();
+                    }
                 }
-                if (args[0].equalsIgnoreCase("settings") && player.hasPermission("megabingo.settings")){
+                if (args[0].equalsIgnoreCase("settings") && player.hasPermission("shantek.ultimatebingo.settings")){
                     ultimateBingo.getMaterialList().createMaterials();
                     Inventory settingsGUI = settingsManager.createSettingsGUI(player);
 
@@ -41,9 +45,9 @@ public class BingoCommand implements CommandExecutor {
                 }
 
 
-                if (!player.hasPermission("megabingo.start") && args[0].equalsIgnoreCase("start")
-                        || !player.hasPermission("megabingo.stop") && args[0].equalsIgnoreCase("stop")
-                        || args[0].equalsIgnoreCase("settings") && !player.hasPermission("megabingo.settings")){
+                if (!player.hasPermission("shantek.ultimatebingo.start") && args[0].equalsIgnoreCase("start")
+                        || !player.hasPermission("shantek.ultimatebingo.stop") && args[0].equalsIgnoreCase("stop")
+                        || args[0].equalsIgnoreCase("settings") && !player.hasPermission("shantek.ultimatebingo.settings")){
                     player.sendMessage(ChatColor.RED + "You do not have permission to do that!");
                 }
 
@@ -63,12 +67,13 @@ public class BingoCommand implements CommandExecutor {
         return false;
     }
 
-    public void startBingo(){
+    public void startBingo() {
+
         bingoStarted = true;
         bingoManager.setBingoCards(16);
         ultimateBingo.getMaterialList().createMaterials();
         bingoManager.createBingoCards();
-        for (Player target : Bukkit.getOnlinePlayers()){
+        for (Player target : Bukkit.getOnlinePlayers()) {
             target.sendMessage(ChatColor.GREEN + "Bingo has started! Check your bingo cards with /bingo!");
         }
 
@@ -90,20 +95,20 @@ public class BingoCommand implements CommandExecutor {
             if (bingoManager.getBingoGUIs().containsKey(sender.getUniqueId())){
                 sender.openInventory(bingoManager.getBingoGUIs().get(sender.getUniqueId()));
             } else {
-                if (sender.hasPermission("megabingo.start")){
+                if (sender.hasPermission("shantek.ultimatebingo.start")){
                     sender.sendMessage(ChatColor.RED + "You missed the opportunity to join Bingo! Use /bingo start if you want to create a new game.");
                 }
 
-                if (!sender.hasPermission("megabingo.start")){
+                if (!sender.hasPermission("shantek.ultimatebingo.start")){
                     sender.sendMessage(ChatColor.RED + "You missed the opportunity to join Bingo!");
                 }
             }
         } else {
-            if (sender.hasPermission("megabingo.start")){
+            if (sender.hasPermission("shantek.ultimatebingo.start")){
                 sender.sendMessage(ChatColor.RED + "Bingo hasn't started yet! Use /bingo start to start");
             }
 
-            if (!sender.hasPermission("megabingo.start")){
+            if (!sender.hasPermission("shantek.ultimatebingo.start")){
                 sender.sendMessage(ChatColor.RED + "Bingo hasn't started yet!");
             }
 
