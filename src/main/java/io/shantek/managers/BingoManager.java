@@ -1,5 +1,6 @@
 package io.shantek.managers;
 
+import io.shantek.BingoCommand;
 import io.shantek.UltimateBingo;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,6 +19,7 @@ public class BingoManager{
     Map<UUID, Inventory> bingoGUIs;
     private int bingoCards;
     private UltimateBingo ultimateBingo;
+    private BingoCommand bingoCommand;
     private int[] slots;
     public boolean started;
 
@@ -100,6 +102,8 @@ public class BingoManager{
 
                 String removedUnderscore = completedMaterial.name().toLowerCase().replace('_', ' ');
                 player.sendMessage(ChatColor.GREEN + "You completed the " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " item in your bingo card!");
+                Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
+
                 player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 10, 5);
 
                 if(checkForBingo(player)){
@@ -108,6 +112,8 @@ public class BingoManager{
                         target.sendTitle(ChatColor.GOLD + player.getName() + ChatColor.GREEN +  " got BINGO!"
                                 , ChatColor.GREEN.toString() + ChatColor.BOLD + "GG");
                     }
+
+                    bingoCommand.endGame();
                 }
                 break;
             }

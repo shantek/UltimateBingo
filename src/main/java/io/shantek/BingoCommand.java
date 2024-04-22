@@ -90,6 +90,15 @@ public class BingoCommand implements CommandExecutor {
         }
     }
 
+    public void endGame(){
+        bingoStarted = false;
+        if (bingoManager.getPlayerBingoCards() != null && bingoManager.getBingoGUIs() != null){
+            bingoManager.clearData();
+            Bukkit.broadcastMessage(ChatColor.GREEN + " Bingo has ended. Thanks for playing!");
+
+        }
+    }
+
     public void openBingo(Player sender){
         if (bingoManager.getBingoGUIs() != null  && !bingoManager.getBingoGUIs().isEmpty()){
             if (bingoManager.getBingoGUIs().containsKey(sender.getUniqueId())){
