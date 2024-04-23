@@ -143,12 +143,15 @@ public class BingoManager{
                 player.sendMessage(ChatColor.GREEN + "You completed the " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " item in your bingo card!");
 
                 for (Player target : Bukkit.getOnlinePlayers()) {
+                    // PLAY FOR ALL PLAYERS
+                    target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 5);
+
                     if (!target.equals(player)) { // Exclude the player who triggered the event
                         target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
                     }
                 }
 
-                player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 10, 5);
+
 
                 if(checkForBingo(player)){
                     Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
