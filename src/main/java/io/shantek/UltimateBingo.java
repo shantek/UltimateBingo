@@ -19,7 +19,7 @@ public final class UltimateBingo extends JavaPlugin {
     public BingoManager bingoManager;
     private MaterialList materialList;
     public BingoFunctions bingoFunctions;
-    public Location bingoSpawnLocation;  // To store the op's location
+    public Location bingoSpawnLocation;
 
 
     @Override

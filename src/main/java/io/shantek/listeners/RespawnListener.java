@@ -13,14 +13,21 @@ public class RespawnListener implements Listener {
         this.ultimateBingo = ultimateBingo;
     }
 
+    //TODO Better handle spawning a player back at the bingo spawn
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-        Player player = event.getPlayer();
 
-        // Spawn them back at the bingo spawn
-        event.setRespawnLocation(ultimateBingo.bingoSpawnLocation);
+        if (ultimateBingo.bingoManager.isStarted()) {
+            Player player = event.getPlayer();
 
-        // Give them a new bingo compass
-        ultimateBingo.bingoFunctions.giveBingoCompass(player);
+            // Spawn them back at the bingo spawn
+            event.setRespawnLocation(ultimateBingo.bingoSpawnLocation);
+
+            // Teleport the player to the bingo spawn
+            player.teleport(ultimateBingo.bingoSpawnLocation);
+
+            // Give them a new bingo compass
+            ultimateBingo.bingoFunctions.giveBingoCompass(player);
+        }
     }
 }
