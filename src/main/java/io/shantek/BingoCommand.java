@@ -34,6 +34,7 @@ public class BingoCommand implements CommandExecutor {
                     if (bingoStarted) {
                         player.sendMessage(ChatColor.RED + "Bingo has already started!");
                     } else {
+                        ultimateBingo.bingoSpawnLocation = player.getLocation();
                         startBingo(false);
                     }
                 }
@@ -41,6 +42,7 @@ public class BingoCommand implements CommandExecutor {
                     if (bingoStarted) {
                         player.sendMessage(ChatColor.RED + "Bingo has already started!");
                     } else {
+                        ultimateBingo.bingoSpawnLocation = player.getLocation();
                         startBingo(true);
                     }
                 }
@@ -51,13 +53,11 @@ public class BingoCommand implements CommandExecutor {
                     player.openInventory(settingsGUI);
                 }
 
-
                 if (!player.hasPermission("shantek.ultimatebingo.start") && args[0].equalsIgnoreCase("start")
                         || !player.hasPermission("shantek.ultimatebingo.stop") && args[0].equalsIgnoreCase("stop")
                         || args[0].equalsIgnoreCase("settings") && !player.hasPermission("shantek.ultimatebingo.settings")){
                     player.sendMessage(ChatColor.RED + "You do not have permission to do that!");
                 }
-
 
             } else {
                 if (bingoStarted){
@@ -67,8 +67,6 @@ public class BingoCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "Bingo hasn't started yet!");
                 }
             }
-
-
         }
 
         return false;
@@ -76,23 +74,43 @@ public class BingoCommand implements CommandExecutor {
 
     public void startBingo(boolean uniquecard) {
 
+        // Let's remove all items from the ground for a clean slate
+        ultimateBingo.bingoFunctions.despawnAllItems();
+
         bingoStarted = true;
         bingoManager.setBingoCards(16);
         ultimateBingo.getMaterialList().createMaterials();
 
-        bingoManager.resetPlayers();
+        // Reset player stats, inventory and the time of day
+        ultimateBingo.bingoFunctions.resetPlayers();
+        ultimateBingo.bingoFunctions.resetTimeAndWeather();
 
         if (uniquecard) {
             bingoManager.createUniqueBingoCards();
         } else {
             bingoManager.createBingoCards();
         }
-        for (Player target : Bukkit.getOnlinePlayers()) {
-            target.sendMessage(ChatColor.GREEN + "Bingo has started! Check your bingo cards with /bingo!");
+        for (Player player : Bukkit.getOnlinePlayers()) {
+
+            // If we have a bingo start location, teleport the players here
+            if (ultimateBingo.bingoSpawnLocation != null) {
+                player.teleport(ultimateBingo.bingoSpawnLocation);
+            }
+
+            // Give them a bingo compass
+            ultimateBingo.bingoFunctions.giveBingoCompass(player);
+
+            if (uniquecard) {
+                player.sendMessage(ChatColor.GREEN + "Bingo has started using a " + ChatColor.YELLOW + "unique card" + ChatColor.YELLOW + "!");
+                player.sendMessage(ChatColor.WHITE + "Use your Compass or type " + ChatColor.YELLOW + "/bingo" + ChatColor.WHITE + " to open your bingo card.");
+            } else {
+                player.sendMessage(ChatColor.GREEN + "Bingo has started using a " + ChatColor.YELLOW + "shared card" + ChatColor.YELLOW + "!");
+                player.sendMessage(ChatColor.WHITE + "Use your Compass or type " + ChatColor.YELLOW + "/bingo" + ChatColor.WHITE + " to open your bingo card.");
+
+            }
         }
 
     }
-
 
     public void stopBingo(Player sender){
         bingoStarted = false;
@@ -102,12 +120,38 @@ public class BingoCommand implements CommandExecutor {
         } else {
             sender.sendMessage(ChatColor.RED + "Bingo hasn't started yet! Start with /bingo start");
         }
+
+        // Bring everyone back to the bingo spawn, reset their inventory and state
+        // and despawn everything off the ground
+        teleportPlayers();
+        ultimateBingo.bingoFunctions.resetPlayers();
+        ultimateBingo.bingoSpawnLocation = null;
+        ultimateBingo.bingoFunctions.despawnAllItems();
     }
 
     public void endGame() {
         bingoStarted = false;
         ultimateBingo.bingoManager.clearData();
         Bukkit.broadcastMessage(ChatColor.GREEN + " Bingo has ended. Thanks for playing!");
+
+        // Bring everyone back to the bingo spawn, reset their inventory and state
+        // and despawn everything off the ground
+        teleportPlayers();
+        ultimateBingo.bingoFunctions.resetPlayers();
+        ultimateBingo.bingoSpawnLocation = null;
+        ultimateBingo.bingoFunctions.despawnAllItems();
+    }
+
+    public void teleportPlayers()
+    {
+        for (Player target : Bukkit.getOnlinePlayers()) {
+
+            // If we have a bingo start location, teleport the players here
+            if (ultimateBingo.bingoSpawnLocation != null) {
+                target.teleport(ultimateBingo.bingoSpawnLocation);
+            }
+
+        }
     }
 
     public void openBingo(Player sender){

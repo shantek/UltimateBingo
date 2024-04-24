@@ -19,8 +19,8 @@ import java.util.UUID;
 
 public class BingoInventoryOpenListener implements Listener {
     UltimateBingo ultimateBingo;
-    public BingoInventoryOpenListener(UltimateBingo megaBingo){
-        this.ultimateBingo = megaBingo;
+    public BingoInventoryOpenListener(UltimateBingo ultimateBingo){
+        this.ultimateBingo = ultimateBingo;
     }
 
     @EventHandler

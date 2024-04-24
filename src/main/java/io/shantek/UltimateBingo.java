@@ -9,12 +9,17 @@ import io.shantek.listeners.*;
 import io.shantek.managers.BingoManager;
 import io.shantek.managers.SettingsManager;
 import io.shantek.tools.MaterialList;
+import io.shantek.tools.BingoFunctions;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
+
 
 public final class UltimateBingo extends JavaPlugin {
     public BingoManager bingoManager;
     private MaterialList materialList;
+    public BingoFunctions bingoFunctions;
+    public Location bingoSpawnLocation;  // To store the op's location
 
 
     @Override
@@ -22,11 +27,13 @@ public final class UltimateBingo extends JavaPlugin {
 
 
         materialList = new MaterialList(this);
+        bingoFunctions = new BingoFunctions(this);
 
         SettingsManager settingsManager = new SettingsManager(this);
-
+        RespawnListener respawnListener = new RespawnListener(this);
         BingoCraftListener bingoCraftListener = new BingoCraftListener(this);
         BingoPickupListener bingoPickupListener = new BingoPickupListener(this);
+        BingoInteractListener bingoStickListener = new BingoInteractListener(this);
         BingoInventoryOpenListener bingoInventoryOpenListener = new BingoInventoryOpenListener(this);
         SettingsListener settingsListener = new SettingsListener(materialList, settingsManager);
 
@@ -40,7 +47,8 @@ public final class UltimateBingo extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BingoGUIListener(), this);
         Bukkit.getPluginManager().registerEvents(bingoInventoryOpenListener, this);
         Bukkit.getPluginManager().registerEvents(settingsListener, this);
-
+        Bukkit.getPluginManager().registerEvents(respawnListener, this);
+        Bukkit.getPluginManager().registerEvents(bingoStickListener, this);
         materialList.createMaterials();
 
     }
@@ -51,6 +59,10 @@ public final class UltimateBingo extends JavaPlugin {
     }
     public MaterialList getMaterialList(){
         return materialList;
+    }
+
+    public BingoFunctions getBingoFunctions(){
+        return bingoFunctions;
     }
 
     @Override

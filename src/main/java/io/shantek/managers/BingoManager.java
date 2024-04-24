@@ -2,10 +2,9 @@ package io.shantek.managers;
 
 import io.shantek.BingoCommand;
 import io.shantek.UltimateBingo;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -39,7 +38,7 @@ public class BingoManager{
 
         for (Player player : Bukkit.getOnlinePlayers()){
             UUID playerId = player.getUniqueId();
-            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo");
+            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Ultimate Bingo");
 
             List<ItemStack> cards = new ArrayList<>();
             List<Material> generatedMaterials = generateMaterials();
@@ -62,7 +61,6 @@ public class BingoManager{
             bingoGUIs.put(playerId, bingoGUI);
         }
     }
-
     public void createBingoCards(){
         started = true;
         playerBingoCards = new HashMap<>();
@@ -76,7 +74,7 @@ public class BingoManager{
 
         for (Player player : Bukkit.getOnlinePlayers()){
             UUID playerId = player.getUniqueId();
-            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo");
+            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Ultimate Bingo");
 
             List<ItemStack> cards = new ArrayList<>();
 
@@ -96,6 +94,8 @@ public class BingoManager{
             bingoGUIs.put(playerId, bingoGUI);
         }
     }
+
+
 
 
     public List<Material> generateMaterials(){
@@ -228,34 +228,4 @@ public class BingoManager{
         return started;
     }
 
-    public void resetPlayers(){
-        for (Player player : Bukkit.getOnlinePlayers()){
-            // Reset health to max health (20.0 is full health)
-            player.setHealth(20.0);
-
-            // Reset food level to max (20 is full hunger)
-            player.setFoodLevel(20);
-
-            // Reset saturation to max (5.0F is full saturation)
-            player.setSaturation(5.0F);
-
-            // Reset exhaustion to 0 (no exhaustion)
-            player.setExhaustion(0.0F);
-
-            // Reset remaining potion effects
-            for (PotionEffect effect : player.getActivePotionEffects()){
-                player.removePotionEffect(effect.getType());
-            }
-
-            // Clear inventory
-            player.getInventory().clear();
-
-            // Clear armor
-            player.getInventory().setArmorContents(new ItemStack[4]);
-
-            // Reset XP and levels
-            player.setExp(0);
-            player.setLevel(0);
-        }
-    }
 }

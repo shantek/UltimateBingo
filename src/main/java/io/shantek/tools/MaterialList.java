@@ -232,7 +232,6 @@ public class MaterialList {
         add(Material.CRYING_OBSIDIAN, 4);
         add(Material.DIAMOND_HELMET, 4);
         add(Material.GLOW_BERRIES, 4);
-        add(Material.ENDER_PEARL, 4);
 
         add(Material.EMERALD,5);
         add(Material.NETHERITE_INGOT,5);
