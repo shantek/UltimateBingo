@@ -1,4 +1,5 @@
 name: Build project and create GitHub Release
+
 on: [push, pull_request]
 
 jobs:
@@ -19,7 +20,7 @@ jobs:
         maven-version: 3.8.1
 
     - name: Build project
-      run: mvn test -B
+      run: mvn package -B
 
     - name: Create Release
       id: create_release
@@ -36,6 +37,6 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./target/*.jar
-        asset_name: my-project-${{ steps.version.outputs.version }}.jar
+        asset_path: ./target/UltimateBingo-${{ steps.version.outputs.version }}.jar
+        asset_name: UltimateBingo-${{ steps.version.outputs.version }}.jar
         asset_content_type: application/java-archive
