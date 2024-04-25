@@ -97,8 +97,8 @@ public class BingoCommand implements CommandExecutor {
                 player.teleport(ultimateBingo.bingoSpawnLocation);
             }
 
-            // Give them a bingo compass
-            ultimateBingo.bingoFunctions.giveBingoCompass(player);
+            // Give them a bingo card
+            ultimateBingo.bingoFunctions.giveBingoCard(player);
 
             if (uniquecard) {
                 player.sendMessage(ChatColor.GREEN + "Bingo has started using a " + ChatColor.YELLOW + "unique card" + ChatColor.YELLOW + "!");
