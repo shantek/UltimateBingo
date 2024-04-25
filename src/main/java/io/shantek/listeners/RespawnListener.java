@@ -27,7 +27,7 @@ public class RespawnListener implements Listener {
             player.teleport(ultimateBingo.bingoSpawnLocation);
 
             // Give them a new bingo compass
-            ultimateBingo.bingoFunctions.giveBingoCompass(player);
+            ultimateBingo.bingoFunctions.giveBingoCard(player);
         }
     }
 }
