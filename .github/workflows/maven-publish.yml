@@ -22,6 +22,10 @@ jobs:
     - name: Build project
       run: mvn package -B
 
+    - name: Get version from pom.xml
+      id: version
+      run: echo ::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -32,6 +36,8 @@ jobs:
         prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      outputs:
+        version: ${{ steps.version.outputs.version }}
 
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
