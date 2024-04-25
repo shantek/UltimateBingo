@@ -1,4 +1,5 @@
 name: Build project and create GitHub Release
+
 on: [push, pull_request]
 
 jobs:
@@ -46,3 +47,5 @@ jobs:
         asset_path: ./target/UltimateBingo-${{ env.VERSION }}.jar
         asset_name: UltimateBingo-${{ env.VERSION }}.jar
         asset_content_type: application/java-archive
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
