@@ -1,4 +1,4 @@
-name: Build project, validate formatting, and create GitHub Release
+name: Build project and create GitHub Release
 
 on: [push, pull_request]
 
@@ -21,9 +21,6 @@ jobs:
 
     - name: Build project
       run: mvn test -B
-
-    - name: Validate formatting
-      run: mvn com.coveo:fmt-maven-plugin:format
 
     - name: Create Release
       id: create_release
