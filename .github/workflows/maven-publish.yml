@@ -26,6 +26,9 @@ jobs:
       id: version
       run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
+    - name: List files in target directory
+      run: ls -al ./target/
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -35,7 +38,7 @@ jobs:
         draft: false
         prerelease: false
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
