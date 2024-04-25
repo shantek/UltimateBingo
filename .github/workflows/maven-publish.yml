@@ -49,4 +49,4 @@ jobs:
         asset_name: UltimateBingo-${{ env.VERSION }}.jar
         asset_content_type: application/java-archive
       env:
-        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
