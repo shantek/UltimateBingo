@@ -23,7 +23,7 @@ jobs:
       run: mvn test -B
 
     - name: Validate formatting
-      run: mvn validate formatter:validate
+      run: mvn com.coveo:fmt-maven-plugin:format
 
     - name: Create Release
       id: create_release
