@@ -51,24 +51,24 @@ public class BingoFunctions
         }
     }
 
-    // Give the player a compass, used to open their bingo card
-    public void giveBingoCompass(Player player) {
-        ItemStack bingoCompass = new ItemStack(Material.COMPASS);
-        ItemMeta itemMeta = bingoCompass.getItemMeta();
+    // Give the player paper, used to open their bingo card
+    public void giveBingoCard(Player player) {
+        ItemStack bingoCard = new ItemStack(Material.PAPER);
+        ItemMeta itemMeta = bingoCard.getItemMeta();
 
         // Set display name for the stick
         itemMeta.setDisplayName("Bingo");
 
-        bingoCompass.setItemMeta(itemMeta);
+        bingoCard.setItemMeta(itemMeta);
 
         // Give the stick to the player in the 9th slot
-        player.getInventory().setItem(0, bingoCompass);  // Slot index starts from 0, so 8 is the 9th slot
+        player.getInventory().setItem(0, bingoCard);  // Slot index starts from 0, so 8 is the 9th slot
     }
 
-    // Give all players a bingo compass
-    public void giveBingoCompassToAllPlayers() {
+    // Give all players a bingo card
+    public void giveBingoCardToAllPlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            giveBingoCompass(player);
+            giveBingoCard(player);
         }
     }
 
