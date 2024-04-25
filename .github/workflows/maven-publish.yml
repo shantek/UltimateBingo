@@ -1,5 +1,4 @@
 name: Build project and create GitHub Release
-
 on: [push, pull_request]
 
 jobs:
