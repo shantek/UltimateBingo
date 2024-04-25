@@ -21,6 +21,7 @@ jobs:
 
     - name: Build project
       run: mvn test -B
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -29,7 +30,6 @@ jobs:
         release_name: Release ${{ steps.version.outputs.version }}
         draft: false
         prerelease: false
-        token: ${{ secrets.GH_TOKEN }}
 
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
