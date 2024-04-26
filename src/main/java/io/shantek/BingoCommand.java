@@ -102,10 +102,10 @@ public class BingoCommand implements CommandExecutor {
 
             if (uniquecard) {
                 player.sendMessage(ChatColor.GREEN + "Bingo has started using a " + ChatColor.YELLOW + "unique card" + ChatColor.YELLOW + "!");
-                player.sendMessage(ChatColor.WHITE + "Use your Compass or type " + ChatColor.YELLOW + "/bingo" + ChatColor.WHITE + " to open your bingo card.");
+                player.sendMessage(ChatColor.WHITE + "Interact with your bingo card to open it (or type " + ChatColor.YELLOW + "/bingo" + ChatColor.WHITE + ").");
             } else {
                 player.sendMessage(ChatColor.GREEN + "Bingo has started using a " + ChatColor.YELLOW + "shared card" + ChatColor.YELLOW + "!");
-                player.sendMessage(ChatColor.WHITE + "Use your Compass or type " + ChatColor.YELLOW + "/bingo" + ChatColor.WHITE + " to open your bingo card.");
+                player.sendMessage(ChatColor.WHITE + "Interact with your bingo card to open it (or type " + ChatColor.YELLOW + "/bingo" + ChatColor.WHITE + ").");
 
             }
         }
@@ -131,7 +131,7 @@ public class BingoCommand implements CommandExecutor {
 
     public void endGame() {
         bingoStarted = false;
-        ultimateBingo.bingoManager.clearData();
+        bingoManager.clearData();
         Bukkit.broadcastMessage(ChatColor.GREEN + " Bingo has ended. Thanks for playing!");
 
         // Bring everyone back to the bingo spawn, reset their inventory and state
