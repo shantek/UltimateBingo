@@ -20,7 +20,7 @@ public final class UltimateBingo extends JavaPlugin {
     private MaterialList materialList;
     public BingoFunctions bingoFunctions;
     public Location bingoSpawnLocation;
-
+    public String cardSize;
 
     @Override
     public void onEnable() {
