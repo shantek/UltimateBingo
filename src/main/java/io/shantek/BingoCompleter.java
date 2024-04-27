@@ -12,23 +12,35 @@ import java.util.List;
 public class BingoCompleter implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] args) {
-
-        if (args.length == 1 && commandSender instanceof Player player){
+        if (args.length == 1 && commandSender instanceof Player player) {
             List<String> complete = new ArrayList<>();
-            if (player.hasPermission("shantek.ultimatebingo.start")){
+            if (player.hasPermission("shantek.ultimatebingo.start")) {
                 complete.add("start");
-                complete.add("startunique");
             }
-            if (player.hasPermission("shantek.ultimatebingo.stop")){
+            if (player.hasPermission("shantek.ultimatebingo.stop")) {
                 complete.add("stop");
             }
-            if (player.hasPermission("shantek.ultimatebingo.settings")){
+            if (player.hasPermission("shantek.ultimatebingo.settings")) {
                 complete.add("settings");
             }
 
             return StringUtil.copyPartialMatches(args[0], complete, new ArrayList<>());
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("start")) {
+            List<String> complete = new ArrayList<>();
+            complete.add("same");
+            complete.add("unique");
+
+            return StringUtil.copyPartialMatches(args[1], complete, new ArrayList<>());
+        } else if (args.length == 3 && args[0].equalsIgnoreCase("start") && (args[1].equalsIgnoreCase("same") || args[1].equalsIgnoreCase("unique"))) {
+            List<String> complete = new ArrayList<>();
+            complete.add("small");
+            complete.add("medium");
+            complete.add("large");
+
+            return StringUtil.copyPartialMatches(args[2], complete, new ArrayList<>());
         }
 
         return null;
     }
+
 }

@@ -25,7 +25,7 @@ public class BingoCommand implements CommandExecutor {
 
         if (commandSender instanceof Player player){
 
-            if (args.length == 1){
+            if (args.length > 0){
                 if (args[0].equalsIgnoreCase("stop") && player.hasPermission("shantek.ultimatebingo.stop")){
                     stopBingo(player);
                 }
@@ -34,16 +34,31 @@ public class BingoCommand implements CommandExecutor {
                     if (bingoStarted) {
                         player.sendMessage(ChatColor.RED + "Bingo has already started!");
                     } else {
+                        boolean isUnique = false;
+                        String size = "medium"; // Default size to medium
+                        // Check if additional arguments are provided
+                        if (args.length > 1) {
+                            // Parse the second argument to determine if it's "unique" or "same"
+                            if (args[1].equalsIgnoreCase("unique")) {
+                                isUnique = true;
+                            }
+                        }
+
+                        // Check if size argument is provided
+                        if (args.length > 2) {
+                            // Parse the third argument to determine the size
+                            size = args[2].toLowerCase(); // Convert to lowercase for case-insensitive comparison
+                            // Check if the parsed size is not valid, default it to medium
+                            if (!size.equals("small") && !size.equals("medium") && !size.equals("large")) {
+                                size = "medium";
+                                ultimateBingo.cardSize = "medium";
+                            } else {
+                                ultimateBingo.cardSize = size;
+                            }
+                        }
+
                         ultimateBingo.bingoSpawnLocation = player.getLocation();
-                        startBingo(false);
-                    }
-                }
-                if (args[0].equalsIgnoreCase("startunique") && player.hasPermission("shantek.ultimatebingo.start")){
-                    if (bingoStarted) {
-                        player.sendMessage(ChatColor.RED + "Bingo has already started!");
-                    } else {
-                        ultimateBingo.bingoSpawnLocation = player.getLocation();
-                        startBingo(true);
+                        startBingo(isUnique, size);
                     }
                 }
                 if (args[0].equalsIgnoreCase("settings") && player.hasPermission("shantek.ultimatebingo.settings")){
@@ -72,7 +87,7 @@ public class BingoCommand implements CommandExecutor {
         return false;
     }
 
-    public void startBingo(boolean uniquecard) {
+    public void startBingo(boolean uniquecard, String size) {
 
         // Let's remove all items from the ground for a clean slate
         ultimateBingo.bingoFunctions.despawnAllItems();
