@@ -67,9 +67,9 @@ public class BingoManager{
         playerBingoCards = new HashMap<>();
         bingoGUIs = new HashMap<>();
 
-        // Check for bingo based on the card type and size
-        String cardSize = ultimateBingo.cardSize;
-        boolean hasBingo = false;
+        Set<Material> selectedMaterials = new HashSet<>();
+        List<Material> availableMaterials = generateMaterials();
+        Collections.shuffle(availableMaterials);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             UUID playerId = player.getUniqueId();
@@ -77,14 +77,7 @@ public class BingoManager{
 
             List<ItemStack> cards = new ArrayList<>();
 
-            Set<Material> selectedMaterials = new HashSet<>();
-            List<Material> availableMaterials = generateMaterials();
-
-            // Debug: Print all available materials
-            System.out.println("Available materials: " + availableMaterials);
-
             while (selectedMaterials.size() < slots.length && !availableMaterials.isEmpty()) {
-                Collections.shuffle(availableMaterials);
 
                 Material material = availableMaterials.remove(0);
 
@@ -93,9 +86,6 @@ public class BingoManager{
                     ItemStack item = new ItemStack(material);
                     bingoGUI.setItem(slots[selectedMaterials.size() - 1], item); // -1 because list is 0-indexed
                     cards.add(item);
-
-                    // Debug: Print the slot and the item being assigned to it
-                    System.out.println("Assigning item " + item.getType() + " to slot " + slots[selectedMaterials.size() - 1]);
                 }
             }
 
@@ -187,7 +177,7 @@ public class BingoManager{
                                 , ChatColor.GREEN.toString() + ChatColor.BOLD + "GG");
                     }
 
-                    bingoCommand.endGame();
+                    bingoCommand.stopBingo(player, true);
                 }
 
                 break;
