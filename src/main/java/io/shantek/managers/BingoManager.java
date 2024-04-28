@@ -26,183 +26,110 @@ public class BingoManager{
         this.bingoCommand = bingoCommand;
     }
 
-    public void createBingoCards() {
-        started = true;
-        playerBingoCards = new HashMap<>();
-        bingoGUIs = new HashMap<>();
-
-        // Determine difficulty level and set TOTAL_ITEMS based on it
-        int difficultyLevel;
-        switch (ultimateBingo.difficulty.toLowerCase()) {
-            case "normal":
-                difficultyLevel = 2;
-                TOTAL_ITEMS = 21; // Set TOTAL_ITEMS for normal difficulty
-                break;
-            case "hard":
-                difficultyLevel = 3;
-                TOTAL_ITEMS = 30; // Set TOTAL_ITEMS for hard difficulty
-                break;
-            default:
-                difficultyLevel = 1; // Default to "easy"
-                TOTAL_ITEMS = 14; // Set TOTAL_ITEMS for easy difficulty
-                break;
-        }
-
-        // Generate and shuffle materials for the card
-        List<Material> availableMaterials = generateMaterials(difficultyLevel);
-        Collections.shuffle(availableMaterials);
-
-        // Get slots based on the card size
-        int[] slots = determineSlotsBasedOnCardSize();
-
-        // Distribute unique cards to each player
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            UUID playerId = player.getUniqueId();
-
-            // Store the string for the card type
-            String cardInfo = ultimateBingo.uniqueCard ? "unique" : "identical";
-            cardInfo += ultimateBingo.fullCard ? "/full card" : "/single row";
-            cardInfo = "(" + cardInfo + ")";
-
-            // Create a new inventory for each player
-            Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
-
-            // Populate the card inventory with selected materials
-            for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
-                Material material = availableMaterials.get(i);
-                ItemStack item = new ItemStack(material);
-                bingoGUI.setItem(slots[i], item);
-            }
-
-
-            bingoGUIs.put(playerId, bingoGUI);
-
-            // Store the card for each player
-            List<ItemStack> cards = new ArrayList<>();
-            for (int slot : slots) {
-                ItemStack item = bingoGUI.getItem(slot);
-                if (item != null) {
-                    cards.add(item);
-                }
-            }
-            playerBingoCards.put(playerId, cards);
-        }
-    }
-
-    public boolean checkHasBingoCard(Player player) {
-        UUID playerId = player.getUniqueId();
-        return bingoGUIs.containsKey(playerId);
-    }
-
-
     public void createUniqueBingoCards() {
         started = true;
         playerBingoCards = new HashMap<>();
         bingoGUIs = new HashMap<>();
 
-// Determine difficulty level and set TOTAL_ITEMS based on it
-        int difficultyLevel;
-        switch (ultimateBingo.difficulty.toLowerCase()) {
-            case "normal":
-                difficultyLevel = 2;
-                TOTAL_ITEMS = 21; // Set TOTAL_ITEMS for normal difficulty
-                break;
-            case "hard":
-                difficultyLevel = 3;
-                TOTAL_ITEMS = 30; // Set TOTAL_ITEMS for hard difficulty
-                break;
-            default:
-                difficultyLevel = 1; // Default to "easy"
-                TOTAL_ITEMS = 14; // Set TOTAL_ITEMS for easy difficulty
-                break;
-        }
-
-        // Generate a single set of materials for all players
-        List<Material> sharedMaterials = generateMaterials(difficultyLevel);
-
-        // Distribute unique shuffled cards to each player
         for (Player player : Bukkit.getOnlinePlayers()) {
             UUID playerId = player.getUniqueId();
-
-            // Store the string for the card type
-            String cardInfo = ultimateBingo.uniqueCard ? "unique" : "identical";
-            cardInfo += ultimateBingo.fullCard ? "/full card" : "/single row";
-            cardInfo = "(" + cardInfo + ")";
-
-            // Create a new inventory for each player
-            Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
-
-            // Shuffle the shared materials uniquely for each player
-            List<Material> playerMaterials = new ArrayList<>(sharedMaterials);
-            Collections.shuffle(playerMaterials);
+            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo");
 
             List<ItemStack> cards = new ArrayList<>();
-            int[] slots = determineSlotsBasedOnCardSize(); // Determine slots based on card size
 
-            // Populate the bingo GUI with shuffled materials
-            for (int i = 0; i < slots.length && i < playerMaterials.size(); i++) {
-                Material material = playerMaterials.get(i);
-                ItemStack item = new ItemStack(material);
-                bingoGUI.setItem(slots[i], item);
-                cards.add(item);
+            Set<Material> selectedMaterials = new HashSet<>();
+            List<Material> availableMaterials = generateMaterials();
+
+            while (selectedMaterials.size() < slots.length && !availableMaterials.isEmpty()) {
+                Collections.shuffle(availableMaterials);
+
+                Material material = availableMaterials.remove(0);
+
+                if (!selectedMaterials.contains(material)) {
+                    selectedMaterials.add(material);
+                    ItemStack item = new ItemStack(material);
+                    bingoGUI.setItem(slots[selectedMaterials.size() - 1], item); // -1 because list is 0-indexed
+                    cards.add(item);
+                }
             }
 
             playerBingoCards.put(playerId, cards);
-            bingoGUIs.put(playerId, bingoGUI);
 
+            player.openInventory(bingoGUI);
+            bingoGUIs.put(playerId, bingoGUI);
         }
     }
 
-    private int[] determineSlotsBasedOnCardSize() {
-        // Define slot arrangements for different card sizes
-        int[] smallSlots = {10, 11, 12, 19, 20, 21, 28, 29, 30};
-        int[] mediumSlots = {10, 11, 12, 13, 19, 20, 21, 22, 28, 29, 30, 31, 37, 38, 39, 40};
-        int[] largeSlots = {10, 11, 12, 13, 14, 19, 20, 21, 22, 23, 28, 29, 30, 31, 32, 37, 38, 39, 40, 41, 46, 47, 48, 49, 50};
 
-        return switch (ultimateBingo.cardSize.toLowerCase()) {
-            case "small" -> smallSlots;
-            case "medium" -> mediumSlots;
-            case "large" -> largeSlots;
-            default -> mediumSlots; // Default to medium if something goes wrong
-        };
+
+    public void createBingoCards() {
+        started = true;
+        playerBingoCards = new HashMap<>();
+        bingoGUIs = new HashMap<>();
+
+        // Check for bingo based on the card type and size
+        String cardSize = ultimateBingo.cardSize;
+        boolean hasBingo = false;
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            UUID playerId = player.getUniqueId();
+            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo");
+
+            List<ItemStack> cards = new ArrayList<>();
+
+            Set<Material> selectedMaterials = new HashSet<>();
+            List<Material> availableMaterials = generateMaterials();
+
+            // Debug: Print all available materials
+            System.out.println("Available materials: " + availableMaterials);
+
+            while (selectedMaterials.size() < slots.length && !availableMaterials.isEmpty()) {
+                Collections.shuffle(availableMaterials);
+
+                Material material = availableMaterials.remove(0);
+
+                if (!selectedMaterials.contains(material)) {
+                    selectedMaterials.add(material);
+                    ItemStack item = new ItemStack(material);
+                    bingoGUI.setItem(slots[selectedMaterials.size() - 1], item); // -1 because list is 0-indexed
+                    cards.add(item);
+
+                    // Debug: Print the slot and the item being assigned to it
+                    System.out.println("Assigning item " + item.getType() + " to slot " + slots[selectedMaterials.size() - 1]);
+                }
+            }
+
+            playerBingoCards.put(playerId, cards);
+            player.openInventory(bingoGUI);
+            bingoGUIs.put(playerId, bingoGUI);
+        }
     }
 
-    private int TOTAL_ITEMS = 30;
-
-    public List<Material> generateMaterials(int type) {
+    public List<Material> generateMaterials(){
         Map<Integer, List<Material>> materials = ultimateBingo.getMaterialList().getMaterials();
         Random random = new Random();
+
         List<Material> generatedMaterials = new ArrayList<>();
 
-        // Adjust the type if it is greater than 3 - Default to easy
-        if (type > 3) {
-            type = 1;
-        }
+        int[] percentages = {20, 20, 20, 20, 20};
 
-        // Define the distribution of items across difficulties based on the type
-        int[] distribution = switch (type) {
-            case 1 -> new int[]{15, 10, 5, 0, 0};
-            case 2 -> new int[]{10, 10, 5, 5, 0};
-            case 3 -> new int[]{5, 5, 8, 6, 6};
-            default -> new int[]{15, 10, 5, 0, 0};
-        };
+        for(int difficulty = 1; difficulty <= 5; difficulty++){
+            int numCards = (int)(bingoCards * (percentages[difficulty-1] / 100.0));
 
-        // Generate materials based on the defined distribution
-        for (int difficulty = 1; difficulty <= 5; difficulty++) {
             List<Material> difficultyMaterials = new ArrayList<>(materials.get(difficulty));
-            int itemsToGenerate = distribution[difficulty - 1];
-            for (int i = 0; i < itemsToGenerate && !difficultyMaterials.isEmpty(); i++) {
+
+            for(int i = 0; i < numCards && !difficultyMaterials.isEmpty(); i++){
                 int randomIndex = random.nextInt(difficultyMaterials.size());
                 Material randomMaterial = difficultyMaterials.get(randomIndex);
                 generatedMaterials.add(randomMaterial);
+
                 difficultyMaterials.remove(randomIndex);
             }
         }
 
-        // Ensure we always return exactly TOTAL_ITEMS materials
-        while (generatedMaterials.size() < TOTAL_ITEMS) {
-            List<Material> fallbackMaterials = materials.get(1);
-            Material randomMaterial = fallbackMaterials.get(random.nextInt(fallbackMaterials.size()));
+        while (generatedMaterials.size() < bingoCards) {
+            List<Material> easiestMaterials = materials.get(1);
+            Material randomMaterial = easiestMaterials.get(random.nextInt(easiestMaterials.size()));
             generatedMaterials.add(randomMaterial);
         }
 
@@ -220,21 +147,14 @@ public class BingoManager{
                 item.setItemMeta(meta);
 
                 String removedUnderscore = completedMaterial.name().toLowerCase().replace('_', ' ');
-                player.sendMessage(ChatColor.GREEN + "You ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from your bingo card!");
+                player.sendMessage(ChatColor.GREEN + "You completed the " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " item in your bingo card!");
 
                 for (Player target : Bukkit.getOnlinePlayers()) {
                     // PLAY FOR ALL PLAYERS
                     target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 5);
 
                     if (!target.equals(player)) { // Exclude the player who triggered the event
-
-                        // Show more info if reveal mode is enabled. If not, be more cryptic in what they did
-                        if (ultimateBingo.revealCards) {
-                            target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
-
-                        } else {
-                            target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
-                        }
+                        target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
                     }
                 }
 
@@ -242,48 +162,34 @@ public class BingoManager{
                 String cardSize = ultimateBingo.cardSize;
                 boolean hasBingo = false;
 
-                // If it's a full card, we'll check the entire card instead
-                if (ultimateBingo.fullCard) {
-                  if (ultimateBingo.cardTypes.checkFullCard(player)) {
-                      hasBingo = true;
-                  }
-
-                } else {
-
-                    // Not a full card, check for traditional line bingo
-                    switch (cardSize.toLowerCase()) {
-                        case "small":
-                            if (ultimateBingo.cardTypes.checkSmallCardBingo(player)) {
-                                hasBingo = true;
-                            }
-                            break;
-                        case "medium":
-                            if (ultimateBingo.cardTypes.checkMediumCardBingo(player)) {
-                                hasBingo = true;
-                            }
-                            break;
-                        case "large":
-                            if (ultimateBingo.cardTypes.checkLargeCardBingo(player)) {
-                                hasBingo = true;
-                            }
-                            break;
-                    }
+                switch (cardSize) {
+                    case "small":
+                        if (ultimateBingo.cardTypes.checkSmallCardBingo(player)) {
+                            hasBingo = true;
+                        }
+                        break;
+                    case "medium":
+                        if (ultimateBingo.cardTypes.checkMediumCardBingo(player)) {
+                            hasBingo = true;
+                        }
+                        break;
+                    case "large":
+                        if (ultimateBingo.cardTypes.checkLargeCardBingo(player)) {
+                            hasBingo = true;
+                        }
+                        break;
                 }
-                if (hasBingo) {
-                    // Disable the game
-                    ultimateBingo.bingoStarted = false;
 
+                if (hasBingo) {
                     Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
                     for (Player target : Bukkit.getOnlinePlayers()){
-                        target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, 1.0f, 1.0f);
-
                         target.sendTitle(ChatColor.GOLD + player.getName() + ChatColor.GREEN +  " got BINGO!"
-                                , ChatColor.GREEN.toString() + ChatColor.BOLD + "Woop woop!");
+                                , ChatColor.GREEN.toString() + ChatColor.BOLD + "GG");
                     }
-                    ultimateBingo.bingoCommand.stopBingo(player, true);
-                    clearData();
 
+                    bingoCommand.endGame();
                 }
+
                 break;
             }
         }
@@ -313,55 +219,5 @@ public class BingoManager{
     public boolean isStarted() {
         return started;
     }
-
-    public void joinGameInProgress(Player player) {
-        UUID playerId = player.getUniqueId();
-
-        // Check if the player already has a bingo GUI
-        if (bingoGUIs.containsKey(playerId)) {
-            player.sendMessage(ChatColor.YELLOW + "You already have a Bingo card.");
-            return;
-        }
-
-        // Get a list of all available GUIs
-        List<UUID> availableGUIKeys = new ArrayList<>(bingoGUIs.keySet());
-
-        if (availableGUIKeys.isEmpty()) {
-            player.sendMessage(ChatColor.RED + "No Bingo cards are available to clone. Please wait for the next round.");
-            return; // Optionally, handle creating a new card instead of returning
-        } else {
-
-            // Select a random GUI to clone
-            UUID randomPlayerId = availableGUIKeys.get(new Random().nextInt(availableGUIKeys.size()));
-            Inventory originalGui = bingoGUIs.get(randomPlayerId);
-
-            // Clone the selected bingo GUI
-            Inventory clonedGui = cloneInventory(originalGui);
-
-            // Add the cloned GUI to this player
-            bingoGUIs.put(playerId, clonedGui);
-            playerBingoCards.put(playerId, new ArrayList<>(playerBingoCards.get(randomPlayerId))); // Clone the ticked off cards
-
-            Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " has just joined bingo!");
-        }
-    }
-    // Utility method to clone an inventory
-    private Inventory cloneInventory(Inventory original) {
-
-        // Store the string for the card type
-        String newCardInfo = ultimateBingo.uniqueCard ? "unique" : "identical";
-        newCardInfo += ultimateBingo.fullCard ? "/full card" : "/single row";
-        newCardInfo = "(" + newCardInfo + ")";
-
-        Inventory clone = Bukkit.createInventory(null, original.getSize(), ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + newCardInfo);
-        for (int i = 0; i < original.getSize(); i++) {
-            ItemStack originalItem = original.getItem(i);
-            if (originalItem != null) {
-                clone.setItem(i, new ItemStack(originalItem));
-            }
-        }
-        return clone;
-    }
-
 
 }
