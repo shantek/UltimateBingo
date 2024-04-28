@@ -37,9 +37,9 @@ public class CardTypes {
         if ((inv.getItem(10).getType() == Material.LIME_CONCRETE &&
                 inv.getItem(20).getType() == Material.LIME_CONCRETE &&
                 inv.getItem(30).getType() == Material.LIME_CONCRETE) ||
-                (inv.getItem(13).getType() == Material.LIME_CONCRETE &&
-                        inv.getItem(21).getType() == Material.LIME_CONCRETE &&
-                        inv.getItem(29).getType() == Material.LIME_CONCRETE)) {
+                (inv.getItem(12).getType() == Material.LIME_CONCRETE &&
+                        inv.getItem(20).getType() == Material.LIME_CONCRETE &&
+                        inv.getItem(28).getType() == Material.LIME_CONCRETE)) {
             return true;
         }
 
@@ -112,11 +112,11 @@ public class CardTypes {
                 inv.getItem(40).getType() == Material.LIME_CONCRETE &&
                 inv.getItem(50).getType() == Material.LIME_CONCRETE) ||
 
-                (inv.getItem(13).getType() == Material.LIME_CONCRETE &&
-                        inv.getItem(21).getType() == Material.LIME_CONCRETE &&
-                        inv.getItem(29).getType() == Material.LIME_CONCRETE &&
-                        inv.getItem(37).getType() == Material.LIME_CONCRETE &&
-                        inv.getItem(45).getType() == Material.LIME_CONCRETE)) {
+                (inv.getItem(14).getType() == Material.LIME_CONCRETE &&
+                        inv.getItem(22).getType() == Material.LIME_CONCRETE &&
+                        inv.getItem(30).getType() == Material.LIME_CONCRETE &&
+                        inv.getItem(38).getType() == Material.LIME_CONCRETE &&
+                        inv.getItem(46).getType() == Material.LIME_CONCRETE)) {
             return true;
         }
 
