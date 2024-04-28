@@ -49,18 +49,21 @@ public class BingoCommand implements CommandExecutor {
                             // Parse the third argument to determine the size
                             size = args[2].toLowerCase(); // Convert to lowercase for case-insensitive comparison
                             // Check if the parsed size is not valid, default it to medium
-                            if (!size.equals("small") && !size.equals("medium") && !size.equals("large")) {
-                                size = "medium";
-                                ultimateBingo.cardSize = "medium";
-                            } else {
-                                ultimateBingo.cardSize = size;
-                            }
+
+                        }
+
+                        if (!size.equals("small") && !size.equals("medium") && !size.equals("large")) {
+                            size = "medium";
+                            ultimateBingo.cardSize = "medium";
+                        } else {
+                            ultimateBingo.cardSize = size;
                         }
 
                         ultimateBingo.bingoSpawnLocation = player.getLocation();
                         startBingo(isUnique, size);
                     }
                 }
+
                 if (args[0].equalsIgnoreCase("settings") && player.hasPermission("shantek.ultimatebingo.settings")){
                     ultimateBingo.getMaterialList().createMaterials();
                     Inventory settingsGUI = settingsManager.createSettingsGUI(player);
@@ -91,14 +94,32 @@ public class BingoCommand implements CommandExecutor {
 
         // Let's remove all items from the ground for a clean slate
         ultimateBingo.bingoFunctions.despawnAllItems();
-
         bingoStarted = true;
-        bingoManager.setBingoCards(16);
-        ultimateBingo.getMaterialList().createMaterials();
 
         // Reset player stats, inventory and the time of day
         ultimateBingo.bingoFunctions.resetPlayers();
         ultimateBingo.bingoFunctions.resetTimeAndWeather();
+
+        // Set the amount of slots we're using based on the card type
+        String cardSize = ultimateBingo.cardSize;
+
+        switch (cardSize) {
+            case "small":
+                bingoManager.slots = new int[]{10, 11, 12, 19, 20, 21, 28, 29, 30, 37, 38, 39};
+                bingoManager.setBingoCards(9);
+                ultimateBingo.getMaterialList().createMaterials();
+                break;
+            case "medium":
+                bingoManager.slots = new int[]{10, 11, 12, 13, 19, 20, 21, 22, 28, 29, 30, 31, 37, 38, 39, 40};
+                bingoManager.setBingoCards(16);
+                ultimateBingo.getMaterialList().createMaterials();
+                break;
+            case "large":
+                bingoManager.slots = new int[]{10, 11, 12, 13, 14, 19, 20, 21, 22, 23, 28, 29, 30, 31, 32, 37, 38, 39, 40, 41, 46, 47, 48, 49, 50};
+                bingoManager.setBingoCards(25);
+                ultimateBingo.getMaterialList().createMaterials();
+                break;
+        }
 
         if (uniquecard) {
             bingoManager.createUniqueBingoCards();
@@ -116,10 +137,10 @@ public class BingoCommand implements CommandExecutor {
             ultimateBingo.bingoFunctions.giveBingoCard(player);
 
             if (uniquecard) {
-                player.sendMessage(ChatColor.GREEN + "Bingo has started using a " + ChatColor.YELLOW + "unique card" + ChatColor.YELLOW + "!");
+                player.sendMessage(ChatColor.GREEN + "Bingo has started using a " + ChatColor.YELLOW + cardSize + " unique card" + ChatColor.YELLOW + "!");
                 player.sendMessage(ChatColor.WHITE + "Interact with your bingo card to open it (or type " + ChatColor.YELLOW + "/bingo" + ChatColor.WHITE + ").");
             } else {
-                player.sendMessage(ChatColor.GREEN + "Bingo has started using a " + ChatColor.YELLOW + "shared card" + ChatColor.YELLOW + "!");
+                player.sendMessage(ChatColor.GREEN + "Bingo has started using a " + ChatColor.YELLOW + size + " shared card" + ChatColor.YELLOW + "!");
                 player.sendMessage(ChatColor.WHITE + "Interact with your bingo card to open it (or type " + ChatColor.YELLOW + "/bingo" + ChatColor.WHITE + ").");
 
             }
