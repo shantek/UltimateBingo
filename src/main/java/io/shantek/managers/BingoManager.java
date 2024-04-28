@@ -3,13 +3,10 @@ package io.shantek.managers;
 import io.shantek.BingoCommand;
 import io.shantek.UltimateBingo;
 import org.bukkit.*;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
 
@@ -19,7 +16,7 @@ public class BingoManager{
     Map<UUID, Inventory> bingoGUIs;
     private int bingoCards;
     private UltimateBingo ultimateBingo;
-    private int[] slots;
+    public int[] slots;
     public boolean started;
 
     private BingoCommand bingoCommand;
@@ -29,66 +26,34 @@ public class BingoManager{
         this.bingoCommand = bingoCommand;
     }
 
-    public void createUniqueBingoCards(){
+    public void createUniqueBingoCards() {
         started = true;
         playerBingoCards = new HashMap<>();
         bingoGUIs = new HashMap<>();
 
-        slots = new int[]{10,11,12,13,19,20,21,22,28,29,30,31,37,38,39,40};
-
-        for (Player player : Bukkit.getOnlinePlayers()){
+        for (Player player : Bukkit.getOnlinePlayers()) {
             UUID playerId = player.getUniqueId();
-            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Ultimate Bingo");
-
-            List<ItemStack> cards = new ArrayList<>();
-            List<Material> generatedMaterials = generateMaterials();
-
-            Collections.shuffle(generatedMaterials);
-
-            for(int i = 0; i < generatedMaterials.size() && i < slots.length; i++) {
-                Material material = generatedMaterials.get(i);
-                ItemStack item = new ItemStack(material);
-                bingoGUI.setItem(slots[i], item);
-            }
-
-            playerBingoCards.put(playerId, cards);
-            for (ItemStack card : playerBingoCards.get(playerId)){
-                System.out.println(card);
-            }
-
-
-            player.openInventory(bingoGUI);
-            bingoGUIs.put(playerId, bingoGUI);
-        }
-    }
-    public void createBingoCards(){
-        started = true;
-        playerBingoCards = new HashMap<>();
-        bingoGUIs = new HashMap<>();
-
-        slots = new int[]{10,11,12,13,19,20,21,22,28,29,30,31,37,38,39,40};
-
-        // Generate materials and shuffle them
-        List<Material> generatedMaterials = generateMaterials();
-        Collections.shuffle(generatedMaterials);
-
-        for (Player player : Bukkit.getOnlinePlayers()){
-            UUID playerId = player.getUniqueId();
-            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Ultimate Bingo");
+            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo");
 
             List<ItemStack> cards = new ArrayList<>();
 
-            for(int i = 0; i < generatedMaterials.size() && i < slots.length; i++) {
-                Material material = generatedMaterials.get(i);
-                ItemStack item = new ItemStack(material);
-                bingoGUI.setItem(slots[i], item);
-                cards.add(item);  // Add item to cards list
+            Set<Material> selectedMaterials = new HashSet<>();
+            List<Material> availableMaterials = generateMaterials();
+
+            while (selectedMaterials.size() < slots.length && !availableMaterials.isEmpty()) {
+                Collections.shuffle(availableMaterials);
+
+                Material material = availableMaterials.remove(0);
+
+                if (!selectedMaterials.contains(material)) {
+                    selectedMaterials.add(material);
+                    ItemStack item = new ItemStack(material);
+                    bingoGUI.setItem(slots[selectedMaterials.size() - 1], item); // -1 because list is 0-indexed
+                    cards.add(item);
+                }
             }
 
             playerBingoCards.put(playerId, cards);
-            for (ItemStack card : playerBingoCards.get(playerId)){
-                System.out.println(card);
-            }
 
             player.openInventory(bingoGUI);
             bingoGUIs.put(playerId, bingoGUI);
@@ -97,6 +62,48 @@ public class BingoManager{
 
 
 
+    public void createBingoCards() {
+        started = true;
+        playerBingoCards = new HashMap<>();
+        bingoGUIs = new HashMap<>();
+
+        // Check for bingo based on the card type and size
+        String cardSize = ultimateBingo.cardSize;
+        boolean hasBingo = false;
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            UUID playerId = player.getUniqueId();
+            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo");
+
+            List<ItemStack> cards = new ArrayList<>();
+
+            Set<Material> selectedMaterials = new HashSet<>();
+            List<Material> availableMaterials = generateMaterials();
+
+            // Debug: Print all available materials
+            System.out.println("Available materials: " + availableMaterials);
+
+            while (selectedMaterials.size() < slots.length && !availableMaterials.isEmpty()) {
+                Collections.shuffle(availableMaterials);
+
+                Material material = availableMaterials.remove(0);
+
+                if (!selectedMaterials.contains(material)) {
+                    selectedMaterials.add(material);
+                    ItemStack item = new ItemStack(material);
+                    bingoGUI.setItem(slots[selectedMaterials.size() - 1], item); // -1 because list is 0-indexed
+                    cards.add(item);
+
+                    // Debug: Print the slot and the item being assigned to it
+                    System.out.println("Assigning item " + item.getType() + " to slot " + slots[selectedMaterials.size() - 1]);
+                }
+            }
+
+            playerBingoCards.put(playerId, cards);
+            player.openInventory(bingoGUI);
+            bingoGUIs.put(playerId, bingoGUI);
+        }
+    }
 
     public List<Material> generateMaterials(){
         Map<Integer, List<Material>> materials = ultimateBingo.getMaterialList().getMaterials();
@@ -151,9 +158,29 @@ public class BingoManager{
                     }
                 }
 
+                // Check for bingo based on the card type and size
+                String cardSize = ultimateBingo.cardSize;
+                boolean hasBingo = false;
 
+                switch (cardSize) {
+                    case "small":
+                        if (ultimateBingo.cardTypes.checkSmallCardBingo(player)) {
+                            hasBingo = true;
+                        }
+                        break;
+                    case "medium":
+                        if (ultimateBingo.cardTypes.checkMediumCardBingo(player)) {
+                            hasBingo = true;
+                        }
+                        break;
+                    case "large":
+                        if (ultimateBingo.cardTypes.checkLargeCardBingo(player)) {
+                            hasBingo = true;
+                        }
+                        break;
+                }
 
-                if(checkForBingo(player)){
+                if (hasBingo) {
                     Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
                     for (Player target : Bukkit.getOnlinePlayers()){
                         target.sendTitle(ChatColor.GOLD + player.getName() + ChatColor.GREEN +  " got BINGO!"
@@ -162,45 +189,10 @@ public class BingoManager{
 
                     bingoCommand.endGame();
                 }
+
                 break;
             }
         }
-    }
-
-    public boolean checkForBingo(Player player) {
-        UUID playerId = player.getUniqueId();
-        Inventory inv = getBingoGUIs().get(playerId);
-
-        for (int i : new int[]{10, 19, 28, 37}) {
-            if (inv.getItem(i).getType() == Material.LIME_CONCRETE &&
-                    inv.getItem(i+1).getType() == Material.LIME_CONCRETE &&
-                    inv.getItem(i+2).getType() == Material.LIME_CONCRETE &&
-                    inv.getItem(i+3).getType() == Material.LIME_CONCRETE) {
-                return true;
-            }
-        }
-
-        for (int i : new int[]{10, 11, 12, 13}) {
-            if (inv.getItem(i).getType() == Material.LIME_CONCRETE &&
-                    inv.getItem(i+9).getType() == Material.LIME_CONCRETE &&
-                    inv.getItem(i+18).getType() == Material.LIME_CONCRETE &&
-                    inv.getItem(i+27).getType() == Material.LIME_CONCRETE) {
-                return true;
-            }
-        }
-
-        if ((inv.getItem(10).getType() == Material.LIME_CONCRETE &&
-                inv.getItem(20).getType() == Material.LIME_CONCRETE &&
-                inv.getItem(30).getType() == Material.LIME_CONCRETE &&
-                inv.getItem(40).getType() == Material.LIME_CONCRETE) ||
-                (inv.getItem(13).getType() == Material.LIME_CONCRETE &&
-                        inv.getItem(21).getType() == Material.LIME_CONCRETE &&
-                        inv.getItem(29).getType() == Material.LIME_CONCRETE &&
-                        inv.getItem(37).getType() == Material.LIME_CONCRETE)) {
-            return true;
-        }
-
-        return false;
     }
 
     public void clearData(){

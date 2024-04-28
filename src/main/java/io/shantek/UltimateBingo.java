@@ -13,6 +13,7 @@ import io.shantek.tools.BingoFunctions;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
+import io.shantek.managers.CardTypes;
 
 
 public final class UltimateBingo extends JavaPlugin {
@@ -21,6 +22,7 @@ public final class UltimateBingo extends JavaPlugin {
     public BingoFunctions bingoFunctions;
     public Location bingoSpawnLocation;
     public String cardSize;
+    public CardTypes cardTypes;
 
     @Override
     public void onEnable() {
@@ -28,11 +30,13 @@ public final class UltimateBingo extends JavaPlugin {
 
         materialList = new MaterialList(this);
         bingoFunctions = new BingoFunctions(this);
+        cardTypes = new CardTypes(this);
 
         SettingsManager settingsManager = new SettingsManager(this);
         RespawnListener respawnListener = new RespawnListener(this);
         BingoCraftListener bingoCraftListener = new BingoCraftListener(this);
         BingoPickupListener bingoPickupListener = new BingoPickupListener(this);
+        BingoFurnaceRemoveListener bingoFurnaceRemoveListener = new BingoFurnaceRemoveListener(this);
         BingoInteractListener bingoStickListener = new BingoInteractListener(this);
         BingoInventoryOpenListener bingoInventoryOpenListener = new BingoInventoryOpenListener(this);
         SettingsListener settingsListener = new SettingsListener(materialList, settingsManager);
@@ -49,6 +53,7 @@ public final class UltimateBingo extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(settingsListener, this);
         Bukkit.getPluginManager().registerEvents(respawnListener, this);
         Bukkit.getPluginManager().registerEvents(bingoStickListener, this);
+        Bukkit.getPluginManager().registerEvents(bingoFurnaceRemoveListener, this);
         materialList.createMaterials();
 
     }
