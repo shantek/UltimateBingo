@@ -27,7 +27,7 @@ public class BingoCommand implements CommandExecutor {
 
             if (args.length > 0){
                 if (args[0].equalsIgnoreCase("stop") && player.hasPermission("shantek.ultimatebingo.stop")){
-                    stopBingo(player);
+                    stopBingo(player, false);
                 }
 
                 if (args[0].equalsIgnoreCase("start") && player.hasPermission("shantek.ultimatebingo.start")){
@@ -148,27 +148,14 @@ public class BingoCommand implements CommandExecutor {
 
     }
 
-    public void stopBingo(Player sender){
+    public void stopBingo(Player sender, boolean gameCompleted){
         bingoStarted = false;
         if (bingoManager.getPlayerBingoCards() != null && bingoManager.getBingoGUIs() != null){
             bingoManager.clearData();
-            sender.sendMessage(ChatColor.RED + "Bingo has been stopped!");
+            if (!gameCompleted) { sender.sendMessage(ChatColor.RED + "Bingo has been stopped!"); }
         } else {
-            sender.sendMessage(ChatColor.RED + "Bingo hasn't started yet! Start with /bingo start");
+            if (!gameCompleted) { sender.sendMessage(ChatColor.RED + "Bingo hasn't started yet! Start with /bingo start"); }
         }
-
-        // Bring everyone back to the bingo spawn, reset their inventory and state
-        // and despawn everything off the ground
-        teleportPlayers();
-        ultimateBingo.bingoFunctions.resetPlayers();
-        ultimateBingo.bingoSpawnLocation = null;
-        ultimateBingo.bingoFunctions.despawnAllItems();
-    }
-
-    public void endGame() {
-        bingoStarted = false;
-        bingoManager.clearData();
-        Bukkit.broadcastMessage(ChatColor.GREEN + " Bingo has ended. Thanks for playing!");
 
         // Bring everyone back to the bingo spawn, reset their inventory and state
         // and despawn everything off the ground
