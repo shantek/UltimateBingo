@@ -36,9 +36,13 @@ public class BingoCommand implements CommandExecutor {
                     } else {
                         boolean isUnique = false;
                         String size = "medium"; // Default size to medium
+
+                        // Set back to the default of single line
+                        ultimateBingo.fullCard = false;
+
                         // Check if additional arguments are provided
                         if (args.length > 1) {
-                            // Parse the second argument to determine if it's "unique" or "same"
+                            // Parse the second argument to determine if it's "unique" or "identical"
                             if (args[1].equalsIgnoreCase("unique")) {
                                 isUnique = true;
                             }
@@ -58,6 +62,21 @@ public class BingoCommand implements CommandExecutor {
                         } else {
                             ultimateBingo.cardSize = size;
                         }
+
+                        // Check if size argument is provided
+                        if (args.length > 3) {
+                            // Parse the third argument to determine the size
+                            String fullcard = args[3].toLowerCase(); // Convert to lowercase for case-insensitive comparison
+
+                            // This has been set back to false, only set to true is manually set in the command
+                            if (fullcard.equals("fullcard")) {
+                                ultimateBingo.fullCard = true;
+                            }
+
+                        }
+
+
+
 
                         ultimateBingo.bingoSpawnLocation = player.getLocation();
                         startBingo(isUnique, size);
@@ -136,14 +155,22 @@ public class BingoCommand implements CommandExecutor {
             // Give them a bingo card
             ultimateBingo.bingoFunctions.giveBingoCard(player);
 
-            if (uniquecard) {
-                player.sendMessage(ChatColor.GREEN + "Bingo has started using a " + ChatColor.YELLOW + cardSize + " unique card" + ChatColor.YELLOW + "!");
-                player.sendMessage(ChatColor.WHITE + "Interact with your bingo card to open it (or type " + ChatColor.YELLOW + "/bingo" + ChatColor.WHITE + ").");
-            } else {
-                player.sendMessage(ChatColor.GREEN + "Bingo has started using a " + ChatColor.YELLOW + size + " shared card" + ChatColor.YELLOW + "!");
-                player.sendMessage(ChatColor.WHITE + "Interact with your bingo card to open it (or type " + ChatColor.YELLOW + "/bingo" + ChatColor.WHITE + ").");
-
+            // Work out the win condition
+            String bingoType = "SINGLE ROW";
+            if (ultimateBingo.fullCard) {
+                bingoType = "FULL CARD";
             }
+
+            // Work out the card type
+            String cardType = "IDENTICAL";
+            if (uniquecard) {
+                cardType = "UNIQUE";
+            }
+
+
+            player.sendMessage(ChatColor.GREEN + "Bingo has started with a " + ChatColor.YELLOW + cardSize.toUpperCase() + " " + cardType + ChatColor.GREEN + " card. Get a " + ChatColor.YELLOW + bingoType + ChatColor.GREEN + " to win!");
+            player.sendMessage(ChatColor.WHITE + "Interact with your bingo card to open it (or type " + ChatColor.YELLOW + "/bingo" + ChatColor.WHITE + ").");
+
         }
 
     }

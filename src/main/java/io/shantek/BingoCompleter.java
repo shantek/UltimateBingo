@@ -28,17 +28,25 @@ public class BingoCompleter implements TabCompleter {
             return StringUtil.copyPartialMatches(args[0], complete, new ArrayList<>());
         } else if (args.length == 2 && args[0].equalsIgnoreCase("start")) {
             List<String> complete = new ArrayList<>();
-            complete.add("same");
+            complete.add("identical");
             complete.add("unique");
 
             return StringUtil.copyPartialMatches(args[1], complete, new ArrayList<>());
-        } else if (args.length == 3 && args[0].equalsIgnoreCase("start") && (args[1].equalsIgnoreCase("same") || args[1].equalsIgnoreCase("unique"))) {
+
+        } else if (args.length == 3 && args[0].equalsIgnoreCase("start") && (args[1].equalsIgnoreCase("identical") || args[1].equalsIgnoreCase("unique"))) {
             List<String> complete = new ArrayList<>();
             complete.add("small");
             complete.add("medium");
             complete.add("large");
 
             return StringUtil.copyPartialMatches(args[2], complete, new ArrayList<>());
+
+        } else if (args.length == 4 && args[0].equalsIgnoreCase("start") && (args[2].equalsIgnoreCase("small") || args[2].equalsIgnoreCase("medium") || args[2].equalsIgnoreCase("large"))) {
+            List<String> complete = new ArrayList<>();
+            complete.add("fullcard");
+            complete.add("bingo");
+
+            return StringUtil.copyPartialMatches(args[3], complete, new ArrayList<>());
         }
 
         return null;

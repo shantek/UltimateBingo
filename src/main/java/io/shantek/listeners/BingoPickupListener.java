@@ -7,9 +7,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
 import java.util.*;
 
 public class BingoPickupListener implements Listener {
@@ -19,36 +20,40 @@ public class BingoPickupListener implements Listener {
     }
 
     @EventHandler
-    public void onPickup(EntityPickupItemEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
-            if (ultimateBingo.bingoManager.isStarted()) {
-               // BingoManager bingoManager = ultimateBingo.getBingoManager();
-                Material pickedItem = event.getItem().getItemStack().getType();
+    public void onPickup (PlayerPickupItemEvent e){
+        if (ultimateBingo.getBingoManager().isStarted()){
+            BingoManager bingoManager = ultimateBingo.getBingoManager();
+            Material pickedItem = e.getItem().getItemStack().getType();
+            Player player = (Player) e.getPlayer();
 
-                UUID uuid = player.getUniqueId();
-                Map<UUID, Inventory> bingoGUIs = ultimateBingo.bingoManager.getBingoGUIs();
-                MaterialList materialListObject = ultimateBingo.getMaterialList();
 
-                List<Material> allMaterials = new ArrayList<>();
-                allMaterials.addAll(materialListObject.easy);
-                allMaterials.addAll(materialListObject.normal);
-                allMaterials.addAll(materialListObject.hard);
-                allMaterials.addAll(materialListObject.extreme);
-                allMaterials.addAll(materialListObject.impossible);
+            UUID uuid = player.getUniqueId();
 
-                if (allMaterials.contains(pickedItem)) {
+            Map<UUID, Inventory> bingoGUIs = bingoManager.getBingoGUIs();
+
+            MaterialList materialListObject = ultimateBingo.getMaterialList();
+
+            List<Material> allMaterials = new ArrayList<>();
+            allMaterials.addAll(materialListObject.easy);
+            allMaterials.addAll(materialListObject.normal);
+            allMaterials.addAll(materialListObject.hard);
+            allMaterials.addAll(materialListObject.extreme);
+            allMaterials.addAll(materialListObject.impossible);
+
+            if (allMaterials.contains(pickedItem)){
+                for (int i : bingoManager.getSlots()) {
                     Inventory bingoGUI = bingoGUIs.get(uuid);
                     if (bingoGUI != null) {
-                        for (int i : ultimateBingo.bingoManager.getSlots()) {
-                            ItemStack bingoItem = bingoGUI.getItem(i);
-                            if (bingoItem != null && bingoItem.getType() == pickedItem) {
-                                ultimateBingo.bingoManager.markItemAsComplete(player, pickedItem);
-                            }
+                        ItemStack bingoItem = bingoGUI.getItem(i);
+                        if (bingoItem != null && bingoItem.getType() == pickedItem) {
+                            bingoManager.markItemAsComplete(player, pickedItem);
                         }
                     }
                 }
             }
+
         }
+
+
     }
 }
