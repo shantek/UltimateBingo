@@ -177,8 +177,10 @@ public class BingoCommand implements CommandExecutor {
 
     public void stopBingo(Player sender, boolean gameCompleted){
         bingoStarted = false;
+        bingoManager.clearData();
+
         if (bingoManager.getPlayerBingoCards() != null && bingoManager.getBingoGUIs() != null){
-            bingoManager.clearData();
+
             if (!gameCompleted) { sender.sendMessage(ChatColor.RED + "Bingo has been stopped!"); }
         } else {
             if (!gameCompleted) { sender.sendMessage(ChatColor.RED + "Bingo hasn't started yet! Start with /bingo start"); }

@@ -55,22 +55,19 @@ public class BingoInventoryOpenListener implements Listener {
                 allMaterials.addAll(materialListObject.extreme);
                 allMaterials.addAll(materialListObject.impossible);
 
-                for (int i = 0; i < chestMaterials.size(); i++){
-                    for (Material material : chestMaterials){
-                        if (allMaterials.contains(material)){
-                            for (int slot : bingoManager.getSlots()){
-                                if (bingoGUIs.get(uuid).getItem(slot).getType().equals(chestMaterials.get(i))){
+                for (int i = 0; i < chestMaterials.size(); i++) {
+                    for (Material material : chestMaterials) {
+                        if (allMaterials.contains(material)) {
+                            for (int slot : bingoManager.getSlots()) {
+                                ItemStack item = bingoGUIs.get(uuid).getItem(slot);
+                                if (item != null && item.getType().equals(chestMaterials.get(i))) {
                                     bingoManager.markItemAsComplete(player, chestMaterials.get(i));
                                 }
                             }
                         }
                     }
                 }
-
-
             }
-
-
 
         }
     }
