@@ -26,6 +26,7 @@ public final class UltimateBingo extends JavaPlugin {
     public String cardSize;
     public CardTypes cardTypes;
     public boolean fullCard = false;
+    public int difficulty = 1;
 
 
     @Override
