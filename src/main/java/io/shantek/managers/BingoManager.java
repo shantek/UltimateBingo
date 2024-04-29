@@ -40,7 +40,7 @@ public class BingoManager{
             Set<Material> selectedMaterials = new HashSet<>();
             List<Material> availableMaterials = generateMaterials();
 
-            while (selectedMaterials.size() < slots.length && !availableMaterials.isEmpty()) {
+            while (selectedMaterials.size() <= slots.length - 1 && !availableMaterials.isEmpty()) {
                 Collections.shuffle(availableMaterials);
 
                 Material material = availableMaterials.remove(0);
@@ -52,6 +52,22 @@ public class BingoManager{
                     cards.add(item);
                 }
             }
+            // Determine the last slot based on the card size
+            int lastSlot;
+            if (ultimateBingo.cardSize.equalsIgnoreCase("small")) {
+                lastSlot = Math.min(slots.length - 1, 30); // For small card, limit to slot 30
+            } else if (ultimateBingo.cardSize.equalsIgnoreCase("medium")) {
+                lastSlot = Math.min(slots.length - 1, 45); // For medium card, limit to slot 45
+            } else {
+                lastSlot = Math.min(slots.length - 1, 54); // For large card, limit to slot 54
+            }
+
+// Ensure the last slot is always filled if necessary
+            if (!availableMaterials.isEmpty()) {
+                Material lastMaterial = availableMaterials.get(availableMaterials.size() - 1);
+                ItemStack lastItem = new ItemStack(lastMaterial);
+                bingoGUI.setItem(lastSlot, lastItem);
+            }
 
             playerBingoCards.put(playerId, cards);
 
@@ -59,7 +75,6 @@ public class BingoManager{
             bingoGUIs.put(playerId, bingoGUI);
         }
     }
-
 
 
     public void createBingoCards() {
@@ -67,33 +82,50 @@ public class BingoManager{
         playerBingoCards = new HashMap<>();
         bingoGUIs = new HashMap<>();
 
-        Set<Material> selectedMaterials = new HashSet<>();
+        // Generate materials for the card
         List<Material> availableMaterials = generateMaterials();
         Collections.shuffle(availableMaterials);
 
+        // Create the card inventory
+        Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo");
+
+        // Populate the card inventory with selected materials
+        for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
+            Material material = availableMaterials.get(i);
+            ItemStack item = new ItemStack(material);
+            bingoGUI.setItem(slots[i], item);
+        }
+
+        // Determine the last slot based on the card size
+        int lastSlot;
+        if (ultimateBingo.cardSize.equalsIgnoreCase("small")) {
+            lastSlot = Math.min(slots.length - 1, 30); // For small card, limit to slot 30
+        } else if (ultimateBingo.cardSize.equalsIgnoreCase("medium")) {
+            lastSlot = Math.min(slots.length - 1, 45); // For medium card, limit to slot 45
+        } else {
+            lastSlot = Math.min(slots.length - 1, 54); // For large card, limit to slot 54
+        }
+
+// Ensure the last slot is always filled if necessary
+        if (slots.length > availableMaterials.size()) {
+            Material lastMaterial = availableMaterials.get(availableMaterials.size() - 1);
+            ItemStack lastItem = new ItemStack(lastMaterial);
+            bingoGUI.setItem(lastSlot, lastItem);
+        }
+
+        // Distribute the same card to all players
         for (Player player : Bukkit.getOnlinePlayers()) {
             UUID playerId = player.getUniqueId();
-            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo");
 
-            List<ItemStack> cards = new ArrayList<>();
-
-            while (selectedMaterials.size() < slots.length && !availableMaterials.isEmpty()) {
-
-                Material material = availableMaterials.remove(0);
-
-                if (!selectedMaterials.contains(material)) {
-                    selectedMaterials.add(material);
-                    ItemStack item = new ItemStack(material);
-                    bingoGUI.setItem(slots[selectedMaterials.size() - 1], item); // -1 because list is 0-indexed
-                    cards.add(item);
-                }
-            }
-
-            playerBingoCards.put(playerId, cards);
-            player.openInventory(bingoGUI);
+            player.openInventory(bingoGUI); // Open the same card inventory for each player
             bingoGUIs.put(playerId, bingoGUI);
+
+            // Store the card for each player (optional)
+            List<ItemStack> cards = new ArrayList<>(Arrays.asList(bingoGUI.getContents()));
+            playerBingoCards.put(playerId, cards);
         }
     }
+
 
     public List<Material> generateMaterials(){
         Map<Integer, List<Material>> materials = ultimateBingo.getMaterialList().getMaterials();
@@ -186,7 +218,8 @@ public class BingoManager{
                                 , ChatColor.GREEN.toString() + ChatColor.BOLD + "GG");
                     }
 
-                    bingoCommand.stopBingo(player, true);
+                    ultimateBingo.bingoCommand.stopBingo(player, true);
+
                 }
 
                 break;
