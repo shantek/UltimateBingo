@@ -9,10 +9,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.*;
 
 public class BingoPickupListener implements Listener {
     UltimateBingo ultimateBingo;
@@ -42,12 +41,17 @@ public class BingoPickupListener implements Listener {
             allMaterials.addAll(materialListObject.impossible);
 
             if (allMaterials.contains(pickedItem)){
-                for (int i : bingoManager.getSlots()){
-                    if (bingoGUIs.get(uuid).getItem(i).getType().equals(pickedItem)){
-                        bingoManager.markItemAsComplete(player, pickedItem);
+                for (int i : bingoManager.getSlots()) {
+                    Inventory bingoGUI = bingoGUIs.get(uuid);
+                    if (bingoGUI != null) {
+                        ItemStack bingoItem = bingoGUI.getItem(i);
+                        if (bingoItem != null && bingoItem.getType() == pickedItem) {
+                            bingoManager.markItemAsComplete(player, pickedItem);
+                        }
                     }
                 }
             }
+
         }
 
 

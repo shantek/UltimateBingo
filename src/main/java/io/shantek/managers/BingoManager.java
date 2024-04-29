@@ -152,24 +152,33 @@ public class BingoManager{
                 String cardSize = ultimateBingo.cardSize;
                 boolean hasBingo = false;
 
-                switch (cardSize) {
-                    case "small":
-                        if (ultimateBingo.cardTypes.checkSmallCardBingo(player)) {
-                            hasBingo = true;
-                        }
-                        break;
-                    case "medium":
-                        if (ultimateBingo.cardTypes.checkMediumCardBingo(player)) {
-                            hasBingo = true;
-                        }
-                        break;
-                    case "large":
-                        if (ultimateBingo.cardTypes.checkLargeCardBingo(player)) {
-                            hasBingo = true;
-                        }
-                        break;
-                }
+                // If it's a full card, we'll check the entire card instead
+                if (ultimateBingo.fullCard) {
+                  if (ultimateBingo.cardTypes.checkFullCard(player)) {
+                      hasBingo = true;
+                  }
 
+                } else {
+
+                    // Not a full card, check for traditional line bingo
+                    switch (cardSize) {
+                        case "small":
+                            if (ultimateBingo.cardTypes.checkSmallCardBingo(player)) {
+                                hasBingo = true;
+                            }
+                            break;
+                        case "medium":
+                            if (ultimateBingo.cardTypes.checkMediumCardBingo(player)) {
+                                hasBingo = true;
+                            }
+                            break;
+                        case "large":
+                            if (ultimateBingo.cardTypes.checkLargeCardBingo(player)) {
+                                hasBingo = true;
+                            }
+                            break;
+                    }
+                }
                 if (hasBingo) {
                     Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
                     for (Player target : Bukkit.getOnlinePlayers()){
