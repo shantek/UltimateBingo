@@ -33,7 +33,7 @@ public class BingoManager{
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             UUID playerId = player.getUniqueId();
-            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo");
+            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Ultimate Bingo");
 
             List<ItemStack> cards = new ArrayList<>();
 
@@ -91,7 +91,7 @@ public class BingoManager{
             UUID playerId = player.getUniqueId();
 
             // Create a new inventory for each player
-            Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo");
+            Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Ultimate Bingo");
 
             // Populate the card inventory with selected materials
             for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
