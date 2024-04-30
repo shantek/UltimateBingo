@@ -24,29 +24,44 @@ public class BingoCompleter implements TabCompleter {
             if (player.hasPermission("shantek.ultimatebingo.settings")) {
                 complete.add("settings");
             }
-
+            if (player.hasPermission("shantek.ultimatebingo.configure")) {
+                complete.add("cardsize");
+                complete.add("condition");
+                complete.add("difficulty");
+                complete.add("cardtype");
+            }
+            complete.add("info");
             return StringUtil.copyPartialMatches(args[0], complete, new ArrayList<>());
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("start")) {
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("cardtype") && commandSender.hasPermission("shantek.ultimatebingo.configure")) {
             List<String> complete = new ArrayList<>();
             complete.add("identical");
             complete.add("unique");
 
             return StringUtil.copyPartialMatches(args[1], complete, new ArrayList<>());
 
-        } else if (args.length == 3 && args[0].equalsIgnoreCase("start") && (args[1].equalsIgnoreCase("identical") || args[1].equalsIgnoreCase("unique"))) {
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("cardsize") && commandSender.hasPermission("shantek.ultimatebingo.configure")) {
             List<String> complete = new ArrayList<>();
             complete.add("small");
             complete.add("medium");
             complete.add("large");
 
-            return StringUtil.copyPartialMatches(args[2], complete, new ArrayList<>());
+            return StringUtil.copyPartialMatches(args[1], complete, new ArrayList<>());
 
-        } else if (args.length == 4 && args[0].equalsIgnoreCase("start") && (args[2].equalsIgnoreCase("small") || args[2].equalsIgnoreCase("medium") || args[2].equalsIgnoreCase("large"))) {
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("condition") && commandSender.hasPermission("shantek.ultimatebingo.configure")) {
             List<String> complete = new ArrayList<>();
             complete.add("fullcard");
             complete.add("bingo");
 
-            return StringUtil.copyPartialMatches(args[3], complete, new ArrayList<>());
+            return StringUtil.copyPartialMatches(args[1], complete, new ArrayList<>());
+
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("difficulty") && commandSender.hasPermission("shantek.ultimatebingo.configure")) {
+            List<String> complete = new ArrayList<>();
+            complete.add("easy");
+            complete.add("normal");
+            complete.add("hard");
+
+            return StringUtil.copyPartialMatches(args[1], complete, new ArrayList<>());
+
         }
 
         return null;
