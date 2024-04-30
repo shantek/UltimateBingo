@@ -221,6 +221,7 @@ public class BingoManager{
                     }
 
                     ultimateBingo.bingoCommand.stopBingo(player, true);
+                    clearData();
 
                 }
 
