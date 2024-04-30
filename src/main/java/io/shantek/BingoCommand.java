@@ -10,6 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import java.util.Objects;
+
 public class BingoCommand implements CommandExecutor {
     UltimateBingo ultimateBingo;
     SettingsManager settingsManager;
@@ -30,67 +32,112 @@ public class BingoCommand implements CommandExecutor {
                     stopBingo(player, false);
                 }
 
-                if (args[0].equalsIgnoreCase("start") && player.hasPermission("shantek.ultimatebingo.start")){
+                else if (args[0].equalsIgnoreCase("start") && player.hasPermission("shantek.ultimatebingo.start")){
                     if (bingoStarted) {
                         player.sendMessage(ChatColor.RED + "Bingo has already started!");
                     } else {
-                        boolean isUnique = false;
-                        String size = "medium"; // Default size to medium
-
-                        // Set back to the default of single line
-                        ultimateBingo.fullCard = false;
-
-                        // Check if additional arguments are provided
-                        if (args.length > 1) {
-                            // Parse the second argument to determine if it's "unique" or "identical"
-                            if (args[1].equalsIgnoreCase("unique")) {
-                                isUnique = true;
-                            }
-                        }
-
-                        // Check if size argument is provided
-                        if (args.length > 2) {
-                            // Parse the third argument to determine the size
-                            size = args[2].toLowerCase(); // Convert to lowercase for case-insensitive comparison
-                            // Check if the parsed size is not valid, default it to medium
-
-                        }
-
-                        if (!size.equals("small") && !size.equals("medium") && !size.equals("large")) {
-                            size = "medium";
-                            ultimateBingo.cardSize = "medium";
-                        } else {
-                            ultimateBingo.cardSize = size;
-                        }
-
-                        // Check if size argument is provided
-                        if (args.length > 3) {
-                            // Parse the third argument to determine the size
-                            String fullcard = args[3].toLowerCase(); // Convert to lowercase for case-insensitive comparison
-
-                            // This has been set back to false, only set to true is manually set in the command
-                            if (fullcard.equals("fullcard")) {
-                                ultimateBingo.fullCard = true;
-                            }
-
-                        }
-
-
-
 
                         ultimateBingo.bingoSpawnLocation = player.getLocation();
-                        startBingo(isUnique, size);
+                        startBingo();
                     }
                 }
+                else if (args[0].equalsIgnoreCase("cardsize") && player.hasPermission("shantek.ultimatebingo.configure")) {
 
-                if (args[0].equalsIgnoreCase("settings") && player.hasPermission("shantek.ultimatebingo.settings")){
+                    // Check if size argument is provided
+                    String cardSize = null;
+
+                    if (args.length > 1) {
+                        // Parse the third argument to determine the size
+                        cardSize = args[1].toLowerCase(); // Convert to lowercase for case-insensitive comparison
+
+                        // Update and save the card size
+                        boolean cardSizeUpdated = false;
+
+                        switch (cardSize) {
+                            case "small":
+                            case "medium":
+                            case "large":
+                                cardSizeUpdated = true;
+                                ultimateBingo.cardSize = cardSize;
+                                player.sendMessage(ChatColor.GREEN + "Bingo card size has been set to " + ChatColor.GREEN + cardSize.toUpperCase());
+                                break;
+                        }
+                        ultimateBingo.saveGameConfig();
+
+                        if (!cardSizeUpdated) {
+                            player.sendMessage(ChatColor.RED + "Invalid Bingo card size. Please use SMALL, MEDIUM or LARGE.");
+                        }
+                    } else {
+                        player.sendMessage(ChatColor.GREEN + "Bingo card size is currently set to " + ChatColor.YELLOW + ultimateBingo.cardSize.toUpperCase());
+                    }
+
+                }
+                else if (args[0].equalsIgnoreCase("condition") && player.hasPermission("shantek.ultimatebingo.configure")){
+
+                    // Check if additional arguments are provided
+                    if (args.length > 1) {
+
+                        switch (args[1]) {
+                            case "fullcard" -> ultimateBingo.fullCard = true;
+                            case "bingo" -> ultimateBingo.fullCard = false;
+                            default ->
+                                    player.sendMessage(ChatColor.RED + "Invalid game type. You can set this to full card or bingo.");
+                        }
+
+                        ultimateBingo.saveGameConfig();
+
+                    } else {
+                        player.sendMessage(ChatColor.GREEN + "Card type is currently set to " + ChatColor.YELLOW + (ultimateBingo.fullCard ? "FULL CARD" : "BINGO"));
+                    }
+                }
+                else if (args[0].equalsIgnoreCase("cardtype") && player.hasPermission("shantek.ultimatebingo.configure")) {
+
+                    // Check if additional arguments are provided
+                    if (args.length > 1) {
+
+                        switch (args[1]) {
+                            case "unique" -> ultimateBingo.uniqueCard = true;
+                            case "identical" -> ultimateBingo.uniqueCard = false;
+                            default ->
+                                    player.sendMessage(ChatColor.RED + "Invalid card type. Set this to UNIQUE if you want all players to have different cards or IDENTICAL for all players to have the same card.");
+                        }
+                        ultimateBingo.saveGameConfig();
+                    } else {
+                        player.sendMessage(ChatColor.GREEN + "Card type is currently set to " + ChatColor.YELLOW + (ultimateBingo.fullCard ? "UNIQUE" : "IDENTICAL"));
+                    }
+                }
+                else if (args[0].equalsIgnoreCase("difficulty") && player.hasPermission("shantek.ultimatebingo.configure")) {
+
+                    // Check if additional arguments are provided
+                    if (args.length > 1) {
+
+                        switch (args[1]) {
+                            case "easy" -> ultimateBingo.difficulty = "easy";
+                            case "normal" -> ultimateBingo.difficulty = "normal";
+                            case "hard" -> ultimateBingo.difficulty = "hard";
+                            default ->
+                                    player.sendMessage(ChatColor.RED + "Invalid difficulty. You can set this to easy, normal or hard.");
+                        }
+                        ultimateBingo.saveGameConfig();
+                    } else {
+                        player.sendMessage(ChatColor.GREEN + "Difficulty is currently set to " + ChatColor.YELLOW + ultimateBingo.difficulty);
+                    }
+                }
+                else if (args[0].equalsIgnoreCase("info")){
+                    player.sendMessage(ChatColor.WHITE + "Bingo is currently set up with the following configuration:");
+                    player.sendMessage(ChatColor.GREEN + "Difficulty: " + ChatColor.YELLOW + ultimateBingo.difficulty.toUpperCase());
+                    player.sendMessage(ChatColor.GREEN + "Card type: " +  ChatColor.YELLOW + ultimateBingo.cardSize.toUpperCase() + "/" + (ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL"));
+                    player.sendMessage(ChatColor.GREEN + "Win condition: " + ChatColor.YELLOW + (ultimateBingo.fullCard ? "FULL CARD" : "BINGO"));
+                }
+
+                else if (args[0].equalsIgnoreCase("settings") && player.hasPermission("shantek.ultimatebingo.settings")){
                     ultimateBingo.getMaterialList().createMaterials();
                     Inventory settingsGUI = settingsManager.createSettingsGUI(player);
 
                     player.openInventory(settingsGUI);
                 }
 
-                if (!player.hasPermission("shantek.ultimatebingo.start") && args[0].equalsIgnoreCase("start")
+                else if (!player.hasPermission("shantek.ultimatebingo.start") && args[0].equalsIgnoreCase("start")
                         || !player.hasPermission("shantek.ultimatebingo.stop") && args[0].equalsIgnoreCase("stop")
                         || args[0].equalsIgnoreCase("settings") && !player.hasPermission("shantek.ultimatebingo.settings")){
                     player.sendMessage(ChatColor.RED + "You do not have permission to do that!");
@@ -109,7 +156,7 @@ public class BingoCommand implements CommandExecutor {
         return false;
     }
 
-    public void startBingo(boolean uniquecard, String size) {
+    public void startBingo() {
 
         // Let's remove all items from the ground for a clean slate
         ultimateBingo.bingoFunctions.despawnAllItems();
@@ -140,7 +187,7 @@ public class BingoCommand implements CommandExecutor {
                 break;
         }
 
-        if (uniquecard) {
+        if (ultimateBingo.uniqueCard) {
             bingoManager.createUniqueBingoCards();
         } else {
             bingoManager.createBingoCards();
@@ -163,27 +210,26 @@ public class BingoCommand implements CommandExecutor {
 
             // Work out the card type
             String cardType = "IDENTICAL";
-            if (uniquecard) {
+            if (ultimateBingo.uniqueCard) {
                 cardType = "UNIQUE";
             }
-
 
             player.sendMessage(ChatColor.GREEN + "Bingo has started with a " + ChatColor.YELLOW + cardSize.toUpperCase() + " " + cardType + ChatColor.GREEN + " card. Get a " + ChatColor.YELLOW + bingoType + ChatColor.GREEN + " to win!");
             player.sendMessage(ChatColor.WHITE + "Interact with your bingo card to open it (or type " + ChatColor.YELLOW + "/bingo" + ChatColor.WHITE + ").");
 
         }
-
     }
 
     public void stopBingo(Player sender, boolean gameCompleted){
-        bingoStarted = false;
+
         bingoManager.clearData();
 
-        if (bingoManager.getPlayerBingoCards() != null && bingoManager.getBingoGUIs() != null){
-
+        if (bingoStarted){
             if (!gameCompleted) { sender.sendMessage(ChatColor.RED + "Bingo has been stopped!"); }
         } else {
-            if (!gameCompleted) { sender.sendMessage(ChatColor.RED + "Bingo hasn't started yet! Start with /bingo start"); }
+            if (!gameCompleted) {
+                sender.sendMessage(ChatColor.RED + "Bingo hasn't started yet! Start with /bingo start");
+            }
         }
 
         // Bring everyone back to the bingo spawn, reset their inventory and state
@@ -192,6 +238,7 @@ public class BingoCommand implements CommandExecutor {
         ultimateBingo.bingoFunctions.resetPlayers();
         ultimateBingo.bingoSpawnLocation = null;
         ultimateBingo.bingoFunctions.despawnAllItems();
+        bingoStarted = false;
     }
 
     public void teleportPlayers()
