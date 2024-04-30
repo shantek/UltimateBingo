@@ -12,9 +12,13 @@ import io.shantek.tools.MaterialList;
 import io.shantek.tools.BingoFunctions;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import io.shantek.managers.CardTypes;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
 
 
 public final class UltimateBingo extends JavaPlugin {
@@ -23,11 +27,15 @@ public final class UltimateBingo extends JavaPlugin {
     public BingoFunctions bingoFunctions;
     public BingoCommand bingoCommand;
     public Location bingoSpawnLocation;
-    public String cardSize;
+
+    private YamlConfiguration gameConfig;
+    private File gameConfigFile;
+
     public CardTypes cardTypes;
     public boolean fullCard = false;
-    public int difficulty = 1;
-
+    public String difficulty;
+    public String cardSize;
+    public boolean uniqueCard;
 
     @Override
     public void onEnable() {
@@ -59,8 +67,10 @@ public final class UltimateBingo extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(bingoStickListener, this);
         materialList.createMaterials();
 
-    }
+        // Load the game configuration
+        loadGameConfig();
 
+    }
 
     public BingoManager getBingoManager() {
         return bingoManager;
@@ -78,4 +88,37 @@ public final class UltimateBingo extends JavaPlugin {
         bingoManager.clearData();
         bingoManager.started = false;
     }
+
+    public void loadGameConfig() {
+        // Create or load the GameConfig.yml file in the plugin's data folder
+        gameConfigFile = new File(getDataFolder(), "GameConfig.yml");
+        if (!gameConfigFile.exists()) {
+            saveResource("GameConfig.yml", false);
+        }
+
+        // Load the YAML file into memory
+        gameConfig = YamlConfiguration.loadConfiguration(gameConfigFile);
+
+        // Load the values from the configuration
+        fullCard = gameConfig.getBoolean("full-card", false);
+        uniqueCard = gameConfig.getBoolean("unique-card", false);
+        difficulty = gameConfig.getString("difficulty", "easy");
+        cardSize = gameConfig.getString("card-size", "medium");
+    }
+
+    public void saveGameConfig() {
+        // Set the values in the YAML configuration object
+        gameConfig.set("full-card", fullCard);
+        gameConfig.set("difficulty", difficulty);
+        gameConfig.set("card-size", cardSize);
+        gameConfig.set("unique-card", uniqueCard);
+
+        // Save the YAML configuration to the file
+        try {
+            gameConfig.save(gameConfigFile);
+        } catch (IOException e) {
+            getLogger().log(Level.SEVERE, "Could not save GameConfig.yml", e);
+        }
+    }
+
 }
