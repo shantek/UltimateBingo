@@ -1,0 +1,14 @@
+#  Print out any plugin errors to the console
+console-logs: true
+
+
+
+################################################
+# Current game configuration - Don't manually change this
+# Only adjust with the /bingo command in game
+################################################
+
+difficulty: easy
+card-size: small
+unique-card: false
+full-card: false

@@ -4,6 +4,7 @@ import io.shantek.managers.BingoManager;
 import io.shantek.managers.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -38,8 +39,13 @@ public class BingoCommand implements CommandExecutor {
                     } else {
 
                         ultimateBingo.bingoSpawnLocation = player.getLocation();
-                        startBingo();
+                        startBingo(player);
                     }
+                }
+                else if (args[0].equalsIgnoreCase("reload") && player.hasPermission("shantek.ultimatebingo.settings")) {
+                    ultimateBingo.configFile.reloadConfigFile();
+                    player.sendMessage(ChatColor.GREEN + "Bingo config file reloaded.");
+
                 }
                 else if (args[0].equalsIgnoreCase("cardsize") && player.hasPermission("shantek.ultimatebingo.configure")) {
 
@@ -62,7 +68,7 @@ public class BingoCommand implements CommandExecutor {
                                 player.sendMessage(ChatColor.GREEN + "Bingo card size has been set to " + ChatColor.GREEN + cardSize.toUpperCase());
                                 break;
                         }
-                        ultimateBingo.saveGameConfig();
+                        ultimateBingo.configFile.saveConfig();
 
                         if (!cardSizeUpdated) {
                             player.sendMessage(ChatColor.RED + "Invalid Bingo card size. Please use SMALL, MEDIUM or LARGE.");
@@ -78,13 +84,18 @@ public class BingoCommand implements CommandExecutor {
                     if (args.length > 1) {
 
                         switch (args[1]) {
-                            case "fullcard" -> ultimateBingo.fullCard = true;
-                            case "bingo" -> ultimateBingo.fullCard = false;
-                            default ->
-                                    player.sendMessage(ChatColor.RED + "Invalid game type. You can set this to full card or bingo.");
+                            case "fullcard":
+                                ultimateBingo.fullCard = true;
+                                player.sendMessage(ChatColor.GREEN + "Win condition set to " + ChatColor.YELLOW + "FULL CARD");
+                                break;
+                            case "bingo":
+                                ultimateBingo.fullCard = false;
+                                player.sendMessage(ChatColor.GREEN + "Win condition set to " + ChatColor.YELLOW + "BINGO");
+                                break;
+                            default:
+                                player.sendMessage(ChatColor.RED + "Invalid game type. You can set this to full card or bingo.");
                         }
 
-                        ultimateBingo.saveGameConfig();
 
                     } else {
                         player.sendMessage(ChatColor.GREEN + "Card type is currently set to " + ChatColor.YELLOW + (ultimateBingo.fullCard ? "FULL CARD" : "BINGO"));
@@ -96,12 +107,18 @@ public class BingoCommand implements CommandExecutor {
                     if (args.length > 1) {
 
                         switch (args[1]) {
-                            case "unique" -> ultimateBingo.uniqueCard = true;
-                            case "identical" -> ultimateBingo.uniqueCard = false;
-                            default ->
-                                    player.sendMessage(ChatColor.RED + "Invalid card type. Set this to UNIQUE if you want all players to have different cards or IDENTICAL for all players to have the same card.");
+                            case "unique":
+                                ultimateBingo.uniqueCard = true;
+                                player.sendMessage(ChatColor.GREEN + "Card type has been set to " + ChatColor.YELLOW + "UNIQUE");
+                                break;
+                            case "identical":
+                                ultimateBingo.uniqueCard = false;
+                                player.sendMessage(ChatColor.GREEN + "Card type has been set to " + ChatColor.YELLOW + "IDENTICAL");
+                                break;
+                            default:
+                                player.sendMessage(ChatColor.RED + "Invalid card type. Set this to UNIQUE if you want all players to have different cards or IDENTICAL for all players to have the same card.");
                         }
-                        ultimateBingo.saveGameConfig();
+
                     } else {
                         player.sendMessage(ChatColor.GREEN + "Card type is currently set to " + ChatColor.YELLOW + (ultimateBingo.fullCard ? "UNIQUE" : "IDENTICAL"));
                     }
@@ -112,13 +129,23 @@ public class BingoCommand implements CommandExecutor {
                     if (args.length > 1) {
 
                         switch (args[1]) {
-                            case "easy" -> ultimateBingo.difficulty = "easy";
-                            case "normal" -> ultimateBingo.difficulty = "normal";
-                            case "hard" -> ultimateBingo.difficulty = "hard";
-                            default ->
-                                    player.sendMessage(ChatColor.RED + "Invalid difficulty. You can set this to easy, normal or hard.");
+                            case "easy":
+                                ultimateBingo.difficulty = "easy";
+                                player.sendMessage(ChatColor.GREEN + "Difficulty has been set to " + ChatColor.YELLOW + "EASY");
+                                break;
+                            case "normal":
+                                ultimateBingo.difficulty = "normal";
+                                player.sendMessage(ChatColor.GREEN + "Difficulty has been set to " + ChatColor.YELLOW + "NORMAL");
+                                break;
+                            case "hard":
+                                ultimateBingo.difficulty = "hard";
+                                player.sendMessage(ChatColor.GREEN + "Difficulty has been set to " + ChatColor.YELLOW + "HARD");
+                                break;
+                            default:
+                                player.sendMessage(ChatColor.RED + "Invalid difficulty. You can set this to easy, normal or hard.");
                         }
-                        ultimateBingo.saveGameConfig();
+
+                        ultimateBingo.configFile.saveConfig();
                     } else {
                         player.sendMessage(ChatColor.GREEN + "Difficulty is currently set to " + ChatColor.YELLOW + ultimateBingo.difficulty);
                     }
@@ -156,7 +183,7 @@ public class BingoCommand implements CommandExecutor {
         return false;
     }
 
-    public void startBingo() {
+    public void startBingo(Player commandPlayer) {
 
         // Let's remove all items from the ground for a clean slate
         ultimateBingo.bingoFunctions.despawnAllItems();
@@ -186,6 +213,16 @@ public class BingoCommand implements CommandExecutor {
                 ultimateBingo.getMaterialList().createMaterials();
                 break;
         }
+
+        // Set the new world spawn
+        Location location = commandPlayer.getLocation();
+        int x = location.getBlockX();
+        int y = location.getBlockY();
+        int z = location.getBlockZ();
+
+        // Execute the command as the player
+        String commandString = "/setspawn " + x + " " + y + " " + z;
+        Bukkit.dispatchCommand(commandPlayer, commandString);
 
         if (ultimateBingo.uniqueCard) {
             bingoManager.createUniqueBingoCards();
