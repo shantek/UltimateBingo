@@ -1,8 +1,6 @@
 #  Print out any plugin errors to the console
 console-logs: true
 
-# Respawn players back to bingo spawn after a death
-respawn-teleport: true
 
 
 ################################################
@@ -14,5 +12,3 @@ difficulty: easy
 card-size: small
 unique-card: false
 full-card: false
-game-mode: traditional
-reveal-cards: true
