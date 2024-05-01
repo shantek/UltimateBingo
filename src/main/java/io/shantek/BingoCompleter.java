@@ -23,6 +23,7 @@ public class BingoCompleter implements TabCompleter {
             }
             if (player.hasPermission("shantek.ultimatebingo.settings")) {
                 complete.add("settings");
+                complete.add("reload");
             }
             if (player.hasPermission("shantek.ultimatebingo.configure")) {
                 complete.add("cardsize");
