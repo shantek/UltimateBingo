@@ -56,22 +56,28 @@ public class BingoFunctions
         }
     }
 
-    // Give the player paper, used to open their bingo card
     public void giveBingoCard(Player player) {
         ItemStack bingoCard = new ItemStack(Material.PAPER);
         ItemMeta itemMeta = bingoCard.getItemMeta();
 
-        // Set display name for the Bingo Card
-        itemMeta.setDisplayName("Bingo");
-        // Set lore with two lines using Arrays.asList
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + "Card type: " + (ultimateBingo.uniqueCard ? ChatColor.BLUE + "Unique" : ChatColor.BLUE + "Identical") + "/" + ultimateBingo.difficulty);
-        lore.add(ChatColor.GRAY + "Win condition: " + (ultimateBingo.fullCard ? ChatColor.BLUE + "Full card" : ChatColor.BLUE + "Single row"));
+        if (itemMeta != null) { // Always good to check for null when working with ItemMeta
+            // Set display name for the Bingo Card
+            itemMeta.setDisplayName(ChatColor.GOLD + "Bingo Card");
 
-        bingoCard.setItemMeta(itemMeta);
+            // Set lore with two lines
+            List<String> lore = new ArrayList<>();
+            lore.add(ChatColor.GRAY + "Card type: " + (ultimateBingo.uniqueCard ? ChatColor.BLUE + "Unique" : ChatColor.BLUE + "Identical") + "/" + ultimateBingo.difficulty);
+            lore.add(ChatColor.GRAY + "Win condition: " + (ultimateBingo.fullCard ? ChatColor.BLUE + "Full card" : ChatColor.BLUE + "Single row"));
 
-        // Give the stick to the player in the 9th slot
-        player.getInventory().setItem(0, bingoCard);  // Slot index starts from 0, so 8 is the 9th slot
+            itemMeta.setLore(lore); // Apply the lore to the item meta
+            bingoCard.setItemMeta(itemMeta); // Apply the modified item meta back to the item stack
+
+            // Give the bingo card to the player in the first slot (index 0)
+            player.getInventory().setItem(0, bingoCard);
+        } else {
+            // Log or handle the case where item meta couldn't be retrieved
+            Bukkit.getLogger().warning("Failed to retrieve item meta for Bingo Card.");
+        }
     }
 
     // Give all players a bingo card
