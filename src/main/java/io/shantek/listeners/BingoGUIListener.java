@@ -9,7 +9,7 @@ public class BingoGUIListener implements Listener {
     @EventHandler
     public void onInventoryClick (InventoryClickEvent e){
         if (ChatColor.translateAlternateColorCodes('&',
-                e.getView().getTitle()).equals(ChatColor.GOLD.toString() + ChatColor.BOLD + "Ultimate Bingo") && e.getCurrentItem() != null){
+                e.getView().getTitle()).contains("Bingo") && e.getCurrentItem() != null){
             e.setCancelled(true);
         }
     }
