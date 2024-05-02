@@ -31,13 +31,22 @@ public class BingoManager{
         playerBingoCards = new HashMap<>();
         bingoGUIs = new HashMap<>();
 
-        // Generate and shuffle materials for the card based on the set difficulty
-        int difficultyLevel = switch (ultimateBingo.difficulty) {
-            case "normal" -> 2;
-            case "hard" -> 3;
-            default -> 1; // default to "easy"
-
-        };
+        // Determine difficulty level and set TOTAL_ITEMS based on it
+        int difficultyLevel;
+        switch (ultimateBingo.difficulty) {
+            case "normal":
+                difficultyLevel = 2;
+                TOTAL_ITEMS = 21; // Set TOTAL_ITEMS for normal difficulty
+                break;
+            case "hard":
+                difficultyLevel = 3;
+                TOTAL_ITEMS = 30; // Set TOTAL_ITEMS for hard difficulty
+                break;
+            default:
+                difficultyLevel = 1; // Default to "easy"
+                TOTAL_ITEMS = 14; // Set TOTAL_ITEMS for easy difficulty
+                break;
+        }
 
         // Generate and shuffle materials for the card
         List<Material> availableMaterials = generateMaterials(difficultyLevel);
@@ -86,13 +95,22 @@ public class BingoManager{
         playerBingoCards = new HashMap<>();
         bingoGUIs = new HashMap<>();
 
-        // Generate and shuffle materials for the card based on the set difficulty
-        int difficultyLevel = switch (ultimateBingo.difficulty) {
-            case "normal" -> 2;
-            case "hard" -> 3;
-            default -> 1; // default to "easy"
-
-        };
+// Determine difficulty level and set TOTAL_ITEMS based on it
+        int difficultyLevel;
+        switch (ultimateBingo.difficulty) {
+            case "normal":
+                difficultyLevel = 2;
+                TOTAL_ITEMS = 21; // Set TOTAL_ITEMS for normal difficulty
+                break;
+            case "hard":
+                difficultyLevel = 3;
+                TOTAL_ITEMS = 30; // Set TOTAL_ITEMS for hard difficulty
+                break;
+            default:
+                difficultyLevel = 1; // Default to "easy"
+                TOTAL_ITEMS = 14; // Set TOTAL_ITEMS for easy difficulty
+                break;
+        }
 
         // Generate a single set of materials for all players
         List<Material> sharedMaterials = generateMaterials(difficultyLevel);
@@ -144,7 +162,7 @@ public class BingoManager{
         };
     }
 
-    private static final int TOTAL_ITEMS = 30;
+    private int TOTAL_ITEMS = 30;
 
     public List<Material> generateMaterials(int type) {
         Map<Integer, List<Material>> materials = ultimateBingo.getMaterialList().getMaterials();
@@ -160,7 +178,7 @@ public class BingoManager{
         int[] distribution = switch (type) {
             case 1 -> new int[]{15, 10, 5, 0, 0};
             case 2 -> new int[]{10, 10, 5, 5, 0};
-            case 3 -> new int[]{10, 5, 5, 5, 5};
+            case 3 -> new int[]{5, 5, 8, 6, 6};
             default -> new int[]{15, 10, 5, 0, 0};
         };
 
