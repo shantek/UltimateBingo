@@ -5,12 +5,15 @@ import io.shantek.managers.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class BingoCommand implements CommandExecutor {
@@ -171,7 +174,7 @@ public class BingoCommand implements CommandExecutor {
                 }
 
             } else {
-                if (bingoStarted){
+                if (bingoStarted & ultimateBingo.bingoCardActive){
                     openBingo(player);
                 }
                 if (!bingoStarted){
@@ -184,81 +187,88 @@ public class BingoCommand implements CommandExecutor {
     }
 
     public void startBingo(Player commandPlayer) {
+        UltimateBingo plugin = UltimateBingo.getInstance();
 
-        // Let's remove all items from the ground for a clean slate
+        // Clean up and reset game environment
         ultimateBingo.bingoFunctions.despawnAllItems();
         bingoStarted = true;
-
-        // Reset player stats, inventory and the time of day
         ultimateBingo.bingoFunctions.resetPlayers();
         ultimateBingo.bingoFunctions.resetTimeAndWeather();
 
-        // Set the amount of slots we're using based on the card type
+        // Configure game based on card size
         String cardSize = ultimateBingo.cardSize;
-
         switch (cardSize) {
             case "small":
                 bingoManager.slots = new int[]{10, 11, 12, 19, 20, 21, 28, 29, 30, 37, 38, 39};
                 bingoManager.setBingoCards(9);
-                ultimateBingo.getMaterialList().createMaterials();
                 break;
             case "medium":
                 bingoManager.slots = new int[]{10, 11, 12, 13, 19, 20, 21, 22, 28, 29, 30, 31, 37, 38, 39, 40};
                 bingoManager.setBingoCards(16);
-                ultimateBingo.getMaterialList().createMaterials();
                 break;
             case "large":
                 bingoManager.slots = new int[]{10, 11, 12, 13, 14, 19, 20, 21, 22, 23, 28, 29, 30, 31, 32, 37, 38, 39, 40, 41, 46, 47, 48, 49, 50};
                 bingoManager.setBingoCards(25);
-                ultimateBingo.getMaterialList().createMaterials();
                 break;
         }
+        ultimateBingo.getMaterialList().createMaterials();
 
-        // Set the new world spawn
-        Location location = commandPlayer.getLocation();
-        int x = location.getBlockX();
-        int y = location.getBlockY();
-        int z = location.getBlockZ();
-
-        // Execute the command as the player
-        String commandString = "/setspawn " + x + " " + y + " " + z;
-        Bukkit.dispatchCommand(commandPlayer, commandString);
-
+        // Set new spawn and prepare bingo cards
+        //Location location = commandPlayer.getLocation();
+        //Bukkit.dispatchCommand(commandPlayer, "/setspawn " + location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ());
         if (ultimateBingo.uniqueCard) {
             bingoManager.createUniqueBingoCards();
         } else {
             bingoManager.createBingoCards();
         }
-        for (Player player : Bukkit.getOnlinePlayers()) {
 
-            // If we have a bingo start location, teleport the players here
+        // Store a reference to all online players
+        List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
+
+        // Display initial messages
+        onlinePlayers.forEach(player -> {
+            String cardType = ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL";
+            String bingoType = ultimateBingo.fullCard ? "FULL CARD" : "SINGLE ROW";
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                player.sendTitle(ChatColor.YELLOW + cardType, "", 10, 40, 10);
+            }, 20); // 20 ticks = 1 second for initial pause
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                player.sendTitle(ChatColor.YELLOW + bingoType, "", 10, 40, 10);
+            }, 60); // 2 seconds later
+
+            // Countdown with chimes, with bold and colorful text
+            for (int i = 3; i > 0; i--) {
+                final int count = i;
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                    player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + String.valueOf(count), "", 10, 20, 10);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+                }, 100 + 30 * (3 - count)); // Countdown starts at 5 seconds
+            }
+
+            // Final "GO!" message and chime, bold and green
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "GO!", "", 10, 20, 10);
+                player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
+            }, 190); // 1.5 seconds after "1"
+        });
+
+        // Handle player teleportation and give bingo cards after the countdown
+        onlinePlayers.forEach(player -> {
             if (ultimateBingo.bingoSpawnLocation != null) {
                 player.teleport(ultimateBingo.bingoSpawnLocation);
             }
-
-            // Give them a bingo card
-            ultimateBingo.bingoFunctions.giveBingoCard(player);
-
-            // Work out the win condition
-            String bingoType = "SINGLE ROW";
-            if (ultimateBingo.fullCard) {
-                bingoType = "FULL CARD";
-            }
-
-            // Work out the card type
-            String cardType = "IDENTICAL";
-            if (ultimateBingo.uniqueCard) {
-                cardType = "UNIQUE";
-            }
-
-            player.sendMessage(ChatColor.GREEN + "Bingo has started with a " + ChatColor.YELLOW + cardSize.toUpperCase() + " " + ultimateBingo.difficulty.toUpperCase() + " " + cardType + ChatColor.GREEN + " card. Get a " + ChatColor.YELLOW + bingoType + ChatColor.GREEN + " to win!");
-            player.sendMessage(ChatColor.WHITE + "Interact with your bingo card to open it (or type " + ChatColor.YELLOW + "/bingo" + ChatColor.WHITE + ").");
-
-        }
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                ultimateBingo.bingoFunctions.giveBingoCard(player);
+                ultimateBingo.bingoCardActive = true;
+            }, 210); // 210 ticks = 10.5 seconds, just after the "GO!"
+        });
     }
 
     public void stopBingo(Player sender, boolean gameCompleted){
 
+        ultimateBingo.bingoCardActive = false;
         bingoManager.clearData();
 
         if (bingoStarted){
@@ -278,8 +288,7 @@ public class BingoCommand implements CommandExecutor {
         bingoStarted = false;
     }
 
-    public void teleportPlayers()
-    {
+    public void teleportPlayers() {
         for (Player target : Bukkit.getOnlinePlayers()) {
 
             // If we have a bingo start location, teleport the players here
