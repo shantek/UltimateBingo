@@ -42,8 +42,14 @@ public class BingoManager{
         for (Player player : Bukkit.getOnlinePlayers()) {
             UUID playerId = player.getUniqueId();
 
+            // Store the string for the card type
+            // Store the string for the card type
+            String cardInfo = ultimateBingo.uniqueCard ? "unique" : "identical";
+            cardInfo += ultimateBingo.fullCard ? "/full card" : "/single row";
+            cardInfo = "(" + cardInfo + ")";
+
             // Create a new inventory for each player
-            Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Ultimate Bingo");
+            Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
 
             // Populate the card inventory with selected materials
             for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
@@ -79,7 +85,14 @@ public class BingoManager{
         // Distribute unique shuffled cards to each player
         for (Player player : Bukkit.getOnlinePlayers()) {
             UUID playerId = player.getUniqueId();
-            Inventory bingoGUI = Bukkit.createInventory(player, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Ultimate Bingo");
+
+            // Store the string for the card type
+            String cardInfo = ultimateBingo.uniqueCard ? "unique" : "identical";
+            cardInfo += ultimateBingo.fullCard ? "/full card" : "/single row";
+            cardInfo = "(" + cardInfo + ")";
+
+            // Create a new inventory for each player
+            Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
 
             // Shuffle the shared materials uniquely for each player
             List<Material> playerMaterials = new ArrayList<>(sharedMaterials);
