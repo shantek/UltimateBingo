@@ -31,8 +31,16 @@ public class BingoManager{
         playerBingoCards = new HashMap<>();
         bingoGUIs = new HashMap<>();
 
+        // Generate and shuffle materials for the card based on the set difficulty
+        int difficultyLevel = switch (ultimateBingo.difficulty) {
+            case "normal" -> 2;
+            case "hard" -> 3;
+            default -> 1; // default to "easy"
+
+        };
+
         // Generate and shuffle materials for the card
-        List<Material> availableMaterials = generateMaterials(1);
+        List<Material> availableMaterials = generateMaterials(difficultyLevel);
         Collections.shuffle(availableMaterials);
 
         // Get slots based on the card size
@@ -78,8 +86,16 @@ public class BingoManager{
         playerBingoCards = new HashMap<>();
         bingoGUIs = new HashMap<>();
 
+        // Generate and shuffle materials for the card based on the set difficulty
+        int difficultyLevel = switch (ultimateBingo.difficulty) {
+            case "normal" -> 2;
+            case "hard" -> 3;
+            default -> 1; // default to "easy"
+
+        };
+
         // Generate a single set of materials for all players
-        List<Material> sharedMaterials = generateMaterials(1);
+        List<Material> sharedMaterials = generateMaterials(difficultyLevel);
 
         // Distribute unique shuffled cards to each player
         for (Player player : Bukkit.getOnlinePlayers()) {
