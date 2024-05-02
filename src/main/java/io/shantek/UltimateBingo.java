@@ -38,9 +38,14 @@ public final class UltimateBingo extends JavaPlugin {
     public String cardSize;
     public boolean uniqueCard;
     public boolean consoleLogs = true;
+    public boolean bingoCardActive = false;
+
+    public static UltimateBingo instance;
 
     @Override
     public void onEnable() {
+        // Save the instance of the plugin
+        instance = this;
 
         SettingsManager settingsManager = new SettingsManager(this);
         bingoManager = new BingoManager(this, new BingoCommand(this, settingsManager, bingoManager));
@@ -55,6 +60,7 @@ public final class UltimateBingo extends JavaPlugin {
         BingoPickupListener bingoPickupListener = new BingoPickupListener(this);
         BingoInteractListener bingoStickListener = new BingoInteractListener(this);
         BingoInventoryOpenListener bingoInventoryOpenListener = new BingoInventoryOpenListener(this);
+        BingoInventoryCloseListener bingoInventoryCloseListener = new BingoInventoryCloseListener(this);
         SettingsListener settingsListener = new SettingsListener(materialList, settingsManager);
 
 
@@ -65,6 +71,7 @@ public final class UltimateBingo extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(bingoPickupListener, this);
         Bukkit.getPluginManager().registerEvents(new BingoGUIListener(), this);
         Bukkit.getPluginManager().registerEvents(bingoInventoryOpenListener, this);
+        Bukkit.getPluginManager().registerEvents(bingoInventoryCloseListener, this);
         Bukkit.getPluginManager().registerEvents(settingsListener, this);
         Bukkit.getPluginManager().registerEvents(respawnListener, this);
         Bukkit.getPluginManager().registerEvents(bingoStickListener, this);
@@ -92,6 +99,12 @@ public final class UltimateBingo extends JavaPlugin {
     public void onDisable() {
         bingoManager.clearData();
         bingoManager.started = false;
+
+        instance = null;
+    }
+
+    public static UltimateBingo getInstance() {
+        return instance;
     }
 
 
