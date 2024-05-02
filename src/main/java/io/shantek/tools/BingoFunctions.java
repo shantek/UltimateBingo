@@ -2,6 +2,7 @@ package io.shantek.tools;
 
 import io.shantek.UltimateBingo;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -10,6 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class BingoFunctions
 {
@@ -56,8 +61,12 @@ public class BingoFunctions
         ItemStack bingoCard = new ItemStack(Material.PAPER);
         ItemMeta itemMeta = bingoCard.getItemMeta();
 
-        // Set display name for the stick
+        // Set display name for the Bingo Card
         itemMeta.setDisplayName("Bingo");
+        // Set lore with two lines using Arrays.asList
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + "Card type: " + (ultimateBingo.uniqueCard ? ChatColor.BLUE + "Unique" : ChatColor.BLUE + "Identical") + "/" + ultimateBingo.difficulty);
+        lore.add(ChatColor.GRAY + "Win condition: " + (ultimateBingo.fullCard ? ChatColor.BLUE + "Full card" : ChatColor.BLUE + "Single row"));
 
         bingoCard.setItemMeta(itemMeta);
 
