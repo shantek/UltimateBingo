@@ -22,7 +22,7 @@ public class BingoInteractListener implements Listener {
         ItemStack itemInHand = event.getItem();
 
         // Check if the player is holding the "Bingo" stick
-        if (itemInHand != null && itemInHand.getType() == Material.PAPER && "Bingo".equals(itemInHand.getItemMeta().getDisplayName())) {
+        if (itemInHand != null && itemInHand.getType() == Material.PAPER && itemInHand.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
 
             // Run the "/bingo" command for the player
             // If this is false, the bingo countdown is still running or they have an old card
