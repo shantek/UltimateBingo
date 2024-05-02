@@ -140,5 +140,4 @@ public class CardTypes {
         // If all slots are either empty or lime concrete, return true
         return true;
     }
-
 }

@@ -73,32 +73,25 @@ public class SettingsListener implements Listener {
                     if (isHardDifficulty){
                         materialList.removeItem(clickedItem.getType(), 3);
                         createItemSettings(player, 3);
-
                     }
 
                     if (isExtremeDifficulty){
                         materialList.removeItem(clickedItem.getType(), 4);
                         createItemSettings(player, 4);
-
                     }
 
                     if (isImpossibleDifficulty){
                         materialList.removeItem(clickedItem.getType(), 5);
                         createItemSettings(player, 5);
-
                     }
 
                     player.sendMessage(ChatColor.GREEN + "You removed "
                             + ChatColor.GOLD + clickedItem.getType().name() + ChatColor.GREEN +" from the Bingo Items");
                 }
-
-
             }
         }
 
-
         Inventory clickedInv = e.getClickedInventory();
-
         if (clickedInv != null && clickedInv.getType() == InventoryType.PLAYER && e.getWhoClicked() instanceof Player player) {
 
             if (isEasyDifficulty || isNormalDifficulty || isHardDifficulty || isExtremeDifficulty || isImpossibleDifficulty) {
@@ -129,8 +122,6 @@ public class SettingsListener implements Listener {
                 }
             }
         }
-
-
     }
     public void createItemSettings(Player player, int difficulty){
         Inventory bingoItems = Bukkit.createInventory(player, 54, settingsManager.getDifficultyDisplay(difficulty));
@@ -138,7 +129,6 @@ public class SettingsListener implements Listener {
         for (Material material : materialList.getMaterials().get(difficulty)){
             ItemStack item = new ItemBuilder(material).withLore(ChatColor.GRAY + "LEFT-CLICK to Remove").build();
             bingoItems.addItem(item);
-
         }
         if (bingoItems.getItem(53) != null && !sentWarning){
             player.sendMessage(ChatColor.RED + "You have reached the maximum of items that are visible in the GUI! " +
