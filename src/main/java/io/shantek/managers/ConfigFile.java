@@ -3,7 +3,6 @@ package io.shantek.managers;
 import io.shantek.UltimateBingo;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
