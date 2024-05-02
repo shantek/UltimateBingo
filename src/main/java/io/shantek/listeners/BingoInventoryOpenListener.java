@@ -11,7 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,18 +33,14 @@ public class BingoInventoryOpenListener implements Listener {
                 ItemStack[] chestItems = openedChest.getContents();
                 List<Material> chestMaterials = new ArrayList<>();
 
-                for(int i = 0; i < chestItems.length; i++) {
-                    if(chestItems[i] != null) {
-                        chestMaterials.add(chestItems[i].getType());
+                for (ItemStack chestItem : chestItems) {
+                    if (chestItem != null) {
+                        chestMaterials.add(chestItem.getType());
                     }
                 }
 
-
-
                 UUID uuid = player.getUniqueId();
-
                 Map<UUID, Inventory> bingoGUIs = bingoManager.getBingoGUIs();
-
                 MaterialList materialListObject = ultimateBingo.getMaterialList();
 
                 List<Material> allMaterials = new ArrayList<>();

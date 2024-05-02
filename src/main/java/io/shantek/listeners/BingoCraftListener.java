@@ -9,7 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.Inventory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +28,7 @@ public class BingoCraftListener implements Listener {
             Material craftedItem = e.getRecipe().getResult().getType();
             Player player = (Player) e.getWhoClicked();
 
-
             UUID  uuid = player.getUniqueId();
-
             Map<UUID, Inventory> bingoGUIs = bingoManager.getBingoGUIs();
 
             MaterialList materialListObject = ultimateBingo.getMaterialList();
@@ -42,7 +39,6 @@ public class BingoCraftListener implements Listener {
             allMaterials.addAll(materialListObject.hard);
             allMaterials.addAll(materialListObject.extreme);
             allMaterials.addAll(materialListObject.impossible);
-
 
             if (allMaterials.contains(craftedItem) && bingoGUIs.containsKey(uuid)){
                 for (int i : bingoManager.getSlots()){
