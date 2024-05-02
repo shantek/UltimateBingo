@@ -43,7 +43,6 @@ public class BingoManager{
             UUID playerId = player.getUniqueId();
 
             // Store the string for the card type
-            // Store the string for the card type
             String cardInfo = ultimateBingo.uniqueCard ? "unique" : "identical";
             cardInfo += ultimateBingo.fullCard ? "/full card" : "/single row";
             cardInfo = "(" + cardInfo + ")";
@@ -128,8 +127,6 @@ public class BingoManager{
             default -> mediumSlots; // Default to medium if something goes wrong
         };
     }
-
-
 
     private static final int TOTAL_ITEMS = 30;
 
