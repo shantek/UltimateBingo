@@ -5,9 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class BingoCompleter implements TabCompleter {
@@ -67,5 +65,4 @@ public class BingoCompleter implements TabCompleter {
 
         return null;
     }
-
 }
