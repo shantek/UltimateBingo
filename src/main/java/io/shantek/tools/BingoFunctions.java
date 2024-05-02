@@ -8,13 +8,13 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class BingoFunctions
 {
@@ -56,88 +56,24 @@ public class BingoFunctions
         }
     }
 
-    public void resetIndividualPlayer(Player player) {
-
-        // Reset health to max health (20.0 is full health)
-        player.setHealth(20.0);
-
-        // Reset food level to max (20 is full hunger)
-        player.setFoodLevel(20);
-
-        // Reset saturation to max (5.0F is full saturation)
-        player.setSaturation(5.0F);
-
-        // Reset exhaustion to 0 (no exhaustion)
-        player.setExhaustion(0.0F);
-
-        // Reset remaining potion effects
-        for (PotionEffect effect : player.getActivePotionEffects()) {
-            player.removePotionEffect(effect.getType());
-        }
-
-        // Clear inventory
-        player.getInventory().clear();
-
-        // Clear armor
-        player.getInventory().setArmorContents(new ItemStack[4]);
-
-        // Reset XP and levels
-        player.setExp(0);
-        player.setLevel(0);
-    }
-
+    // Give the player paper, used to open their bingo card
     public void giveBingoCard(Player player) {
-        PlayerInventory inventory = player.getInventory(); // Get the player's inventory
-
-        // Check if the player already has a bingo card
-        if (hasBingoCard(inventory)) {
-            player.sendMessage(ChatColor.YELLOW + "You already have a Bingo Card.");
-            return; // Stop further execution if they already have one
-        }
-
-        ItemStack bingoCard = new ItemStack(ultimateBingo.bingoCardMaterial);
+        ItemStack bingoCard = new ItemStack(Material.PAPER);
         ItemMeta itemMeta = bingoCard.getItemMeta();
 
-        if (itemMeta != null) { // Always good to check for null when working with ItemMeta
-            // Set display name for the Bingo Card
-            itemMeta.setDisplayName(ChatColor.GOLD + "Bingo Card");
+        // Set display name for the Bingo Card
+        itemMeta.setDisplayName("Bingo");
+        // Set lore with two lines using Arrays.asList
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + "Card type: " + (ultimateBingo.uniqueCard ? ChatColor.BLUE + "Unique" : ChatColor.BLUE + "Identical") + "/" + ultimateBingo.difficulty);
+        lore.add(ChatColor.GRAY + "Win condition: " + (ultimateBingo.fullCard ? ChatColor.BLUE + "Full card" : ChatColor.BLUE + "Single row"));
 
-            // Set lore with two lines
-            List<String> lore = new ArrayList<>();
-            lore.add(ChatColor.GRAY + "Card type: " + (ultimateBingo.uniqueCard ? ChatColor.BLUE + "Unique" : ChatColor.BLUE + "Identical") + "/" + ultimateBingo.difficulty);
-            lore.add(ChatColor.GRAY + "Win condition: " + (ultimateBingo.fullCard ? ChatColor.BLUE + "Full card" : ChatColor.BLUE + "Single row"));
+        bingoCard.setItemMeta(itemMeta);
 
-            itemMeta.setLore(lore); // Apply the lore to the item meta
-            bingoCard.setItemMeta(itemMeta); // Apply the modified item meta back to the item stack
-
-            // Check if the inventory is full
-            if (inventory.firstEmpty() == -1) {
-                player.sendMessage(ChatColor.RED + "Unable to give you a bingo card, your inventory is full.");
-            } else {
-                // Check if slot 0 is empty
-                if (inventory.getItem(0) == null) {
-                    inventory.setItem(0, bingoCard); // Place the bingo card in slot 0
-                } else {
-                    inventory.addItem(bingoCard); // Automatically places in the first available slot
-                }
-            }
-        } else {
-            // Log or handle the case where item meta couldn't be retrieved
-            Bukkit.getLogger().warning("Failed to retrieve item meta for Bingo Card.");
-        }
+        // Give the stick to the player in the 9th slot
+        player.getInventory().setItem(0, bingoCard);  // Slot index starts from 0, so 8 is the 9th slot
     }
 
-    private boolean hasBingoCard(PlayerInventory inventory) {
-        for (ItemStack item : inventory.getContents()) {
-            if (item != null && item.getType() == ultimateBingo.bingoCardMaterial) {
-                ItemMeta meta = item.getItemMeta();
-                if (meta != null && meta.hasDisplayName() && meta.getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
-                    return true; // Bingo card found
-                }
-            }
-        }
-        return false; // No Bingo card found
-    }
     // Give all players a bingo card
     public void giveBingoCardToAllPlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
