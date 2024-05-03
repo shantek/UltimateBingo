@@ -265,19 +265,20 @@ public class BingoManager{
                     }
                 }
                 if (hasBingo) {
+                    // Disable the game
+                    ultimateBingo.bingoCommand.bingoStarted = false;
+
                     Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
                     for (Player target : Bukkit.getOnlinePlayers()){
                         target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, 1.0f, 1.0f);
 
                         target.sendTitle(ChatColor.GOLD + player.getName() + ChatColor.GREEN +  " got BINGO!"
-                                , ChatColor.GREEN.toString() + ChatColor.BOLD + "GG");
+                                , ChatColor.GREEN.toString() + ChatColor.BOLD + "Woop woop!");
                     }
-
                     ultimateBingo.bingoCommand.stopBingo(player, true);
                     clearData();
 
                 }
-
                 break;
             }
         }
