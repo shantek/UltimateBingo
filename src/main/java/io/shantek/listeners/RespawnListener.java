@@ -1,5 +1,7 @@
 package io.shantek.listeners;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -9,25 +11,28 @@ import io.shantek.UltimateBingo;
 public class RespawnListener implements Listener {
 
     UltimateBingo ultimateBingo;
-    public RespawnListener(UltimateBingo ultimateBingo){
+
+    public RespawnListener(UltimateBingo ultimateBingo) {
         this.ultimateBingo = ultimateBingo;
     }
 
-    //TODO Better handle spawning a player back at the bingo spawn
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
 
-        if (ultimateBingo.bingoManager.isStarted()) {
+        // Only teleport the player back to bingo spawn if enabled in the settings
+        // Enabled by default
+
+        if (ultimateBingo.bingoManager.isStarted() && ultimateBingo.respawnTeleport) {
             Player player = event.getPlayer();
 
-            // Spawn them back at the bingo spawn
-            event.setRespawnLocation(ultimateBingo.bingoSpawnLocation);
+            // Send title and subtitle immediately after respawn
+            player.sendTitle(ChatColor.YELLOW + "TELEPORTING", ChatColor.WHITE + "One Moment", 10, 40, 10);
 
-            // Teleport the player to the bingo spawn
-            player.teleport(ultimateBingo.bingoSpawnLocation);
-
-            // Give them a new bingo compass
-            ultimateBingo.bingoFunctions.giveBingoCard(player);
+            // Delayed teleport to handle any asynchronous issues, increased delay to 2 seconds
+            Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
+                player.teleport(ultimateBingo.bingoSpawnLocation);
+                ultimateBingo.bingoFunctions.giveBingoCard(player);
+            }, 60L); // Delay teleportation by 3 seconds (60 ticks)
         }
     }
 }
