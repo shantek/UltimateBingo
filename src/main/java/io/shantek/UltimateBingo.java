@@ -33,6 +33,8 @@ public final class UltimateBingo extends JavaPlugin {
     public boolean uniqueCard;
     public boolean consoleLogs = true;
     public boolean bingoCardActive = false;
+    public String gameMode = "traditional";
+    public boolean respawnTeleport = true;
 
     public static UltimateBingo instance;
 
