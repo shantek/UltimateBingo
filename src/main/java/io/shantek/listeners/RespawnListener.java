@@ -2,7 +2,6 @@ package io.shantek.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -26,18 +25,14 @@ public class RespawnListener implements Listener {
         if (ultimateBingo.bingoManager.isStarted() && ultimateBingo.respawnTeleport) {
             Player player = event.getPlayer();
 
-            // Delay the sendTitle message by 10 ticks
-            Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
-                player.sendTitle(ChatColor.YELLOW + "TELEPORTING", ChatColor.WHITE + "One Moment", 10, 40, 10);
-            }, 10L); // Delay showing the title by 10 ticks
+            // Send title and subtitle immediately after respawn
+            player.sendTitle(ChatColor.YELLOW + "TELEPORTING", ChatColor.WHITE + "One Moment", 10, 40, 10);
 
-            // Delayed teleport to handle any asynchronous issues, total delay 3.5 seconds (70 ticks from respawn)
+            // Delayed teleport to handle any asynchronous issues, increased delay to 2 seconds
             Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
                 player.teleport(ultimateBingo.bingoSpawnLocation);
                 ultimateBingo.bingoFunctions.giveBingoCard(player);
-                player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 1.0f);
-            }, 70L); // Delay teleportation by 3.5 seconds (70 ticks) after respawn
+            }, 60L); // Delay teleportation by 3 seconds (60 ticks)
         }
-
     }
 }
