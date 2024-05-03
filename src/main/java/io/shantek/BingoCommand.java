@@ -19,7 +19,7 @@ public class BingoCommand implements CommandExecutor {
     UltimateBingo ultimateBingo;
     SettingsManager settingsManager;
     BingoManager bingoManager;
-    private boolean bingoStarted;
+    public boolean bingoStarted;
 
     public BingoCommand(UltimateBingo ultimateBingo, SettingsManager settingsManager, BingoManager bingoManager) {
         this.ultimateBingo = ultimateBingo;
@@ -324,10 +324,15 @@ public class BingoCommand implements CommandExecutor {
         // Bring everyone back to the bingo spawn, reset their inventory and state
         // and despawn everything off the ground
         teleportPlayers();
-        ultimateBingo.bingoFunctions.resetPlayers();
+
         ultimateBingo.bingoSpawnLocation = null;
-        ultimateBingo.bingoFunctions.despawnAllItems();
-        bingoStarted = false;
+
+        // Schedule a delayed task to run after 2 seconds (40 ticks)
+        Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
+            ultimateBingo.bingoFunctions.resetPlayers();
+            ultimateBingo.bingoFunctions.despawnAllItems();
+            bingoStarted = false;
+        }, 40L);  // Delay specified in ticks (40 ticks = 2 seconds)
     }
 
     public void teleportPlayers() {
