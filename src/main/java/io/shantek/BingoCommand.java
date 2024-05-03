@@ -4,6 +4,7 @@ import io.shantek.managers.BingoManager;
 import io.shantek.managers.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,22 +20,22 @@ public class BingoCommand implements CommandExecutor {
     SettingsManager settingsManager;
     BingoManager bingoManager;
     private boolean bingoStarted;
-    public BingoCommand(UltimateBingo ultimateBingo, SettingsManager settingsManager, BingoManager bingoManager){
+
+    public BingoCommand(UltimateBingo ultimateBingo, SettingsManager settingsManager, BingoManager bingoManager) {
         this.ultimateBingo = ultimateBingo;
         this.settingsManager = settingsManager;
         this.bingoManager = bingoManager;
     }
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
 
-        if (commandSender instanceof Player player){
+        if (commandSender instanceof Player player) {
 
-            if (args.length > 0){
-                if (args[0].equalsIgnoreCase("stop") && player.hasPermission("shantek.ultimatebingo.stop")){
+            if (args.length > 0) {
+                if (args[0].equalsIgnoreCase("stop") && player.hasPermission("shantek.ultimatebingo.stop")) {
                     stopBingo(player, false);
-                }
-
-                else if (args[0].equalsIgnoreCase("start") && player.hasPermission("shantek.ultimatebingo.start")){
+                } else if (args[0].equalsIgnoreCase("start") && player.hasPermission("shantek.ultimatebingo.start")) {
                     if (bingoStarted) {
                         player.sendMessage(ChatColor.RED + "Bingo has already started!");
                     } else {
@@ -42,13 +43,11 @@ public class BingoCommand implements CommandExecutor {
                         ultimateBingo.bingoSpawnLocation = player.getLocation();
                         startBingo(player);
                     }
-                }
-                else if (args[0].equalsIgnoreCase("reload") && player.hasPermission("shantek.ultimatebingo.settings")) {
+                } else if (args[0].equalsIgnoreCase("reload") && player.hasPermission("shantek.ultimatebingo.settings")) {
                     ultimateBingo.configFile.reloadConfigFile();
                     player.sendMessage(ChatColor.GREEN + "Bingo config file reloaded.");
 
-                }
-                else if (args[0].equalsIgnoreCase("cardsize") && player.hasPermission("shantek.ultimatebingo.configure")) {
+                } else if (args[0].equalsIgnoreCase("cardsize") && player.hasPermission("shantek.ultimatebingo.configure")) {
 
                     // Check if size argument is provided
                     String cardSize = null;
@@ -78,8 +77,59 @@ public class BingoCommand implements CommandExecutor {
                         player.sendMessage(ChatColor.GREEN + "Bingo card size is currently set to " + ChatColor.YELLOW + ultimateBingo.cardSize.toUpperCase());
                     }
 
-                }
-                else if (args[0].equalsIgnoreCase("condition") && player.hasPermission("shantek.ultimatebingo.configure")){
+                } else if (args[0].equalsIgnoreCase("gamemode") && player.hasPermission("shantek.ultimatebingo.configure")) {
+
+                    // Check if size argument is provided
+                    String gameMode = "traditional";
+
+                    if (args.length > 1) {
+                        // Parse the third argument to determine the size
+                        gameMode = args[1].toLowerCase(); // Convert to lowercase for case-insensitive comparison
+
+                        // Update and save the card size
+                        boolean modeUpdated = false;
+
+                        switch (gameMode) {
+                            case "traditional":
+                            case "reveal":
+                                modeUpdated = true;
+                                ultimateBingo.gameMode = gameMode.toLowerCase();
+                                player.sendMessage(ChatColor.GREEN + "Bingo game mode has been set to " + ChatColor.GREEN + gameMode.toUpperCase());
+                                break;
+                        }
+                        ultimateBingo.configFile.saveConfig();
+
+                        if (!modeUpdated) {
+                            player.sendMessage(ChatColor.RED + "Invalid Bingo card size. Please use SMALL, MEDIUM or LARGE.");
+                        }
+                    } else {
+                        player.sendMessage(ChatColor.GREEN + "Bingo card size is currently set to " + ChatColor.YELLOW + ultimateBingo.cardSize.toUpperCase());
+                    }
+
+                } else if (args[0].equalsIgnoreCase("reveal")) {
+                    if (ultimateBingo.gameMode.equals("reveal")) {
+
+                        if (args.length > 1) {
+                            String playerName = args[1]; // Name of the player to reveal
+                            Player otherPlayer = Bukkit.getPlayerExact(playerName); // Get the exact player by name
+
+                            if (otherPlayer != null && otherPlayer.isOnline()) {
+                                // If the player exists and is online, proceed with your method
+                                openBingoOtherPlayer(player, otherPlayer);
+                            } else {
+                                // If no such player is found or they are offline, send an error message
+                                player.sendMessage(ChatColor.RED + "Invalid player name or player is offline.");
+                            }
+                        } else {
+                            // If the command is incomplete or missing the player name argument
+                            player.sendMessage(ChatColor.RED + "Please specify a player name.");
+                        }
+                    } else {
+                        // Only available during the reveal game mode
+                        player.sendMessage(ChatColor.RED + "This command is only available during the reveal mode. No cheating!");
+                    }
+
+                } else if (args[0].equalsIgnoreCase("condition") && player.hasPermission("shantek.ultimatebingo.configure")) {
 
                     // Check if additional arguments are provided
                     if (args.length > 1) {
@@ -101,8 +151,7 @@ public class BingoCommand implements CommandExecutor {
                     } else {
                         player.sendMessage(ChatColor.GREEN + "Card type is currently set to " + ChatColor.YELLOW + (ultimateBingo.fullCard ? "FULL CARD" : "BINGO"));
                     }
-                }
-                else if (args[0].equalsIgnoreCase("cardtype") && player.hasPermission("shantek.ultimatebingo.configure")) {
+                } else if (args[0].equalsIgnoreCase("cardtype") && player.hasPermission("shantek.ultimatebingo.configure")) {
 
                     // Check if additional arguments are provided
                     if (args.length > 1) {
@@ -123,8 +172,7 @@ public class BingoCommand implements CommandExecutor {
                     } else {
                         player.sendMessage(ChatColor.GREEN + "Card type is currently set to " + ChatColor.YELLOW + (ultimateBingo.fullCard ? "UNIQUE" : "IDENTICAL"));
                     }
-                }
-                else if (args[0].equalsIgnoreCase("difficulty") && player.hasPermission("shantek.ultimatebingo.configure")) {
+                } else if (args[0].equalsIgnoreCase("difficulty") && player.hasPermission("shantek.ultimatebingo.configure")) {
 
                     // Check if additional arguments are provided
                     if (args.length > 1) {
@@ -150,32 +198,29 @@ public class BingoCommand implements CommandExecutor {
                     } else {
                         player.sendMessage(ChatColor.GREEN + "Difficulty is currently set to " + ChatColor.YELLOW + ultimateBingo.difficulty);
                     }
-                }
-                else if (args[0].equalsIgnoreCase("info")){
+                } else if (args[0].equalsIgnoreCase("info")) {
                     player.sendMessage(ChatColor.WHITE + "Bingo is currently set up with the following configuration:");
                     player.sendMessage(ChatColor.GREEN + "Difficulty: " + ChatColor.YELLOW + ultimateBingo.difficulty.toUpperCase());
-                    player.sendMessage(ChatColor.GREEN + "Card type: " +  ChatColor.YELLOW + ultimateBingo.cardSize.toUpperCase() + "/" + (ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL"));
+                    player.sendMessage(ChatColor.GREEN + "Card type: " + ChatColor.YELLOW + ultimateBingo.cardSize.toUpperCase() + "/" + (ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL"));
+                    player.sendMessage(ChatColor.GREEN + "Game mode: " + ChatColor.YELLOW + ultimateBingo.gameMode.toUpperCase());
                     player.sendMessage(ChatColor.GREEN + "Win condition: " + ChatColor.YELLOW + (ultimateBingo.fullCard ? "FULL CARD" : "BINGO"));
-                }
 
-                else if (args[0].equalsIgnoreCase("settings") && player.hasPermission("shantek.ultimatebingo.settings")){
+                } else if (args[0].equalsIgnoreCase("settings") && player.hasPermission("shantek.ultimatebingo.settings")) {
                     ultimateBingo.getMaterialList().createMaterials();
                     Inventory settingsGUI = settingsManager.createSettingsGUI(player);
 
                     player.openInventory(settingsGUI);
-                }
-
-                else if (!player.hasPermission("shantek.ultimatebingo.start") && args[0].equalsIgnoreCase("start")
+                } else if (!player.hasPermission("shantek.ultimatebingo.start") && args[0].equalsIgnoreCase("start")
                         || !player.hasPermission("shantek.ultimatebingo.stop") && args[0].equalsIgnoreCase("stop")
-                        || args[0].equalsIgnoreCase("settings") && !player.hasPermission("shantek.ultimatebingo.settings")){
+                        || args[0].equalsIgnoreCase("settings") && !player.hasPermission("shantek.ultimatebingo.settings")) {
                     player.sendMessage(ChatColor.RED + "You do not have permission to do that!");
                 }
 
             } else {
-                if (bingoStarted & ultimateBingo.bingoCardActive){
+                if (bingoStarted & ultimateBingo.bingoCardActive) {
                     openBingo(player);
                 }
-                if (!bingoStarted){
+                if (!bingoStarted) {
                     player.sendMessage(ChatColor.RED + "Bingo hasn't started yet!");
                 }
             }
@@ -211,9 +256,6 @@ public class BingoCommand implements CommandExecutor {
         }
         ultimateBingo.getMaterialList().createMaterials();
 
-        // Set new spawn and prepare bingo cards
-        //Location location = commandPlayer.getLocation();
-        //Bukkit.dispatchCommand(commandPlayer, "/setspawn " + location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ());
         if (ultimateBingo.uniqueCard) {
             bingoManager.createUniqueBingoCards();
         } else {
@@ -229,11 +271,11 @@ public class BingoCommand implements CommandExecutor {
             String bingoType = ultimateBingo.fullCard ? "FULL CARD" : "SINGLE ROW";
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                player.sendTitle(ChatColor.YELLOW + cardType, "", 10, 40, 10);
+                player.sendTitle(ChatColor.YELLOW + cardType, ChatColor.WHITE + ultimateBingo.difficulty.toUpperCase(), 10, 40, 10);
             }, 20); // 20 ticks = 1 second for initial pause
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                player.sendTitle(ChatColor.YELLOW + bingoType, "", 10, 40, 10);
+                player.sendTitle(ChatColor.YELLOW + bingoType, ChatColor.WHITE + "Game mode: " + ultimateBingo.gameMode.toUpperCase(), 10, 40, 10);
             }, 60); // 2 seconds later
 
             // Countdown with chimes, with bold and colorful text
@@ -264,13 +306,15 @@ public class BingoCommand implements CommandExecutor {
         });
     }
 
-    public void stopBingo(Player sender, boolean gameCompleted){
+    public void stopBingo(Player sender, boolean gameCompleted) {
 
         ultimateBingo.bingoCardActive = false;
         bingoManager.clearData();
 
-        if (bingoStarted){
-            if (!gameCompleted) { sender.sendMessage(ChatColor.RED + "Bingo has been stopped!"); }
+        if (bingoStarted) {
+            if (!gameCompleted) {
+                sender.sendMessage(ChatColor.RED + "Bingo has been stopped!");
+            }
         } else {
             if (!gameCompleted) {
                 sender.sendMessage(ChatColor.RED + "Bingo hasn't started yet! Start with /bingo start");
@@ -297,28 +341,47 @@ public class BingoCommand implements CommandExecutor {
         }
     }
 
-    public void openBingo(Player sender){
-        if (bingoManager.getBingoGUIs() != null  && !bingoManager.getBingoGUIs().isEmpty()){
-            if (bingoManager.getBingoGUIs().containsKey(sender.getUniqueId())){
+    public void openBingo(Player sender) {
+        if (bingoManager.getBingoGUIs() != null && !bingoManager.getBingoGUIs().isEmpty()) {
+            if (bingoManager.getBingoGUIs().containsKey(sender.getUniqueId())) {
                 sender.openInventory(bingoManager.getBingoGUIs().get(sender.getUniqueId()));
             } else {
-                if (sender.hasPermission("shantek.ultimatebingo.start")){
+                if (sender.hasPermission("shantek.ultimatebingo.start")) {
                     sender.sendMessage(ChatColor.RED + "You missed the opportunity to join Bingo! Use /bingo start if you want to create a new game.");
                 }
 
-                if (!sender.hasPermission("shantek.ultimatebingo.start")){
+                if (!sender.hasPermission("shantek.ultimatebingo.start")) {
                     sender.sendMessage(ChatColor.RED + "You missed the opportunity to join Bingo!");
                 }
             }
         } else {
-            if (sender.hasPermission("shantek.ultimatebingo.start")){
+            if (sender.hasPermission("shantek.ultimatebingo.start")) {
                 sender.sendMessage(ChatColor.RED + "Bingo hasn't started yet! Use /bingo start to start");
             }
 
-            if (!sender.hasPermission("shantek.ultimatebingo.start")){
+            if (!sender.hasPermission("shantek.ultimatebingo.start")) {
                 sender.sendMessage(ChatColor.RED + "Bingo hasn't started yet!");
             }
 
         }
+    }
+
+    public void openBingoOtherPlayer(Player sender, Player otherPlayer) {
+        // Playing the reveal mode, all good to allow this functionality
+        if (bingoManager.getBingoGUIs() != null && !bingoManager.getBingoGUIs().isEmpty()) {
+            if (bingoManager.getBingoGUIs().containsKey(otherPlayer.getUniqueId())) {
+                sender.openInventory(bingoManager.getBingoGUIs().get(otherPlayer.getUniqueId()));
+            } else {
+                // Couldn't find that players name in the list
+                sender.sendMessage(ChatColor.RED + "Unable to find a bingo card for " + otherPlayer.getName());
+
+            }
+        } else {
+
+            sender.sendMessage(ChatColor.RED + "Bingo hasn't started yet!");
+
+
+        }
+
     }
 }
