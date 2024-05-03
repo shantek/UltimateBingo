@@ -215,14 +215,21 @@ public class BingoManager{
                 item.setItemMeta(meta);
 
                 String removedUnderscore = completedMaterial.name().toLowerCase().replace('_', ' ');
-                player.sendMessage(ChatColor.GREEN + "You completed the " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " item in your bingo card!");
+                player.sendMessage(ChatColor.GREEN + "You ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from your bingo card!");
 
                 for (Player target : Bukkit.getOnlinePlayers()) {
                     // PLAY FOR ALL PLAYERS
                     target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 5);
 
                     if (!target.equals(player)) { // Exclude the player who triggered the event
-                        target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
+
+                        // Show more info if reveal mode is enabled. If not, be more cryptic in what they did
+                        if (ultimateBingo.gameMode.equals("reveal")) {
+                            player.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
+
+                        } else {
+                            target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
+                        }
                     }
                 }
 
@@ -260,6 +267,8 @@ public class BingoManager{
                 if (hasBingo) {
                     Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
                     for (Player target : Bukkit.getOnlinePlayers()){
+                        target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, 1.0f, 1.0f);
+
                         target.sendTitle(ChatColor.GOLD + player.getName() + ChatColor.GREEN +  " got BINGO!"
                                 , ChatColor.GREEN.toString() + ChatColor.BOLD + "GG");
                     }
