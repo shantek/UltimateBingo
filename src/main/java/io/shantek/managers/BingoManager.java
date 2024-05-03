@@ -225,7 +225,7 @@ public class BingoManager{
 
                         // Show more info if reveal mode is enabled. If not, be more cryptic in what they did
                         if (ultimateBingo.gameMode.equals("reveal")) {
-                            player.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
+                            target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
 
                         } else {
                             target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
