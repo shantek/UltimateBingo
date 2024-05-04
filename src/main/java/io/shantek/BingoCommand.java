@@ -47,8 +47,13 @@ public class BingoCommand implements CommandExecutor {
                     ultimateBingo.configFile.reloadConfigFile();
                     player.sendMessage(ChatColor.GREEN + "Bingo config file reloaded.");
 
-                } else if (args[0].equalsIgnoreCase("cardsize") && player.hasPermission("shantek.ultimatebingo.configure")) {
+                } else if (args[0].equalsIgnoreCase("gui") && player.hasPermission("shantek.ultimatebingo.play")) {
 
+                    player.openInventory(ultimateBingo.bingoGameGUIManager.createGameGUI(player));
+
+                } else if (args[0].equalsIgnoreCase("cardsize") && player.hasPermission("shantek.ultimatebingo.configure")) {
+                    // Marked for removal - replaced by GUI
+                    /*
                     // Check if size argument is provided
                     String cardSize = null;
 
@@ -76,9 +81,10 @@ public class BingoCommand implements CommandExecutor {
                     } else {
                         player.sendMessage(ChatColor.GREEN + "Bingo card size is currently set to " + ChatColor.YELLOW + ultimateBingo.cardSize.toUpperCase());
                     }
-
+                    */
                 } else if (args[0].equalsIgnoreCase("gamemode") && player.hasPermission("shantek.ultimatebingo.configure")) {
-
+                    // Marked for removal - replaced by GUI
+                    /*
                     // Check if size argument is provided
                     String gameMode = "traditional";
 
@@ -105,7 +111,7 @@ public class BingoCommand implements CommandExecutor {
                     } else {
                         player.sendMessage(ChatColor.GREEN + "Bingo card size is currently set to " + ChatColor.YELLOW + ultimateBingo.cardSize.toUpperCase());
                     }
-
+                    */
                 } else if (args[0].equalsIgnoreCase("reveal")) {
                     if (ultimateBingo.gameMode.equals("reveal")) {
 
@@ -130,7 +136,8 @@ public class BingoCommand implements CommandExecutor {
                     }
 
                 } else if (args[0].equalsIgnoreCase("condition") && player.hasPermission("shantek.ultimatebingo.configure")) {
-
+                    // Marked for removal - replaced by GUI
+                    /*
                     // Check if additional arguments are provided
                     if (args.length > 1) {
 
@@ -151,8 +158,11 @@ public class BingoCommand implements CommandExecutor {
                     } else {
                         player.sendMessage(ChatColor.GREEN + "Card type is currently set to " + ChatColor.YELLOW + (ultimateBingo.fullCard ? "FULL CARD" : "BINGO"));
                     }
-                } else if (args[0].equalsIgnoreCase("cardtype") && player.hasPermission("shantek.ultimatebingo.configure")) {
+                    */
 
+                } else if (args[0].equalsIgnoreCase("cardtype") && player.hasPermission("shantek.ultimatebingo.configure")) {
+                    // Marked for removal - replaced by GUI
+                    /*
                     // Check if additional arguments are provided
                     if (args.length > 1) {
 
@@ -172,7 +182,11 @@ public class BingoCommand implements CommandExecutor {
                     } else {
                         player.sendMessage(ChatColor.GREEN + "Card type is currently set to " + ChatColor.YELLOW + (ultimateBingo.fullCard ? "UNIQUE" : "IDENTICAL"));
                     }
+
+                     */
                 } else if (args[0].equalsIgnoreCase("difficulty") && player.hasPermission("shantek.ultimatebingo.configure")) {
+                    // Marked for removal - replaced by GUI
+                    /*
 
                     // Check if additional arguments are provided
                     if (args.length > 1) {
@@ -198,6 +212,8 @@ public class BingoCommand implements CommandExecutor {
                     } else {
                         player.sendMessage(ChatColor.GREEN + "Difficulty is currently set to " + ChatColor.YELLOW + ultimateBingo.difficulty);
                     }
+
+                     */
                 } else if (args[0].equalsIgnoreCase("info")) {
                     player.sendMessage(ChatColor.WHITE + "Bingo is currently set up with the following configuration:");
                     player.sendMessage(ChatColor.GREEN + "Difficulty: " + ChatColor.YELLOW + ultimateBingo.difficulty.toUpperCase());

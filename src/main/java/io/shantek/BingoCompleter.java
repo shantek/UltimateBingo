@@ -16,6 +16,7 @@ public class BingoCompleter implements TabCompleter {
             List<String> complete = new ArrayList<>();
             if (player.hasPermission("shantek.ultimatebingo.start")) {
                 complete.add("start");
+                complete.add("gui");
             }
             if (player.hasPermission("shantek.ultimatebingo.stop")) {
                 complete.add("stop");
@@ -24,6 +25,8 @@ public class BingoCompleter implements TabCompleter {
                 complete.add("settings");
                 complete.add("reload");
             }
+            // Marked for removal - replaced by GUI
+            /*
             if (player.hasPermission("shantek.ultimatebingo.configure")) {
                 complete.add("cardsize");
                 complete.add("condition");
@@ -31,10 +34,16 @@ public class BingoCompleter implements TabCompleter {
                 complete.add("cardtype");
                 complete.add("gamemode");
             }
+            */
             complete.add("info");
             complete.add("reveal");
             return StringUtil.copyPartialMatches(args[0], complete, new ArrayList<>());
+
+            // Marked for removal - replaced by GUI
+            /*
         } else if (args.length == 2 && args[0].equalsIgnoreCase("cardtype") && commandSender.hasPermission("shantek.ultimatebingo.configure")) {
+
+
             List<String> complete = new ArrayList<>();
             complete.add("identical");
             complete.add("unique");
@@ -63,7 +72,7 @@ public class BingoCompleter implements TabCompleter {
             complete.add("hard");
 
             return StringUtil.copyPartialMatches(args[1], complete, new ArrayList<>());
-
+*/
         } else if (args.length == 2 && args[0].equalsIgnoreCase("reveal")) {
 
             List<String> playerNames = new ArrayList<>();

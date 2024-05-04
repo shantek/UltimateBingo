@@ -216,7 +216,7 @@ public class MaterialList {
         add(Material.PUMPKIN, 3);
         add(Material.BELL, 3);
         add(Material.COOKED_RABBIT,3);
-        add(Material.HONEYCOMB, 3);
+
         add(Material.POWERED_RAIL, 3);
         add(Material.DETECTOR_RAIL, 3);
         add(Material.MOSSY_COBBLESTONE,3);
@@ -239,7 +239,6 @@ public class MaterialList {
         add(Material.SHORT_GRASS, 3);
         add(Material.BLACK_WOOL, 3);
         add(Material.BROWN_WOOL, 3);
-        add(Material.GREEN_CARPET, 3);
         add(Material.KELP, 3);
         add(Material.GUNPOWDER,3);
         add(Material.BOWL, 3);
@@ -289,6 +288,8 @@ public class MaterialList {
         add(Material.BRUSH, 4);
         add(Material.PUFFERFISH_BUCKET, 4);
         add(Material.EMERALD,4);
+        add(Material.HONEYCOMB, 4);
+        add(Material.GREEN_CARPET, 4);
 
         add(Material.EMERALD_BLOCK, 5);
         add(Material.SLIME_BLOCK,5);
