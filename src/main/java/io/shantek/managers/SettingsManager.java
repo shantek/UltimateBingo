@@ -12,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
 public class SettingsManager {
     UltimateBingo ultimateBingo;
 
-    public SettingsManager(UltimateBingo megaBingo){
-        this.ultimateBingo = megaBingo;
+    public SettingsManager(UltimateBingo ultimateBingo){
+        this.ultimateBingo = ultimateBingo;
     }
 
     public Inventory createSettingsGUI(Player player){
