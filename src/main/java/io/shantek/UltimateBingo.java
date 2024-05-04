@@ -9,6 +9,7 @@ import io.shantek.listeners.*;
 import io.shantek.managers.BingoManager;
 import io.shantek.managers.SettingsManager;
 import io.shantek.managers.ConfigFile;
+import io.shantek.managers.BingoGameGUIManager;
 import io.shantek.tools.MaterialList;
 import io.shantek.tools.BingoFunctions;
 import org.bukkit.Bukkit;
@@ -21,6 +22,7 @@ public final class UltimateBingo extends JavaPlugin {
     public BingoManager bingoManager;
     private MaterialList materialList;
     public BingoFunctions bingoFunctions;
+    public BingoGameGUIManager bingoGameGUIManager;
     public BingoCommand bingoCommand;
     public Location bingoSpawnLocation;
     public ConfigFile configFile;
@@ -47,6 +49,7 @@ public final class UltimateBingo extends JavaPlugin {
         bingoManager = new BingoManager(this, new BingoCommand(this, settingsManager, bingoManager));
         bingoCommand = new BingoCommand(this, settingsManager, bingoManager);
         materialList = new MaterialList(this);
+        bingoGameGUIManager = new BingoGameGUIManager(this);
         bingoFunctions = new BingoFunctions(this);
         cardTypes = new CardTypes(this);
         configFile = new ConfigFile(this);
@@ -57,7 +60,7 @@ public final class UltimateBingo extends JavaPlugin {
         BingoInteractListener bingoStickListener = new BingoInteractListener(this);
         BingoInventoryOpenListener bingoInventoryOpenListener = new BingoInventoryOpenListener(this);
         BingoInventoryCloseListener bingoInventoryCloseListener = new BingoInventoryCloseListener(this);
-        SettingsListener settingsListener = new SettingsListener(materialList, settingsManager);
+        SettingsListener settingsListener = new SettingsListener(materialList, settingsManager, bingoGameGUIManager, this);
 
         getCommand("bingo").setExecutor(new BingoCommand(this, settingsManager, bingoManager));
         getCommand("bingo").setTabCompleter(new BingoCompleter());
@@ -84,9 +87,8 @@ public final class UltimateBingo extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BingoInventoryCloseListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoGUIListener(), this); // Assuming this doesn't need 'this'
 
-        // You mentioned a SettingsListener which seems to need a new SettingsManager instance each time
         SettingsManager settingsManager = new SettingsManager(this);
-        Bukkit.getPluginManager().registerEvents(new SettingsListener(materialList, settingsManager), this);
+        Bukkit.getPluginManager().registerEvents(new SettingsListener(materialList, settingsManager, bingoGameGUIManager, this), this);
     }
 
     public BingoManager getBingoManager() {
