@@ -15,3 +15,4 @@ card-size: small
 unique-card: false
 full-card: false
 game-mode: traditional
+reveal-cards: true

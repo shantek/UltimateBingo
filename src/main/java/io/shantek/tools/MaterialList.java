@@ -186,13 +186,11 @@ public class MaterialList {
         add(Material.TROPICAL_FISH,2);
         add(Material.BOOK,2);
         add(Material.CAULDRON, 2);
-        add(Material.CACTUS, 2);
         add(Material.BEETROOT, 2);
         add(Material.LIGHTNING_ROD, 2);
         add(Material.RAIL, 2);
         add(Material.SNOW_BLOCK, 2);
         add(Material.COCOA_BEANS, 2);
-        add(Material.MINECART, 2);
         add(Material.GLASS, 2);
         add(Material.COAL_BLOCK,2);
         add(Material.DARK_OAK_LOG,2);
@@ -207,7 +205,7 @@ public class MaterialList {
         add(Material.RED_WOOL, 2);
         add(Material.MUD, 2);
         add(Material.PACKED_MUD, 2);
-
+        add(Material.GLOW_INK_SAC, 2);
 
         add(Material.LAPIS_LAZULI,3);
         add(Material.BOOKSHELF,3);
@@ -216,7 +214,6 @@ public class MaterialList {
         add(Material.PUMPKIN, 3);
         add(Material.BELL, 3);
         add(Material.COOKED_RABBIT,3);
-
         add(Material.POWERED_RAIL, 3);
         add(Material.DETECTOR_RAIL, 3);
         add(Material.MOSSY_COBBLESTONE,3);
@@ -282,7 +279,6 @@ public class MaterialList {
         add(Material.SMITHING_TABLE, 4);
         add(Material.STONECUTTER, 4);
         add(Material.BREWING_STAND, 4);
-        add(Material.GLOW_INK_SAC, 4);
         add(Material.BEEHIVE, 4);
         add(Material.LAVA_BUCKET, 4);
         add(Material.BRUSH, 4);
@@ -290,6 +286,8 @@ public class MaterialList {
         add(Material.EMERALD,4);
         add(Material.HONEYCOMB, 4);
         add(Material.GREEN_CARPET, 4);
+        add(Material.CACTUS, 4);
+        add(Material.MINECART, 4);
 
         add(Material.EMERALD_BLOCK, 5);
         add(Material.SLIME_BLOCK,5);

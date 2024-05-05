@@ -20,10 +20,11 @@ public class BingoGameGUIManager {
         Inventory gameConfigInventory = Bukkit.createInventory(player, 9, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo Configuration");
 
         gameConfigInventory.setItem(0, createItem(Material.PAPER, "Game mode", ultimateBingo.gameMode));
-        gameConfigInventory.setItem(1, createItem(Material.IRON_SWORD, "Difficulty", ultimateBingo.difficulty));
+        gameConfigInventory.setItem(1, createItem(Material.SHIELD, "Difficulty", ultimateBingo.difficulty));
         gameConfigInventory.setItem(2, createItem(Material.MAP, "Card Size", ultimateBingo.cardSize));
         gameConfigInventory.setItem(3, createItem(Material.NAME_TAG, "Card Type", ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL"));
         gameConfigInventory.setItem(4, createItem(Material.BEACON, "Win Condition", ultimateBingo.fullCard ? "FULL CARD" : "SINGLE ROW"));
+        gameConfigInventory.setItem(5, createItem(Material.SPYGLASS, "Reveal Cards", ultimateBingo.revealCards ? "ENABLED" : "DISABLED"));
         gameConfigInventory.setItem(8, createStartGameItem());
 
         return gameConfigInventory;
@@ -73,8 +74,31 @@ public class BingoGameGUIManager {
         updateGUI(player);
     }
 
-    private void updateGUI(Player player) {
-        player.closeInventory();
-        player.openInventory(createGameGUI(player));
+    public void toggleRevealCards(Player player) {
+        // Toggle boolean value
+        ultimateBingo.revealCards = !ultimateBingo.revealCards;
+        updateGUI(player);
     }
+
+    private void updateGUI(Player player) {
+        Inventory currentInventory = player.getOpenInventory().getTopInventory();
+        ItemStack startGameItem = currentInventory.getItem(8);  // This is the "Start Game" item in slot 8
+
+        if (startGameItem != null && startGameItem.hasItemMeta() && startGameItem.getItemMeta().hasDisplayName() &&
+                ChatColor.stripColor(startGameItem.getItemMeta().getDisplayName()).equals("Start Game")) {
+            // The inventory is confirmed to be the Bingo Configuration GUI
+            // Update existing inventory directly
+            currentInventory.setItem(0, createItem(Material.PAPER, "Game mode", ultimateBingo.gameMode));
+            currentInventory.setItem(1, createItem(Material.SHIELD, "Difficulty", ultimateBingo.difficulty));
+            currentInventory.setItem(2, createItem(Material.MAP, "Card Size", ultimateBingo.cardSize));
+            currentInventory.setItem(3, createItem(Material.NAME_TAG, "Card Type", ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL"));
+            currentInventory.setItem(4, createItem(Material.BEACON, "Win Condition", ultimateBingo.fullCard ? "FULL CARD" : "SINGLE ROW"));
+            currentInventory.setItem(5, createItem(Material.SPYGLASS, "Reveal Cards", ultimateBingo.revealCards ? "ENABLED" : "DISABLED"));
+
+        } else {
+            // If not viewing the Bingo configuration, open it
+            player.openInventory(createGameGUI(player));
+        }
+    }
+
 }

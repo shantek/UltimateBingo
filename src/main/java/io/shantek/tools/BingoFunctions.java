@@ -57,7 +57,7 @@ public class BingoFunctions
     }
 
     public void giveBingoCard(Player player) {
-        ItemStack bingoCard = new ItemStack(Material.PAPER);
+        ItemStack bingoCard = new ItemStack(Material.FILLED_MAP);
         ItemMeta itemMeta = bingoCard.getItemMeta();
 
         if (itemMeta != null) { // Always good to check for null when working with ItemMeta
