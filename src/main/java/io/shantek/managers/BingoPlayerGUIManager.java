@@ -24,7 +24,7 @@ public class BingoPlayerGUIManager {
     public Inventory createPlayerGUI(Player player) {
         Inventory gameConfigInventory = Bukkit.createInventory(player, 9, ChatColor.GOLD.toString() + ChatColor.BOLD + "Welcome to Ultimate Bingo");
 
-        gameConfigInventory.setItem(0, createItem(ultimateBingo.bingoCardMaterial, "Replacement Bingo Card", "Win condition: " + (ultimateBingo.fullCard ? "Full Card" : "Single Row")));
+        gameConfigInventory.setItem(0, createItem(Material.FILLED_MAP, "Replacement Bingo Card", "Win condition: " + (ultimateBingo.fullCard ? "Full Card" : "Single Row")));
 
         // Only show the reveal cards option if this is enabled
         if (ultimateBingo.revealCards) { gameConfigInventory.setItem(1, createItem(Material.SPYGLASS, "View Players Cards", "Get a peak at other players cards!"));}
@@ -50,7 +50,7 @@ public class BingoPlayerGUIManager {
         // Get all online players and populate the inventory
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (ultimateBingo.bingoManager.bingoGUIs.containsKey(player.getUniqueId())) {  // Check if the player has a bingo card
-                ItemStack item = new ItemStack(ultimateBingo.bingoCardMaterial); // Create a filled map item
+                ItemStack item = new ItemStack(Material.FILLED_MAP); // Create a filled map item
                 ItemMeta meta = item.getItemMeta();  // Get the meta of the item
 
                 if (meta != null) {

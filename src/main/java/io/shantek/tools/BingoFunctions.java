@@ -9,6 +9,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 
@@ -57,6 +58,14 @@ public class BingoFunctions
     }
 
     public void giveBingoCard(Player player) {
+        PlayerInventory inventory = player.getInventory(); // Get the player's inventory
+
+        // Check if the player already has a bingo card
+        if (hasBingoCard(inventory)) {
+            player.sendMessage(ChatColor.YELLOW + "You already have a Bingo Card.");
+            return; // Stop further execution if they already have one
+        }
+
         ItemStack bingoCard = new ItemStack(Material.FILLED_MAP);
         ItemMeta itemMeta = bingoCard.getItemMeta();
 
@@ -72,14 +81,34 @@ public class BingoFunctions
             itemMeta.setLore(lore); // Apply the lore to the item meta
             bingoCard.setItemMeta(itemMeta); // Apply the modified item meta back to the item stack
 
-            // Give the bingo card to the player in the first slot (index 0)
-            player.getInventory().setItem(0, bingoCard);
+            // Check if the inventory is full
+            if (inventory.firstEmpty() == -1) {
+                player.sendMessage(ChatColor.RED + "Unable to give you a bingo card, your inventory is full.");
+            } else {
+                // Check if slot 0 is empty
+                if (inventory.getItem(0) == null) {
+                    inventory.setItem(0, bingoCard); // Place the bingo card in slot 0
+                } else {
+                    inventory.addItem(bingoCard); // Automatically places in the first available slot
+                }
+            }
         } else {
             // Log or handle the case where item meta couldn't be retrieved
             Bukkit.getLogger().warning("Failed to retrieve item meta for Bingo Card.");
         }
     }
 
+    private boolean hasBingoCard(PlayerInventory inventory) {
+        for (ItemStack item : inventory.getContents()) {
+            if (item != null && item.getType() == Material.FILLED_MAP) {
+                ItemMeta meta = item.getItemMeta();
+                if (meta != null && meta.hasDisplayName() && meta.getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
+                    return true; // Bingo card found
+                }
+            }
+        }
+        return false; // No Bingo card found
+    }
     // Give all players a bingo card
     public void giveBingoCardToAllPlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
