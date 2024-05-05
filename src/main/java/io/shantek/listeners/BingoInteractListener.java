@@ -23,7 +23,7 @@ public class BingoInteractListener implements Listener {
 
         ItemStack item = event.getItemDrop().getItemStack();
 
-        if (item.getType() == Material.FILLED_MAP && item.getItemMeta().hasDisplayName() &&
+        if (item.getType() == ultimateBingo.bingoCardMaterial && item.getItemMeta().hasDisplayName() &&
                 item.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
             event.setCancelled(true);
 
@@ -38,7 +38,7 @@ public class BingoInteractListener implements Listener {
         ItemStack itemInHand = event.getItem();
 
         // Check if the player is holding the "Bingo card"
-        if (itemInHand != null && itemInHand.getType() == Material.FILLED_MAP && itemInHand.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
+        if (itemInHand != null && itemInHand.getType() == ultimateBingo.bingoCardMaterial && itemInHand.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
 
             // Run the "/bingo" command for the player
             // If this is false, the bingo countdown is still running or they have an old card
