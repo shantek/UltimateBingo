@@ -73,8 +73,10 @@ public class SettingsListener implements Listener {
                         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
                         break;
                     case 8:
-                        ultimateBingo.bingoCommand.startBingo(player);
+
                         ultimateBingo.bingoSpawnLocation = player.getLocation();
+                        ultimateBingo.bingoCommand.startBingo(player);
+
                         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
                         player.closeInventory();
                         break;
