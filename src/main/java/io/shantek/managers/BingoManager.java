@@ -329,22 +329,22 @@ public class BingoManager{
         if (availableGUIKeys.isEmpty()) {
             player.sendMessage(ChatColor.RED + "No Bingo cards are available to clone. Please wait for the next round.");
             return; // Optionally, handle creating a new card instead of returning
+        } else {
+
+            // Select a random GUI to clone
+            UUID randomPlayerId = availableGUIKeys.get(new Random().nextInt(availableGUIKeys.size()));
+            Inventory originalGui = bingoGUIs.get(randomPlayerId);
+
+            // Clone the selected bingo GUI
+            Inventory clonedGui = cloneInventory(originalGui);
+
+            // Add the cloned GUI to this player
+            bingoGUIs.put(playerId, clonedGui);
+            playerBingoCards.put(playerId, new ArrayList<>(playerBingoCards.get(randomPlayerId))); // Clone the ticked off cards
+
+            Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " has just joined bingo!");
         }
-
-        // Select a random GUI to clone
-        UUID randomPlayerId = availableGUIKeys.get(new Random().nextInt(availableGUIKeys.size()));
-        Inventory originalGui = bingoGUIs.get(randomPlayerId);
-
-        // Clone the selected bingo GUI
-        Inventory clonedGui = cloneInventory(originalGui);
-
-        // Add the cloned GUI to this player
-        bingoGUIs.put(playerId, clonedGui);
-        playerBingoCards.put(playerId, new ArrayList<>(playerBingoCards.get(randomPlayerId))); // Clone the ticked off cards
-
-        player.sendMessage(ChatColor.GREEN + "A Bingo card has been assigned to you. You have joined the game in progress.");
     }
-
     // Utility method to clone an inventory
     private Inventory cloneInventory(Inventory original) {
 
