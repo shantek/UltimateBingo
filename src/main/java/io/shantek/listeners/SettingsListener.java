@@ -8,6 +8,7 @@ import io.shantek.tools.MaterialList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -49,27 +50,42 @@ public class SettingsListener implements Listener {
                 switch (slot) {
                     case 0:
                         bingoGameGUIManager.toggleGameMode(player);
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
                         break;
                     case 1:
                         bingoGameGUIManager.toggleDifficulty(player);
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
                         break;
                     case 2:
                         bingoGameGUIManager.toggleCardSize(player);
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
                         break;
                     case 3:
                         bingoGameGUIManager.toggleCardType(player);
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
                         break;
                     case 4:
                         bingoGameGUIManager.toggleWinCondition(player);
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+                        break;
+                    case 5:
+                        bingoGameGUIManager.toggleRevealCards(player);
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
                         break;
                     case 8:
                         ultimateBingo.bingoCommand.startBingo(player);
+                        ultimateBingo.bingoSpawnLocation = player.getLocation();
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+                        player.closeInventory();
                         break;
                     default:
                         // This case handles any undefined slots, no action is taken
                         break;
                 }
             }
+
+            ultimateBingo.configFile.saveConfig();
+
         } else if (e.getView().getTitle().equals(ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo Settings")) {
             e.setCancelled(true);
 

@@ -1,9 +1,11 @@
 package io.shantek.listeners;
 
 import io.shantek.UltimateBingo;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,12 +19,26 @@ public class BingoInteractListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+
+        ItemStack item = event.getItemDrop().getItemStack();
+
+        if (item.getType() == Material.FILLED_MAP && item.getItemMeta().hasDisplayName() &&
+                item.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
+            event.setCancelled(true);
+
+        }
+    }
+
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+
+
         ItemStack itemInHand = event.getItem();
 
-        // Check if the player is holding the "Bingo" stick
-        if (itemInHand != null && itemInHand.getType() == Material.PAPER && itemInHand.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
+        // Check if the player is holding the "Bingo card"
+        if (itemInHand != null && itemInHand.getType() == Material.FILLED_MAP && itemInHand.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
 
             // Run the "/bingo" command for the player
             // If this is false, the bingo countdown is still running or they have an old card
@@ -32,7 +48,6 @@ public class BingoInteractListener implements Listener {
                 player.sendMessage(ChatColor.RED + "Bingo hasn't started yet!");
             }
 
-            // Optionally, cancel the event to prevent the stick from being used as a normal stick
             event.setCancelled(true);
         }
     }

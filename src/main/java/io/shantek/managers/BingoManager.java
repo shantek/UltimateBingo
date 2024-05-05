@@ -33,7 +33,7 @@ public class BingoManager{
 
         // Determine difficulty level and set TOTAL_ITEMS based on it
         int difficultyLevel;
-        switch (ultimateBingo.difficulty) {
+        switch (ultimateBingo.difficulty.toLowerCase()) {
             case "normal":
                 difficultyLevel = 2;
                 TOTAL_ITEMS = 21; // Set TOTAL_ITEMS for normal difficulty
@@ -74,8 +74,7 @@ public class BingoManager{
                 bingoGUI.setItem(slots[i], item);
             }
 
-            // Open the unique card inventory for each player
-            player.openInventory(bingoGUI);
+
             bingoGUIs.put(playerId, bingoGUI);
 
             // Store the card for each player
@@ -97,7 +96,7 @@ public class BingoManager{
 
 // Determine difficulty level and set TOTAL_ITEMS based on it
         int difficultyLevel;
-        switch (ultimateBingo.difficulty) {
+        switch (ultimateBingo.difficulty.toLowerCase()) {
             case "normal":
                 difficultyLevel = 2;
                 TOTAL_ITEMS = 21; // Set TOTAL_ITEMS for normal difficulty
@@ -144,7 +143,7 @@ public class BingoManager{
 
             playerBingoCards.put(playerId, cards);
             bingoGUIs.put(playerId, bingoGUI);
-            player.openInventory(bingoGUI);
+
         }
     }
 
@@ -224,7 +223,7 @@ public class BingoManager{
                     if (!target.equals(player)) { // Exclude the player who triggered the event
 
                         // Show more info if reveal mode is enabled. If not, be more cryptic in what they did
-                        if (ultimateBingo.gameMode.equals("reveal")) {
+                        if (ultimateBingo.revealCards) {
                             target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
 
                         } else {
@@ -246,7 +245,7 @@ public class BingoManager{
                 } else {
 
                     // Not a full card, check for traditional line bingo
-                    switch (cardSize) {
+                    switch (cardSize.toLowerCase()) {
                         case "small":
                             if (ultimateBingo.cardTypes.checkSmallCardBingo(player)) {
                                 hasBingo = true;
@@ -266,7 +265,7 @@ public class BingoManager{
                 }
                 if (hasBingo) {
                     // Disable the game
-                    ultimateBingo.bingoCommand.bingoStarted = false;
+                    ultimateBingo.bingoStarted = false;
 
                     Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
                     for (Player target : Bukkit.getOnlinePlayers()){
