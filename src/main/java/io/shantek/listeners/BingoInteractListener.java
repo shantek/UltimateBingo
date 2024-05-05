@@ -43,7 +43,7 @@ public class BingoInteractListener implements Listener {
             // Run the "/bingo" command for the player
             // If this is false, the bingo countdown is still running or they have an old card
             if (ultimateBingo.bingoCardActive) {
-                player.performCommand("bingo");
+                ultimateBingo.bingoCommand.openBingo(player);
             } else {
                 player.sendMessage(ChatColor.RED + "Bingo hasn't started yet!");
             }

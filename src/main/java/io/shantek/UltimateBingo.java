@@ -10,6 +10,7 @@ import io.shantek.managers.BingoManager;
 import io.shantek.managers.SettingsManager;
 import io.shantek.managers.ConfigFile;
 import io.shantek.managers.BingoGameGUIManager;
+import io.shantek.managers.BingoPlayerGUIManager;
 import io.shantek.tools.MaterialList;
 import io.shantek.tools.BingoFunctions;
 import org.bukkit.Bukkit;
@@ -23,6 +24,8 @@ public final class UltimateBingo extends JavaPlugin {
     private MaterialList materialList;
     public BingoFunctions bingoFunctions;
     public BingoGameGUIManager bingoGameGUIManager;
+    public BingoPlayerGUIManager bingoPlayerGUIManager;
+    public BingoPlayerGUIListener bingoPlayerGUIListener;
     public BingoCommand bingoCommand;
     public Location bingoSpawnLocation;
     public ConfigFile configFile;
@@ -52,10 +55,12 @@ public final class UltimateBingo extends JavaPlugin {
         bingoCommand = new BingoCommand(this, settingsManager, bingoManager);
         materialList = new MaterialList(this);
         bingoGameGUIManager = new BingoGameGUIManager(this);
+        bingoPlayerGUIManager = new BingoPlayerGUIManager(this);
         bingoFunctions = new BingoFunctions(this);
         cardTypes = new CardTypes(this);
         configFile = new ConfigFile(this);
 
+        /*
         RespawnListener respawnListener = new RespawnListener(this);
         BingoCraftListener bingoCraftListener = new BingoCraftListener(this);
         BingoPickupListener bingoPickupListener = new BingoPickupListener(this);
@@ -63,6 +68,7 @@ public final class UltimateBingo extends JavaPlugin {
         BingoInventoryOpenListener bingoInventoryOpenListener = new BingoInventoryOpenListener(this);
         BingoInventoryCloseListener bingoInventoryCloseListener = new BingoInventoryCloseListener(this);
         SettingsListener settingsListener = new SettingsListener(materialList, settingsManager, bingoGameGUIManager, this);
+        */
 
         getCommand("bingo").setExecutor(new BingoCommand(this, settingsManager, bingoManager));
         getCommand("bingo").setTabCompleter(new BingoCompleter());
@@ -89,9 +95,10 @@ public final class UltimateBingo extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BingoInventoryCloseListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoGUIListener(), this);
 
-
         SettingsManager settingsManager = new SettingsManager(this);
         Bukkit.getPluginManager().registerEvents(new SettingsListener(materialList, settingsManager, bingoGameGUIManager, this), this);
+        Bukkit.getPluginManager().registerEvents(new BingoPlayerGUIListener(materialList, bingoPlayerGUIManager, this), this);
+
     }
 
     public BingoManager getBingoManager() {

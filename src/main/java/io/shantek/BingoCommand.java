@@ -88,7 +88,9 @@ public class BingoCommand implements CommandExecutor {
 
             } else {
                 if (ultimateBingo.bingoStarted & ultimateBingo.bingoCardActive) {
-                    openBingo(player);
+                    //openBingo(player);
+                    player.openInventory(ultimateBingo.bingoPlayerGUIManager.createPlayerGUI(player));
+
                 }
                 if (!ultimateBingo.bingoStarted) {
                     player.sendMessage(ChatColor.RED + "Bingo hasn't started yet!");
