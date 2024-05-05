@@ -89,6 +89,12 @@ public class BingoManager{
         }
     }
 
+    public boolean checkHasBingoCard(Player player) {
+        UUID playerId = player.getUniqueId();
+        return bingoGUIs.containsKey(playerId);
+    }
+
+
     public void createUniqueBingoCards() {
         started = true;
         playerBingoCards = new HashMap<>();
@@ -307,5 +313,55 @@ public class BingoManager{
     public boolean isStarted() {
         return started;
     }
+
+    public void joinGameInProgress(Player player) {
+        UUID playerId = player.getUniqueId();
+
+        // Check if the player already has a bingo GUI
+        if (bingoGUIs.containsKey(playerId)) {
+            player.sendMessage(ChatColor.YELLOW + "You already have a Bingo card.");
+            return;
+        }
+
+        // Get a list of all available GUIs
+        List<UUID> availableGUIKeys = new ArrayList<>(bingoGUIs.keySet());
+
+        if (availableGUIKeys.isEmpty()) {
+            player.sendMessage(ChatColor.RED + "No Bingo cards are available to clone. Please wait for the next round.");
+            return; // Optionally, handle creating a new card instead of returning
+        }
+
+        // Select a random GUI to clone
+        UUID randomPlayerId = availableGUIKeys.get(new Random().nextInt(availableGUIKeys.size()));
+        Inventory originalGui = bingoGUIs.get(randomPlayerId);
+
+        // Clone the selected bingo GUI
+        Inventory clonedGui = cloneInventory(originalGui);
+
+        // Add the cloned GUI to this player
+        bingoGUIs.put(playerId, clonedGui);
+        playerBingoCards.put(playerId, new ArrayList<>(playerBingoCards.get(randomPlayerId))); // Clone the ticked off cards
+
+        player.sendMessage(ChatColor.GREEN + "A Bingo card has been assigned to you. You have joined the game in progress.");
+    }
+
+    // Utility method to clone an inventory
+    private Inventory cloneInventory(Inventory original) {
+
+        // Store the string for the card type
+        String newCardInfo = ultimateBingo.uniqueCard ? "unique" : "identical";
+        newCardInfo += ultimateBingo.fullCard ? "/full card" : "/single row";
+        newCardInfo = "(" + newCardInfo + ")";
+
+        Inventory clone = Bukkit.createInventory(null, original.getSize(), ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + newCardInfo);
+        for (int i = 0; i < original.getSize(); i++) {
+            ItemStack originalItem = original.getItem(i);
+            if (originalItem != null) {
+                clone.setItem(i, new ItemStack(originalItem));
+            }
+        }
+        return clone;
+    }
+
 
 }

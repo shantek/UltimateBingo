@@ -8,14 +8,13 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class BingoFunctions
 {
@@ -55,6 +54,36 @@ public class BingoFunctions
             player.setLevel(0);
 
         }
+    }
+
+    public void resetIndividualPlayer(Player player) {
+
+        // Reset health to max health (20.0 is full health)
+        player.setHealth(20.0);
+
+        // Reset food level to max (20 is full hunger)
+        player.setFoodLevel(20);
+
+        // Reset saturation to max (5.0F is full saturation)
+        player.setSaturation(5.0F);
+
+        // Reset exhaustion to 0 (no exhaustion)
+        player.setExhaustion(0.0F);
+
+        // Reset remaining potion effects
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.removePotionEffect(effect.getType());
+        }
+
+        // Clear inventory
+        player.getInventory().clear();
+
+        // Clear armor
+        player.getInventory().setArmorContents(new ItemStack[4]);
+
+        // Reset XP and levels
+        player.setExp(0);
+        player.setLevel(0);
     }
 
     public void giveBingoCard(Player player) {
