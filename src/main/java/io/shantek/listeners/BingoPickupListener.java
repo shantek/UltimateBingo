@@ -22,12 +22,12 @@ public class BingoPickupListener implements Listener {
     public void onPickup(EntityPickupItemEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            if (ultimateBingo.getBingoManager().isStarted()) {
-                BingoManager bingoManager = ultimateBingo.getBingoManager();
+            if (ultimateBingo.bingoManager.isStarted()) {
+               // BingoManager bingoManager = ultimateBingo.getBingoManager();
                 Material pickedItem = event.getItem().getItemStack().getType();
 
                 UUID uuid = player.getUniqueId();
-                Map<UUID, Inventory> bingoGUIs = bingoManager.getBingoGUIs();
+                Map<UUID, Inventory> bingoGUIs = ultimateBingo.bingoManager.getBingoGUIs();
                 MaterialList materialListObject = ultimateBingo.getMaterialList();
 
                 List<Material> allMaterials = new ArrayList<>();
@@ -40,10 +40,10 @@ public class BingoPickupListener implements Listener {
                 if (allMaterials.contains(pickedItem)) {
                     Inventory bingoGUI = bingoGUIs.get(uuid);
                     if (bingoGUI != null) {
-                        for (int i : bingoManager.getSlots()) {
+                        for (int i : ultimateBingo.bingoManager.getSlots()) {
                             ItemStack bingoItem = bingoGUI.getItem(i);
                             if (bingoItem != null && bingoItem.getType() == pickedItem) {
-                                bingoManager.markItemAsComplete(player, pickedItem);
+                                ultimateBingo.bingoManager.markItemAsComplete(player, pickedItem);
                             }
                         }
                     }

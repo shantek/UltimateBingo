@@ -37,6 +37,8 @@ public final class UltimateBingo extends JavaPlugin {
     public boolean bingoCardActive = false;
     public String gameMode = "traditional";
     public boolean respawnTeleport = true;
+    public boolean revealCards = true;
+    public boolean bingoStarted = false;
 
     public static UltimateBingo instance;
 
@@ -57,7 +59,7 @@ public final class UltimateBingo extends JavaPlugin {
         RespawnListener respawnListener = new RespawnListener(this);
         BingoCraftListener bingoCraftListener = new BingoCraftListener(this);
         BingoPickupListener bingoPickupListener = new BingoPickupListener(this);
-        BingoInteractListener bingoStickListener = new BingoInteractListener(this);
+        BingoInteractListener bingoInteractListener = new BingoInteractListener(this);
         BingoInventoryOpenListener bingoInventoryOpenListener = new BingoInventoryOpenListener(this);
         BingoInventoryCloseListener bingoInventoryCloseListener = new BingoInventoryCloseListener(this);
         SettingsListener settingsListener = new SettingsListener(materialList, settingsManager, bingoGameGUIManager, this);
@@ -85,7 +87,8 @@ public final class UltimateBingo extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BingoInteractListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoInventoryOpenListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoInventoryCloseListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new BingoGUIListener(), this); // Assuming this doesn't need 'this'
+        Bukkit.getPluginManager().registerEvents(new BingoGUIListener(), this);
+
 
         SettingsManager settingsManager = new SettingsManager(this);
         Bukkit.getPluginManager().registerEvents(new SettingsListener(materialList, settingsManager, bingoGameGUIManager, this), this);

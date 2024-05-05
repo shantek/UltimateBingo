@@ -50,13 +50,15 @@ public class ConfigFile {
 
             config.save(configFile);  // Save once after all updates
 
+
+            ultimateBingo.difficulty = getString(config, "difficulty", "normal").toLowerCase();
+            ultimateBingo.cardSize = getString(config, "card-size", "medium").toLowerCase();
+            ultimateBingo.gameMode = getString(config, "game-mode", "traditional").toLowerCase();
             ultimateBingo.fullCard = getBoolean(config, "full-card", false);
-            ultimateBingo.difficulty = getString(config, "difficulty", "normal");
-            ultimateBingo.cardSize = getString(config, "card-size", "medium");
+            ultimateBingo.respawnTeleport = getBoolean(config, "respawn-teleport", true);
+            ultimateBingo.revealCards = getBoolean(config, "reveal-cards", true);
             ultimateBingo.uniqueCard = getBoolean(config, "unique-card", false);
             ultimateBingo.consoleLogs = getBoolean(config, "console-logs", true);
-            ultimateBingo.gameMode = getString(config, "game-mode", "traditional");
-            ultimateBingo.respawnTeleport = getBoolean(config, "respawn-teleport", true);
 
         } catch (Exception e) {
             ultimateBingo.getLogger().log(Level.SEVERE, "An error occurred while reloading the config file", e);
@@ -65,13 +67,13 @@ public class ConfigFile {
 
     private boolean checkForMissingKeys(FileConfiguration config) {
         List<String> keysToCheck = Arrays.asList(
-                "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport");
+                "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport", "reveal-cards");
         return keysToCheck.stream().anyMatch(key -> !config.contains(key));
     }
 
     private Map<String, Object> saveMissingKeyValues(FileConfiguration config) {
         List<String> keysToCheck = Arrays.asList(
-                "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport");
+                "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport", "reveal-cards");
 
         Map<String, Object> missingKeyValues = new HashMap<>();
         keysToCheck.forEach(key -> {
@@ -122,13 +124,15 @@ public class ConfigFile {
             FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
             // Update config values with current game state
+
+            config.set("difficulty", ultimateBingo.difficulty.toLowerCase());
+            config.set("card-size", ultimateBingo.cardSize.toLowerCase());
+            config.set("game-mode", ultimateBingo.gameMode.toLowerCase());
             config.set("full-card", ultimateBingo.fullCard);
-            config.set("difficulty", ultimateBingo.difficulty);
-            config.set("card-size", ultimateBingo.cardSize);
             config.set("unique-card", ultimateBingo.uniqueCard);
             config.set("console-logs", ultimateBingo.consoleLogs);
-            config.set("game-mode", ultimateBingo.gameMode);
             config.set("respawn-teleport", ultimateBingo.respawnTeleport);
+            config.set("reveal-cards", ultimateBingo.revealCards);
 
             config.save(configFile);
         } catch (IOException e) {
