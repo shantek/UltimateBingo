@@ -87,12 +87,21 @@ public class BingoCommand implements CommandExecutor {
                 }
 
             } else {
-                if (ultimateBingo.bingoStarted & ultimateBingo.bingoCardActive) {
-                    //openBingo(player);
+                if (ultimateBingo.bingoStarted && ultimateBingo.bingoCardActive) {
+
+                    if (!ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+
+                        // They aren't in the game, let's give them a card and let them join
+                        ultimateBingo.bingoManager.joinGameInProgress(player);
+                        player.sendMessage(ChatColor.GREEN + "You've been given a random bingo card, good luck!");
+                        ultimateBingo.bingoFunctions.resetIndividualPlayer(player);
+                        ultimateBingo.bingoFunctions.giveBingoCard(player);
+
+                    }
+
                     player.openInventory(ultimateBingo.bingoPlayerGUIManager.createPlayerGUI(player));
 
-                }
-                if (!ultimateBingo.bingoStarted) {
+                } else if (!ultimateBingo.bingoStarted) {
                     player.sendMessage(ChatColor.RED + "Bingo hasn't started yet!");
                 }
             }
