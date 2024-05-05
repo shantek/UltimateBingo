@@ -66,7 +66,7 @@ public class BingoFunctions
             return; // Stop further execution if they already have one
         }
 
-        ItemStack bingoCard = new ItemStack(Material.FILLED_MAP);
+        ItemStack bingoCard = new ItemStack(ultimateBingo.bingoCardMaterial);
         ItemMeta itemMeta = bingoCard.getItemMeta();
 
         if (itemMeta != null) { // Always good to check for null when working with ItemMeta
@@ -100,7 +100,7 @@ public class BingoFunctions
 
     private boolean hasBingoCard(PlayerInventory inventory) {
         for (ItemStack item : inventory.getContents()) {
-            if (item != null && item.getType() == Material.FILLED_MAP) {
+            if (item != null && item.getType() == ultimateBingo.bingoCardMaterial) {
                 ItemMeta meta = item.getItemMeta();
                 if (meta != null && meta.hasDisplayName() && meta.getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
                     return true; // Bingo card found

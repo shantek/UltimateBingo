@@ -15,6 +15,7 @@ import io.shantek.tools.MaterialList;
 import io.shantek.tools.BingoFunctions;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import io.shantek.managers.CardTypes;
@@ -42,6 +43,7 @@ public final class UltimateBingo extends JavaPlugin {
     public boolean respawnTeleport = true;
     public boolean revealCards = true;
     public boolean bingoStarted = false;
+    public Material bingoCardMaterial = Material.COMPASS;
 
     public static UltimateBingo instance;
 
