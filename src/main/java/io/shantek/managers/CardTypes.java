@@ -1,6 +1,8 @@
 package io.shantek.managers;
 
 import io.shantek.UltimateBingo;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -16,6 +18,7 @@ public class CardTypes {
     }
 
     public boolean checkSmallCardBingo(Player player) {
+
         UUID playerId = player.getUniqueId();
         Inventory inv = ultimateBingo.bingoManager.getBingoGUIs().get(playerId);
 
@@ -51,6 +54,7 @@ public class CardTypes {
     }
 
     public boolean checkMediumCardBingo(Player player) {
+
         UUID playerId = player.getUniqueId();
         Inventory inv = ultimateBingo.bingoManager.getBingoGUIs().get(playerId);
 
@@ -87,6 +91,7 @@ public class CardTypes {
     }
 
     public boolean checkLargeCardBingo(Player player) {
+
         UUID playerId = player.getUniqueId();
         Inventory inv = ultimateBingo.bingoManager.getBingoGUIs().get(playerId);
 

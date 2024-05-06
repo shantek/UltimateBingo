@@ -5,6 +5,7 @@ import io.shantek.tools.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -43,22 +44,56 @@ public class BingoGameGUIManager {
     }
 
     public void toggleGameMode(Player player) {
-        // Assuming there are exactly two game modes.
-        ultimateBingo.gameMode = ultimateBingo.gameMode.equals("TRADITIONAL") ? "SPEED RUN" : "TRADITIONAL";;
+
+        /*
+        switch (ultimateBingo.gameMode) {
+            case "traditional":
+                ultimateBingo.gameMode = "speedrun";
+                break;
+            case "speedrun":
+                ultimateBingo.gameMode = "teams";
+                break;
+            case "teams":
+                ultimateBingo.gameMode = "traditional";
+                break;
+        }
+        */
+
+        // Temporary until adding the new game modes
+        ultimateBingo.gameMode = "traditional";
         updateGUI(player);
     }
 
     public void toggleDifficulty(Player player) {
         // Cycle through difficulties. Assuming there are three fixed difficulties.
-        String current = ultimateBingo.difficulty;
-        ultimateBingo.difficulty = current.equals("EASY") ? "NORMAL" : current.equals("NORMAL") ? "HARD" : "EASY";
+
+        switch (ultimateBingo.difficulty) {
+            case "easy":
+                ultimateBingo.difficulty = "normal";
+                break;
+            case "normal":
+                ultimateBingo.difficulty = "hard";
+                break;
+            case "hard":
+                ultimateBingo.difficulty = "easy";
+                break;
+        }
+
         updateGUI(player);
     }
 
     public void toggleCardSize(Player player) {
-        // Cycle through card sizes. Assuming there are three fixed sizes.
-        String current = ultimateBingo.cardSize;
-        ultimateBingo.cardSize = current.equals("SMALL") ? "MEDIUM" : current.equals("MEDIUM") ? "LARGE" : "SMALL";
+        switch (ultimateBingo.cardSize) {
+            case "small":
+                ultimateBingo.cardSize = "medium";
+                break;
+            case "medium":
+                ultimateBingo.cardSize = "large";
+                break;
+            case "large":
+                ultimateBingo.cardSize = "small";
+                break;
+        }
         updateGUI(player);
     }
 
