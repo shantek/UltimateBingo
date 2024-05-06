@@ -264,7 +264,6 @@ public class MaterialList {
         add(Material.REDSTONE_BLOCK,4);
         add(Material.CHERRY_LEAVES, 4);
         add(Material.CHERRY_PLANKS, 4);
-        add(Material.MELON, 4);
         add(Material.DEAD_BUSH, 4);
         add(Material.DARK_OAK_LEAVES, 4);
         add(Material.SPORE_BLOSSOM, 4);

@@ -41,8 +41,11 @@ public class BingoCommand implements CommandExecutor {
 
                 } else if (args[0].equalsIgnoreCase("gui") && player.hasPermission("shantek.ultimatebingo.play")) {
 
-                    player.openInventory(ultimateBingo.bingoGameGUIManager.createGameGUI(player));
-
+                    if (ultimateBingo.bingoStarted) {
+                        player.sendMessage(ChatColor.RED + "A bingo game is in progress. Finish the game or use /bingo stop");
+                    } else {
+                        player.openInventory(ultimateBingo.bingoGameGUIManager.createGameGUI(player));
+                    }
 
                 } else if (args[0].equalsIgnoreCase("card")) {
                     if (ultimateBingo.revealCards) {
@@ -169,29 +172,38 @@ public class BingoCommand implements CommandExecutor {
                 // Countdown with chimes, with bold and colorful text
                 for (int i = 3; i > 0; i--) {
                     final int count = i;
+
+                    // Only continue if the game is still active
+                    if (ultimateBingo.bingoStarted) {
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                            player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + String.valueOf(count), "", 10, 20, 10);
+                            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+                        }, 100 + 30 * (3 - count)); // Countdown starts at 5 seconds
+                    }
+                }
+                // Final "GO!" message and chime, bold and green - Only if the game is still active
+                if (ultimateBingo.bingoStarted) {
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                        player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + String.valueOf(count), "", 10, 20, 10);
-                        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
-                    }, 100 + 30 * (3 - count)); // Countdown starts at 5 seconds
+                        player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "GO!", "", 10, 20, 10);
+                        player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
+                    }, 190); // 1.5 seconds after "1"
                 }
-
-                // Final "GO!" message and chime, bold and green
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "GO!", "", 10, 20, 10);
-                    player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
-                }, 190); // 1.5 seconds after "1"
             });
 
-            // Handle player teleportation and give bingo cards after the countdown
-            onlinePlayers.forEach(player -> {
-                if (ultimateBingo.bingoSpawnLocation != null) {
-                    player.teleport(ultimateBingo.bingoSpawnLocation);
-                }
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    ultimateBingo.bingoFunctions.giveBingoCard(player);
-                    ultimateBingo.bingoCardActive = true;
-                }, 210); // 210 ticks = 10.5 seconds, just after the "GO!"
-            });
+            // Game still active? If so, let's start it
+            if (ultimateBingo.bingoStarted) {
+
+                // Handle player teleportation and give bingo cards after the countdown
+                onlinePlayers.forEach(player -> {
+                    if (ultimateBingo.bingoSpawnLocation != null) {
+                        player.teleport(ultimateBingo.bingoSpawnLocation);
+                    }
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                        ultimateBingo.bingoFunctions.giveBingoCard(player);
+                        ultimateBingo.bingoCardActive = true;
+                    }, 210); // 210 ticks = 10.5 seconds, just after the "GO!"
+                });
+            }
         }
     }
 

@@ -214,6 +214,7 @@ public class BingoManager{
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack item = inv.getItem(i);
             if (item != null && item.getType() == completedMaterial) {
+
                 item.setType(Material.LIME_CONCRETE);
                 ItemMeta meta = item.getItemMeta();
                 meta.setDisplayName(ChatColor.GREEN + "Completed: " + completedMaterial.name());
