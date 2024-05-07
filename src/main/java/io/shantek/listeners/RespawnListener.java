@@ -23,7 +23,7 @@ public class RespawnListener implements Listener {
         // Only teleport the player back to bingo spawn if enabled in the settings
         // Enabled by default
 
-        if (ultimateBingo.bingoManager.isStarted() && ultimateBingo.respawnTeleport) {
+        if (ultimateBingo.bingoStarted && ultimateBingo.respawnTeleport) {
             Player player = event.getPlayer();
 
             // Delay the sendTitle message by 10 ticks
@@ -37,7 +37,17 @@ public class RespawnListener implements Listener {
                 ultimateBingo.bingoFunctions.giveBingoCard(player);
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 1.0f);
             }, 70L); // Delay teleportation by 3.5 seconds (70 ticks) after respawn
+
+
+            // Equip them with fresh speed run gear after respawning
+            if (ultimateBingo.gameMode.equals("speedrun")) {
+
+                ultimateBingo.bingoFunctions.equipSpeedRunGear(player);
+
+            }
         }
+
+
 
     }
 }
