@@ -53,7 +53,7 @@ public class BingoPlayerGUIListener implements Listener {
                         break;
 
                     case 1:
-                        player.openInventory(ultimateBingo.bingoPlayerGUIManager.setupPlayersBingoCardsInventory());
+                        player.openInventory(ultimateBingo.bingoPlayerGUIManager.setupPlayersBingoCardsInventory(true));
                         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
                         break;
                         /*
