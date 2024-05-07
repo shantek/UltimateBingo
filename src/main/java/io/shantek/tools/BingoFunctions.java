@@ -270,4 +270,16 @@ public class BingoFunctions
         playerLoc.setPitch(0); // Ensure players look straight ahead, not up or down
         player.teleport(playerLoc);
     }
+
+
+    // Settings items for player bingo cards
+
+    public ItemStack createSpyglass() {
+        ItemStack spyglass = new ItemStack(Material.SPYGLASS);
+        ItemMeta meta = spyglass.getItemMeta();
+        meta.setDisplayName(ChatColor.GOLD + "View Players Cards");
+        meta.setLore(Arrays.asList(ChatColor.GRAY + "Get a peek at other players' cards!"));
+        spyglass.setItemMeta(meta);
+        return spyglass;
+    }
 }

@@ -87,8 +87,7 @@ public final class UltimateBingo extends JavaPlugin {
         //Bukkit.getPluginManager().registerEvents(new BingoInventoryOpenListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoInventoryCloseListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoPlayerJoinListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new BingoGUIListener(), this);
-
+        Bukkit.getPluginManager().registerEvents(new BingoGUIListener(this), this);
         SettingsManager settingsManager = new SettingsManager(this);
         Bukkit.getPluginManager().registerEvents(new SettingsListener(materialList, settingsManager, bingoGameGUIManager, this), this);
         Bukkit.getPluginManager().registerEvents(new BingoPlayerGUIListener(materialList, bingoPlayerGUIManager, this), this);

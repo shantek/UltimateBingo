@@ -74,6 +74,10 @@ public class BingoManager{
                 bingoGUI.setItem(slots[i], item);
             }
 
+            // Add the Spyglass to the last slot if the feature is enabled
+            if (ultimateBingo.revealCards) {
+                bingoGUI.setItem(17, ultimateBingo.bingoFunctions.createSpyglass()); // Add Spyglass to slot 53 (last slot)
+            }
 
             bingoGUIs.put(playerId, bingoGUI);
 
@@ -147,11 +151,17 @@ public class BingoManager{
                 cards.add(item);
             }
 
+            // Add the Spyglass to the last slot if the feature is enabled
+            if (ultimateBingo.revealCards) {
+                bingoGUI.setItem(17, ultimateBingo.bingoFunctions.createSpyglass()); // Add Spyglass to slot 53 (last slot)
+            }
+
             playerBingoCards.put(playerId, cards);
             bingoGUIs.put(playerId, bingoGUI);
 
         }
     }
+
 
     private int[] determineSlotsBasedOnCardSize() {
         // Define slot arrangements for different card sizes
@@ -210,10 +220,13 @@ public class BingoManager{
     }
 
     public void markItemAsComplete(Player player, Material completedMaterial) {
+
         Inventory inv = getBingoGUIs().get(player.getUniqueId());
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack item = inv.getItem(i);
             if (item != null && item.getType() == completedMaterial) {
+
+
 
                 item.setType(Material.LIME_CONCRETE);
                 ItemMeta meta = item.getItemMeta();
@@ -366,12 +379,14 @@ public class BingoManager{
     private int countTickedItems(List<ItemStack> items) {
         int count = 0;
         for (ItemStack item : items) {
-            if (item != null && item.getType() != Material.AIR) { // Assume ticked items are non-null and not AIR
+            // Check if the item is not null and is specifically LIME_CONCRETE
+            if (item != null && item.getType() == Material.LIME_CONCRETE) {
                 count++;
             }
         }
         return count;
     }
+
 
     // Utility method to clone an inventory
     private Inventory cloneInventory(Inventory original) {
