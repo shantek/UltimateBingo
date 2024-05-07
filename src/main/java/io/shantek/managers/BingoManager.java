@@ -323,34 +323,56 @@ public class BingoManager{
     public void joinGameInProgress(Player player) {
         UUID playerId = player.getUniqueId();
 
-        // Check if the player already has a bingo GUI
+        // Check if the player already has a Bingo card
         if (bingoGUIs.containsKey(playerId)) {
             player.sendMessage(ChatColor.YELLOW + "You already have a Bingo card.");
             return;
         }
 
-        // Get a list of all available GUIs
-        List<UUID> availableGUIKeys = new ArrayList<>(bingoGUIs.keySet());
-
-        if (availableGUIKeys.isEmpty()) {
+        if (playerBingoCards.isEmpty()) {
             player.sendMessage(ChatColor.RED + "No Bingo cards are available to clone. Please wait for the next round.");
-            return; // Optionally, handle creating a new card instead of returning
-        } else {
-
-            // Select a random GUI to clone
-            UUID randomPlayerId = availableGUIKeys.get(new Random().nextInt(availableGUIKeys.size()));
-            Inventory originalGui = bingoGUIs.get(randomPlayerId);
-
-            // Clone the selected bingo GUI
-            Inventory clonedGui = cloneInventory(originalGui);
-
-            // Add the cloned GUI to this player
-            bingoGUIs.put(playerId, clonedGui);
-            playerBingoCards.put(playerId, new ArrayList<>(playerBingoCards.get(randomPlayerId))); // Clone the ticked off cards
-
-            Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " has just joined bingo!");
+            return;
         }
+
+        // Find the card with the fewest ticked off items
+        UUID idOfLeastTickedCard = null;
+        int fewestTickedItems = Integer.MAX_VALUE;
+        for (Map.Entry<UUID, List<ItemStack>> entry : playerBingoCards.entrySet()) {
+            int tickedItemsCount = countTickedItems(entry.getValue());
+            if (tickedItemsCount < fewestTickedItems) {
+                fewestTickedItems = tickedItemsCount;
+                idOfLeastTickedCard = entry.getKey();
+            }
+        }
+
+        if (idOfLeastTickedCard == null) {
+            player.sendMessage(ChatColor.RED + "No suitable Bingo card found.");
+            return;
+        }
+
+        // Clone the Bingo GUI and card list
+        Inventory originalGui = bingoGUIs.get(idOfLeastTickedCard);
+        Inventory clonedGui = cloneInventory(originalGui);
+        List<ItemStack> clonedCardList = new ArrayList<>(playerBingoCards.get(idOfLeastTickedCard));
+
+        // Assign the cloned GUI and card list to the new player
+        bingoGUIs.put(playerId, clonedGui);
+        playerBingoCards.put(playerId, clonedCardList);
+
+        player.sendMessage(ChatColor.GREEN + "You've been given an in-progress bingo card, good luck!");
+        Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " has just joined bingo!");
     }
+
+    private int countTickedItems(List<ItemStack> items) {
+        int count = 0;
+        for (ItemStack item : items) {
+            if (item != null && item.getType() != Material.AIR) { // Assume ticked items are non-null and not AIR
+                count++;
+            }
+        }
+        return count;
+    }
+
     // Utility method to clone an inventory
     private Inventory cloneInventory(Inventory original) {
 
