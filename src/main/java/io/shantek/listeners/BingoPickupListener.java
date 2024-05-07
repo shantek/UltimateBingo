@@ -22,7 +22,7 @@ public class BingoPickupListener implements Listener {
     public void onPickup(EntityPickupItemEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            if (ultimateBingo.bingoManager.isStarted()) {
+            if (ultimateBingo.bingoStarted) {
                // BingoManager bingoManager = ultimateBingo.getBingoManager();
                 Material pickedItem = event.getItem().getItemStack().getType();
 
