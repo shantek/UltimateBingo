@@ -193,14 +193,13 @@ public class BingoFunctions
         // Give player their basic tools
         player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_SWORD, new Enchantment[]{Enchantment.DAMAGE_ALL, Enchantment.KNOCKBACK, Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS, Enchantment.SWEEPING_EDGE}, new int[]{5, 2, 2, 3, 3}));
         player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_PICKAXE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.LOOT_BONUS_BLOCKS, Enchantment.DURABILITY}, new int[]{5, 3, 3}));
-        player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_AXE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.DURABILITY, Enchantment.MENDING}, new int[]{5, 3, 1}));
+        player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_AXE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.DURABILITY, Enchantment.MENDING, Enchantment.SILK_TOUCH}, new int[]{5, 3, 1, 1}));
         player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_SHOVEL, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.DURABILITY, Enchantment.MENDING}, new int[]{5, 3, 1}));
 
         // Add additional items
         player.getInventory().addItem(new ItemStack(Material.PURPLE_BED));
-        player.getInventory().addItem(new ItemStack(Material.TORCH, 64));
-        player.getInventory().addItem(new ItemStack(Material.GOLDEN_CARROT, 64));
         player.getInventory().addItem(new ItemStack(Material.CRAFTING_TABLE, 1));
+        player.getInventory().addItem(new ItemStack(Material.JUNGLE_BOAT, 1));
     }
     // Utility method to create enchanted armor
     private ItemStack createEnchantedArmor(Material material, Enchantment[] enchantments, int[] levels) {

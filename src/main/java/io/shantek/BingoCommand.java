@@ -167,6 +167,7 @@ public class BingoCommand implements CommandExecutor {
 
                 // Freeze players
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100000, 255, false, false));
+
                 player.setWalkSpeed(0);
 
 
@@ -219,8 +220,10 @@ public class BingoCommand implements CommandExecutor {
                     ultimateBingo.bingoCardActive = true;
 
                     // Equip them with the speedrun gear if this mode is enabled
+                    // Also give them night vision
                     if (ultimateBingo.gameMode.equals("speedrun")) {
                         ultimateBingo.bingoFunctions.equipSpeedRunGear(player);
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
                     }
                 }, 210); // 210 ticks = 10.5 seconds, just after the "GO!"
 
@@ -246,6 +249,7 @@ public class BingoCommand implements CommandExecutor {
             onlinePlayers.forEach(player -> {
                         player.removePotionEffect(PotionEffectType.SLOW);
                         player.setWalkSpeed(0.2f); // Default walk speed
+                        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
                     });
 
             // Cancel any tasks that are currently scheduled
