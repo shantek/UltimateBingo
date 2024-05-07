@@ -62,16 +62,6 @@ public final class UltimateBingo extends JavaPlugin {
         cardTypes = new CardTypes(this);
         configFile = new ConfigFile(this);
 
-        /*
-        RespawnListener respawnListener = new RespawnListener(this);
-        BingoCraftListener bingoCraftListener = new BingoCraftListener(this);
-        BingoPickupListener bingoPickupListener = new BingoPickupListener(this);
-        BingoInteractListener bingoInteractListener = new BingoInteractListener(this);
-        BingoInventoryOpenListener bingoInventoryOpenListener = new BingoInventoryOpenListener(this);
-        BingoInventoryCloseListener bingoInventoryCloseListener = new BingoInventoryCloseListener(this);
-        SettingsListener settingsListener = new SettingsListener(materialList, settingsManager, bingoGameGUIManager, this);
-        */
-
         getCommand("bingo").setExecutor(new BingoCommand(this, settingsManager, bingoManager));
         getCommand("bingo").setTabCompleter(new BingoCompleter());
 
@@ -88,13 +78,16 @@ public final class UltimateBingo extends JavaPlugin {
     }
 
     private void registerEventListeners() {
+        // Possibly remove these 2 checks, they should work with the Inventory Close listener.
+
         // Register each listener with the Bukkit plugin manager
         Bukkit.getPluginManager().registerEvents(new RespawnListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new BingoCraftListener(this), this);
+        //Bukkit.getPluginManager().registerEvents(new BingoCraftListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoPickupListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoInteractListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new BingoInventoryOpenListener(this), this);
+        //Bukkit.getPluginManager().registerEvents(new BingoInventoryOpenListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoInventoryCloseListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new BingoPlayerJoinListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoGUIListener(), this);
 
         SettingsManager settingsManager = new SettingsManager(this);
