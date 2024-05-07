@@ -1,10 +1,8 @@
 package io.shantek.tools;
 
 import io.shantek.UltimateBingo;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -56,7 +54,7 @@ public class BingoFunctions
         }
     }
 
-    public void resetIndividualPlayer(Player player) {
+    public void resetIndividualPlayer(Player player, boolean fullReset) {
 
         // Reset health to max health (20.0 is full health)
         player.setHealth(20.0);
@@ -70,20 +68,22 @@ public class BingoFunctions
         // Reset exhaustion to 0 (no exhaustion)
         player.setExhaustion(0.0F);
 
-        // Reset remaining potion effects
-        for (PotionEffect effect : player.getActivePotionEffects()) {
-            player.removePotionEffect(effect.getType());
-        }
-
-        // Clear inventory
-        player.getInventory().clear();
-
-        // Clear armor
-        player.getInventory().setArmorContents(new ItemStack[4]);
-
         // Reset XP and levels
         player.setExp(0);
         player.setLevel(0);
+
+        if (fullReset) {
+            // Reset remaining potion effects
+            for (PotionEffect effect : player.getActivePotionEffects()) {
+                player.removePotionEffect(effect.getType());
+            }
+
+            // Clear inventory
+            player.getInventory().clear();
+
+            // Clear armor
+            player.getInventory().setArmorContents(new ItemStack[4]);
+        }
     }
 
     public void giveBingoCard(Player player) {
@@ -168,4 +168,102 @@ public class BingoFunctions
         }
     }
 
+    // Speed run equipment for players
+
+
+    public void equipSpeedRunGear(Player player) {
+        // Create and set armor
+        player.getInventory().setHelmet(createEnchantedArmor(Material.NETHERITE_HELMET, new Enchantment[]{
+                Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.WATER_WORKER, Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.VANISHING_CURSE, Enchantment.BINDING_CURSE
+        }, new int[]{4, 1, 1, 3, 1, 1}));
+        player.getInventory().setChestplate(createEnchantedArmor(Material.NETHERITE_CHESTPLATE, new Enchantment[]{
+                Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.VANISHING_CURSE, Enchantment.BINDING_CURSE
+        }, new int[]{4, 1, 3, 1, 1}));
+        player.getInventory().setLeggings(createEnchantedArmor(Material.NETHERITE_LEGGINGS, new Enchantment[]{
+                Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.VANISHING_CURSE, Enchantment.BINDING_CURSE
+        }, new int[]{4, 1, 3, 1, 1}));
+        player.getInventory().setBoots(createEnchantedArmor(Material.NETHERITE_BOOTS, new Enchantment[]{
+                Enchantment.PROTECTION_FALL, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.VANISHING_CURSE, Enchantment.BINDING_CURSE
+        }, new int[]{4, 4, 1, 3, 1, 1}));
+
+        // Equip shield
+        ItemStack shield = new ItemStack(Material.SHIELD);
+        player.getInventory().setItemInOffHand(shield);
+
+        // Give tools and items
+        player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_PICKAXE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.LOOT_BONUS_BLOCKS, Enchantment.DURABILITY}, new int[]{5, 3, 3}));
+        player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_SWORD, new Enchantment[]{Enchantment.DAMAGE_ALL, Enchantment.KNOCKBACK, Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS, Enchantment.SWEEPING_EDGE}, new int[]{5, 2, 2, 3, 3}));
+        player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_SHOVEL, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.DURABILITY, Enchantment.MENDING}, new int[]{5, 3, 1}));
+        player.getInventory().addItem(new ItemStack(Material.PURPLE_BED));
+        player.getInventory().addItem(new ItemStack(Material.TORCH, 64));
+    }
+
+    // Utility method to create enchanted armor
+    private ItemStack createEnchantedArmor(Material material, Enchantment[] enchantments, int[] levels) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        for (int i = 0; i < enchantments.length; i++) {
+            meta.addEnchant(enchantments[i], levels[i], true);
+        }
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    // Utility method to create an enchanted item
+    private ItemStack createEnchantedItem(Material material, Enchantment[] enchantments, int[] levels) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        for (int i = 0; i < enchantments.length; i++) {
+            meta.addEnchant(enchantments[i], levels[i], true);
+        }
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    // Logic to find safe locations for teleporting
+
+    // Method to scatter players and ensure they face the center horizontally
+    public void safeScatterPlayers(List<Player> players, Location center, int radius) {
+        World world = center.getWorld();
+        Random random = new Random();
+
+        for (Player player : players) {
+            Location safeLocation = findSafeLocation(world, center, radius, random);
+            player.teleport(safeLocation);
+            setFacing(player, center);
+        }
+    }
+
+    // Find a safe location around a given center within a specified radius
+    private Location findSafeLocation(World world, Location center, int radius, Random random) {
+        for (int i = 0; i < 10; i++) { // Attempt up to 10 times to find a safe location
+            int dx = random.nextInt(radius * 2) - radius;
+            int dz = random.nextInt(radius * 2) - radius;
+            Location loc = center.clone().add(dx, 0, dz);
+            loc = world.getHighestBlockAt(loc).getLocation().add(0, 1, 0); // Adjust to one above the highest solid block
+
+            if (isSafeLocation(loc)) {
+                return loc;
+            }
+        }
+        return center; // Return the center if no safe location is found
+    }
+
+    // Determine if a location is safe for teleportation
+    private boolean isSafeLocation(Location location) {
+        Material block = location.getBlock().getType();
+        Material below = location.clone().add(0, -1, 0).getBlock().getType();
+        return below.isSolid() && block == Material.AIR; // Ensure solid ground and free space above
+    }
+
+    // Set the facing of the player towards the center point horizontally
+    private void setFacing(Player player, Location center) {
+        Location playerLoc = player.getLocation();
+        double dx = center.getX() - playerLoc.getX();
+        double dz = center.getZ() - playerLoc.getZ();
+        float yaw = (float)Math.toDegrees(Math.atan2(dz, dx)) - 90;
+        playerLoc.setYaw(yaw);
+        playerLoc.setPitch(0); // Ensure players look straight ahead, not up or down
+        player.teleport(playerLoc);
+    }
 }
