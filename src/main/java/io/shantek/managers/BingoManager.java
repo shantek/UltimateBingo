@@ -14,6 +14,7 @@ public class BingoManager{
 
     Map<UUID, List<ItemStack>> playerBingoCards;
     Map<UUID, Inventory> bingoGUIs;
+    Map<UUID, Inventory> previousBingoGUIs;
     private int bingoCards;
     private UltimateBingo ultimateBingo;
     public int[] slots;
@@ -162,7 +163,6 @@ public class BingoManager{
         }
     }
 
-
     private int[] determineSlotsBasedOnCardSize() {
         // Define slot arrangements for different card sizes
         int[] smallSlots = {10, 11, 12, 19, 20, 21, 28, 29, 30};
@@ -300,7 +300,7 @@ public class BingoManager{
                                 , ChatColor.GREEN.toString() + ChatColor.BOLD + "Woop woop!");
                     }
                     ultimateBingo.bingoCommand.stopBingo(player, true);
-                    clearData();
+
 
                 }
                 break;
@@ -309,8 +309,14 @@ public class BingoManager{
     }
 
     public void clearData(){
-        bingoGUIs.clear();
-        playerBingoCards.clear();
+        if (bingoGUIs != null) {
+            bingoGUIs.clear();
+        }
+
+        if (playerBingoCards != null) {
+            playerBingoCards.clear();
+        }
+
     }
 
     public void setBingoCards(int amount) {
