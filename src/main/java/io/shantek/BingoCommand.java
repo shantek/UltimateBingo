@@ -11,6 +11,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,8 +100,7 @@ public class BingoCommand implements CommandExecutor {
 
                         // They aren't in the game, let's give them a card and let them join
                         ultimateBingo.bingoManager.joinGameInProgress(player);
-                        player.sendMessage(ChatColor.GREEN + "You've been given a random bingo card, good luck!");
-                        ultimateBingo.bingoFunctions.resetIndividualPlayer(player);
+                        ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
                         ultimateBingo.bingoFunctions.giveBingoCard(player);
 
                     }
@@ -158,6 +161,12 @@ public class BingoCommand implements CommandExecutor {
 
             // Display initial messages
             onlinePlayers.forEach(player -> {
+
+                // Freeze players
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100000, 255, false, false));
+                player.setWalkSpeed(0);
+
+
                 String cardType = ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL";
                 String bingoType = ultimateBingo.fullCard ? "FULL CARD" : "SINGLE ROW";
 
@@ -173,67 +182,90 @@ public class BingoCommand implements CommandExecutor {
                 for (int i = 3; i > 0; i--) {
                     final int count = i;
 
-                    // Only continue if the game is still active
-                    if (ultimateBingo.bingoStarted) {
-                        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                            player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + String.valueOf(count), "", 10, 20, 10);
-                            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
-                        }, 100 + 30 * (3 - count)); // Countdown starts at 5 seconds
-                    }
-                }
-                // Final "GO!" message and chime, bold and green - Only if the game is still active
-                if (ultimateBingo.bingoStarted) {
+
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                        player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "GO!", "", 10, 20, 10);
-                        player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
-                    }, 190); // 1.5 seconds after "1"
+                        player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + String.valueOf(count), "", 10, 20, 10);
+                        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+                    }, 100 + 30 * (3 - count)); // Countdown starts at 5 seconds
+
                 }
+                // Final "GO!" message and chime, bold and green
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                    player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "GO!", "", 10, 20, 10);
+                    player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
+
+                    // Unfreeze players
+                    player.removePotionEffect(PotionEffectType.SLOW);
+                    player.setWalkSpeed(0.2f); // Default walk speed
+                }, 190); // 1.5 seconds after "1"
+
             });
 
             // Game still active? If so, let's start it
-            if (ultimateBingo.bingoStarted) {
 
-                // Handle player teleportation and give bingo cards after the countdown
-                onlinePlayers.forEach(player -> {
-                    if (ultimateBingo.bingoSpawnLocation != null) {
-                        player.teleport(ultimateBingo.bingoSpawnLocation);
+
+            // Get all online players as a List and scatter/teleport them all close together
+            List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+            ultimateBingo.bingoFunctions.safeScatterPlayers(players, ultimateBingo.bingoSpawnLocation, 5);
+
+            // Handle player teleportation and give bingo cards after the countdown
+            onlinePlayers.forEach(player -> {
+
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                    ultimateBingo.bingoFunctions.giveBingoCard(player);
+                    ultimateBingo.bingoCardActive = true;
+
+                    // Equip them with the speedrun gear if this mode is enabled
+                    if (ultimateBingo.gameMode.equals("speedrun")) {
+                        ultimateBingo.bingoFunctions.equipSpeedRunGear(player);
                     }
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                        ultimateBingo.bingoFunctions.giveBingoCard(player);
-                        ultimateBingo.bingoCardActive = true;
-                    }, 210); // 210 ticks = 10.5 seconds, just after the "GO!"
-                });
-            }
+                }, 210); // 210 ticks = 10.5 seconds, just after the "GO!"
+
+            });
         }
     }
 
+
     public void stopBingo(Player sender, boolean gameCompleted) {
 
-        ultimateBingo.bingoCardActive = false;
-        bingoManager.clearData();
+        if (!ultimateBingo.bingoStarted && !gameCompleted) {
 
-        if (ultimateBingo.bingoStarted) {
+            sender.sendMessage(ChatColor.RED + "Bingo hasn't started yet! Start with /bingo start");
+
+        } else {
+
             if (!gameCompleted) {
                 sender.sendMessage(ChatColor.RED + "Bingo has been stopped!");
             }
-        } else {
-            if (!gameCompleted) {
-                sender.sendMessage(ChatColor.RED + "Bingo hasn't started yet! Start with /bingo start");
-            }
-        }
 
-        // Bring everyone back to the bingo spawn, reset their inventory and state
-        // and despawn everything off the ground
-        teleportPlayers();
+            // Unfreeze the player - Run in case the game was stopped mid-countdown
+            List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
+            onlinePlayers.forEach(player -> {
+                        player.removePotionEffect(PotionEffectType.SLOW);
+                        player.setWalkSpeed(0.2f); // Default walk speed
+                    });
 
-        ultimateBingo.bingoSpawnLocation = null;
+            // Cancel any tasks that are currently scheduled
+            Bukkit.getScheduler().cancelTasks(ultimateBingo);
 
-        // Schedule a delayed task to run after 2 seconds (40 ticks)
-        Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
-            ultimateBingo.bingoFunctions.resetPlayers();
-            ultimateBingo.bingoFunctions.despawnAllItems();
+            ultimateBingo.bingoCardActive = false;
             ultimateBingo.bingoStarted = false;
-        }, 40L);  // Delay specified in ticks (40 ticks = 2 seconds)
+            bingoManager.clearData();
+
+            // Get all online players as a List and scatter/teleport them all close together
+            // reset their inventory and state and despawn everything off the ground
+            List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+            ultimateBingo.bingoFunctions.safeScatterPlayers(players, ultimateBingo.bingoSpawnLocation, 5);
+
+            ultimateBingo.bingoSpawnLocation = null;
+
+            // Schedule a delayed task to run after 2 seconds (40 ticks)
+            Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
+                ultimateBingo.bingoFunctions.resetPlayers();
+                ultimateBingo.bingoFunctions.despawnAllItems();
+
+            }, 40L);  // Delay specified in ticks (40 ticks = 2 seconds)
+        }
     }
 
     public void teleportPlayers() {
