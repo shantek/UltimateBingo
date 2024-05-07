@@ -2,11 +2,13 @@ package io.shantek.listeners;
 
 import io.shantek.UltimateBingo;
 import org.bukkit.Material;
+import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.Player;
 import java.util.*;
@@ -23,7 +25,18 @@ public class BingoInventoryCloseListener implements Listener {
                 InventoryType.FURNACE,
                 InventoryType.BLAST_FURNACE,
                 InventoryType.MERCHANT,
-                InventoryType.SMOKER);
+                InventoryType.CRAFTING,
+                InventoryType.CHEST,
+                InventoryType.BARREL,
+                InventoryType.ANVIL,
+                InventoryType.BREWING,
+                InventoryType.CARTOGRAPHY,
+                InventoryType.ENCHANTING,
+                InventoryType.LOOM,
+                InventoryType.SMITHING,
+                InventoryType.STONECUTTER,
+                InventoryType.SMOKER,
+                InventoryType.PLAYER);
     }
 
     @EventHandler
@@ -31,9 +44,13 @@ public class BingoInventoryCloseListener implements Listener {
         Player player = (Player) event.getPlayer();
         UUID uuid = player.getUniqueId();
         Inventory inventory = event.getInventory();
+        InventoryHolder holder = inventory.getHolder();
 
-        // Check if the inventory is one of the valid types
-        if (validInventoryTypes.contains(inventory.getType())) {
+        boolean isValidType = validInventoryTypes.contains(inventory.getType());
+        boolean isSpecialChest = (holder instanceof StorageMinecart); // Add similar checks for other special types like ChestBoat if available
+
+        // Check if the inventory type is valid or if it's a special chest
+        if (isValidType || isSpecialChest) {
             Inventory bingoGUI = ultimateBingo.getBingoManager().getBingoGUIs().get(uuid);
             Inventory playerInventory = player.getInventory();
 
