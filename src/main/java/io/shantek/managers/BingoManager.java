@@ -223,6 +223,11 @@ public class BingoManager{
                 String removedUnderscore = completedMaterial.name().toLowerCase().replace('_', ' ');
                 player.sendMessage(ChatColor.GREEN + "You ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from your bingo card!");
 
+                if (ultimateBingo.gameMode.equals("speedrun")) {
+                    // Reset the players stats
+                    ultimateBingo.bingoFunctions.resetIndividualPlayer(player, false);
+                }
+
                 for (Player target : Bukkit.getOnlinePlayers()) {
                     // PLAY FOR ALL PLAYERS
                     target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 5);
