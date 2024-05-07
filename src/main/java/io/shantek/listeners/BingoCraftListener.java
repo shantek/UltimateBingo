@@ -25,6 +25,9 @@ public class BingoCraftListener implements Listener {
 
     @EventHandler
     public void onCraft(CraftItemEvent e) {
+
+        // Possibly removing this, see if the inventory close listener picks this up
+        /*
         if (e.getWhoClicked() instanceof Player && ultimateBingo.getBingoManager().isStarted()) {
             BingoManager bingoManager = ultimateBingo.getBingoManager();
             Material craftedItem = e.getRecipe().getResult().getType();
@@ -52,5 +55,7 @@ public class BingoCraftListener implements Listener {
                 }
             }
         }
+
+         */
     }
 }
