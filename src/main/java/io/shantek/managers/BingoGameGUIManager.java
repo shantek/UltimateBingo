@@ -45,29 +45,24 @@ public class BingoGameGUIManager {
 
     public void toggleGameMode(Player player) {
 
-        /*
-        switch (ultimateBingo.gameMode) {
+
+        switch (ultimateBingo.gameMode.toLowerCase()) {
             case "traditional":
                 ultimateBingo.gameMode = "speedrun";
                 break;
             case "speedrun":
-                ultimateBingo.gameMode = "teams";
-                break;
-            case "teams":
                 ultimateBingo.gameMode = "traditional";
                 break;
-        }
-        */
 
-        // Temporary until adding the new game modes
-        ultimateBingo.gameMode = "traditional";
+        }
+
         updateGUI(player);
     }
 
     public void toggleDifficulty(Player player) {
         // Cycle through difficulties. Assuming there are three fixed difficulties.
 
-        switch (ultimateBingo.difficulty) {
+        switch (ultimateBingo.difficulty.toLowerCase()) {
             case "easy":
                 ultimateBingo.difficulty = "normal";
                 break;
@@ -83,7 +78,7 @@ public class BingoGameGUIManager {
     }
 
     public void toggleCardSize(Player player) {
-        switch (ultimateBingo.cardSize) {
+        switch (ultimateBingo.cardSize.toLowerCase()) {
             case "small":
                 ultimateBingo.cardSize = "medium";
                 break;
