@@ -6,6 +6,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class BingoPlayerJoinListener implements Listener {
 
@@ -34,6 +36,12 @@ public class BingoPlayerJoinListener implements Listener {
                 }
             }, 100L); // 100 ticks delay
         }
+
+        if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && ultimateBingo.gameMode.equals("speedrun")) {
+
+            player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
+        }
+
 
     }
 
