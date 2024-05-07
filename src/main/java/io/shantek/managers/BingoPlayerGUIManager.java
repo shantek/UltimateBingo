@@ -43,7 +43,7 @@ public class BingoPlayerGUIManager {
                 .withLore(ChatColor.GRAY + lore).build();
     }
 
-    public Inventory setupPlayersBingoCardsInventory(boolean includeBackMenu) {
+    public Inventory setupPlayersBingoCardsInventory() {
         // Create a 54-slot inventory with a custom title
         Inventory inventory = Bukkit.createInventory(null, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Player Bingo Cards");
 
@@ -68,7 +68,7 @@ public class BingoPlayerGUIManager {
         // Add a 'Back to menu' chest in the last slot
         ItemStack backToMenu = new ItemStack(Material.CHEST);
         ItemMeta backToMenuMeta = backToMenu.getItemMeta();
-        if (backToMenuMeta != null && includeBackMenu) {
+        if (backToMenuMeta != null) {
             backToMenuMeta.setDisplayName(ChatColor.RED + "Back to menu");
             backToMenu.setItemMeta(backToMenuMeta);
         }

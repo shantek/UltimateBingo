@@ -126,6 +126,9 @@ public class BingoCommand implements CommandExecutor {
 
         } else {
 
+            // Clear any data prior to the new game
+            bingoManager.clearData();
+
             // Clean up and reset game environment
             ultimateBingo.bingoFunctions.despawnAllItems();
             ultimateBingo.bingoStarted = true;
@@ -250,19 +253,24 @@ public class BingoCommand implements CommandExecutor {
 
             ultimateBingo.bingoCardActive = false;
             ultimateBingo.bingoStarted = false;
-            bingoManager.clearData();
 
             // Get all online players as a List and scatter/teleport them all close together
             // reset their inventory and state and despawn everything off the ground
             List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
             ultimateBingo.bingoFunctions.safeScatterPlayers(players, ultimateBingo.bingoSpawnLocation, 5);
-
             ultimateBingo.bingoSpawnLocation = null;
 
             // Schedule a delayed task to run after 2 seconds (40 ticks)
             Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
                 ultimateBingo.bingoFunctions.resetPlayers();
                 ultimateBingo.bingoFunctions.despawnAllItems();
+
+                // Give them a new bingo card to check the results, only if there are results to see
+                if (!bingoManager.getBingoGUIs().isEmpty()) {
+
+                    ultimateBingo.bingoFunctions.giveBingoCardToAllPlayers();
+
+                }
 
             }, 40L);  // Delay specified in ticks (40 ticks = 2 seconds)
         }
