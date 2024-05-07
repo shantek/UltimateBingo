@@ -24,7 +24,7 @@ public class BingoInventoryOpenListener implements Listener {
 
     @EventHandler
     public void onInventoryOpen (InventoryOpenEvent e){
-        if (e.getPlayer() instanceof Player && ultimateBingo.getBingoManager().isStarted()){
+        if (e.getPlayer() instanceof Player && ultimateBingo.bingoStarted){
             BingoManager bingoManager = ultimateBingo.getBingoManager();
 
             if (e.getInventory().getHolder() instanceof Chest){
