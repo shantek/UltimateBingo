@@ -203,6 +203,57 @@ public class BingoCommand implements CommandExecutor {
                     player.setWalkSpeed(0.2f); // Default walk speed
                 }, 190); // 1.5 seconds after "1"
 
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "The game has now been running for 15 minutes.");
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You've just received a speed boost!");
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+
+                        // Increse their walk speed
+                        player.setWalkSpeed(3.0f);
+
+                    }
+                }, 18000); // Delay of 18,000 ticks, equivalent to 15 minutes
+
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "The game has now been running for 30 minutes.");
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You've just received a speed boost!");
+
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+
+                        // Increse their walk speed
+                        player.setWalkSpeed(3.5f);
+
+                    }
+                }, 36000); // Delay of 18,000 ticks, equivalent to 15 minutes
+
+
+                // Delayed broadcast with the win condition
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+
+                    if (ultimateBingo.gameMode.equalsIgnoreCase("traditional")) {
+
+                        Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "We're playing TRADITIONAL mode.");
+
+                        if (ultimateBingo.fullCard) {
+                            Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Get a full card to win!");
+                        } else {
+                            Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Get a single row to win!");
+                        }
+                    } else if (ultimateBingo.gameMode.equalsIgnoreCase("speedrun")) {
+
+                        Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "We're playing SPEED RUN mode. Hunger/health reset with each item you tick off!");
+
+                        if (ultimateBingo.fullCard) {
+                            Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Get a full card to win!");
+                        } else {
+                            Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Get a single row to win!");
+                        }
+                   }
+
+                }, 300); // Delay of 18,000 ticks, equivalent to 15 minutes
+
             });
 
             // Game still active? If so, let's start it
