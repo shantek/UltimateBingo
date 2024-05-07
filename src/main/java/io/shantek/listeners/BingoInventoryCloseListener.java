@@ -36,7 +36,8 @@ public class BingoInventoryCloseListener implements Listener {
                 InventoryType.SMITHING,
                 InventoryType.STONECUTTER,
                 InventoryType.SMOKER,
-                InventoryType.PLAYER);
+                InventoryType.PLAYER,
+                InventoryType.WORKBENCH);
     }
 
     @EventHandler
