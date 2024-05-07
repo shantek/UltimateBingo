@@ -82,7 +82,6 @@ public final class UltimateBingo extends JavaPlugin {
 
         // Register each listener with the Bukkit plugin manager
         Bukkit.getPluginManager().registerEvents(new RespawnListener(this), this);
-        //Bukkit.getPluginManager().registerEvents(new BingoCraftListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoPickupListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoInteractListener(this), this);
         //Bukkit.getPluginManager().registerEvents(new BingoInventoryOpenListener(this), this);
