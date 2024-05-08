@@ -68,10 +68,6 @@ public class BingoFunctions
         // Reset exhaustion to 0 (no exhaustion)
         player.setExhaustion(0.0F);
 
-        // Reset XP and levels
-        player.setExp(0);
-        player.setLevel(0);
-
         if (fullReset) {
             // Reset remaining potion effects
             for (PotionEffect effect : player.getActivePotionEffects()) {
@@ -83,6 +79,11 @@ public class BingoFunctions
 
             // Clear armor
             player.getInventory().setArmorContents(new ItemStack[4]);
+
+            // Reset XP and levels
+            player.setExp(0);
+            player.setLevel(0);
+
         }
     }
 
