@@ -26,6 +26,17 @@ public class BingoGameGUIManager {
         gameConfigInventory.setItem(3, createItem(Material.NAME_TAG, "Card Type", ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL"));
         gameConfigInventory.setItem(4, createItem(Material.BEACON, "Win Condition", ultimateBingo.fullCard ? "FULL CARD" : "SINGLE ROW"));
         gameConfigInventory.setItem(5, createItem(Material.SPYGLASS, "Reveal Cards", ultimateBingo.revealCards ? "ENABLED" : "DISABLED"));
+
+        // Work out the game time to display
+        String gameTimeString;
+        if (ultimateBingo.gameTime == 0) {
+            gameTimeString = "Unlimited Time";
+        } else {
+            gameTimeString = ultimateBingo.gameTime + " minutes";
+        }
+        gameConfigInventory.setItem(6, createItem(Material.CLOCK, "Time Limit", gameTimeString));
+
+
         gameConfigInventory.setItem(8, createStartGameItem());
 
         return gameConfigInventory;

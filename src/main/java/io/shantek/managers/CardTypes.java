@@ -136,12 +136,17 @@ public class CardTypes {
         UUID playerId = player.getUniqueId();
         Inventory inv = ultimateBingo.bingoManager.getBingoGUIs().get(playerId);
 
-        for (ItemStack item : inv.getContents()) {
+        for (int i = 0; i < inv.getSize(); i++) {
+            // Skip the check for slot 17
+            if (i == 17) continue;
+
+            ItemStack item = inv.getItem(i); // Get the item in the current slot
             // If the slot is not empty and not lime concrete, return false
             if (item != null && item.getType() != Material.LIME_CONCRETE) {
                 return false;
             }
         }
+
         // If all slots are either empty or lime concrete, return true
         return true;
     }

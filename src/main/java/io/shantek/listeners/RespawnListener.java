@@ -41,7 +41,7 @@ public class RespawnListener implements Listener {
 
                 // Equip them with fresh speed run gear after respawning, if keep inventory is off
                 if (ultimateBingo.gameMode.equals("speedrun") && !keepInventory) {
-                    ultimateBingo.bingoFunctions.equipSpeedRunGear(player);
+                    ultimateBingo.bingoFunctions.equipSpeedRunGear(player, ultimateBingo.loadoutType);
                 }
 
             }, 70L); // Delay teleportation by 3.5 seconds (70 ticks) after respawn

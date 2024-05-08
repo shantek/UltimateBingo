@@ -2,10 +2,7 @@ package io.shantek;
 
 import io.shantek.managers.BingoManager;
 import io.shantek.managers.SettingsManager;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,6 +14,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class BingoCommand implements CommandExecutor {
@@ -126,8 +124,14 @@ public class BingoCommand implements CommandExecutor {
 
         } else {
 
+            // Set the loadout type for speedrun
+            ultimateBingo.loadoutType = new Random().nextInt(2) + 1;
+
             // Clear any data prior to the new game
             bingoManager.clearData();
+
+            // Set the time that the game started
+            ultimateBingo.gameStartTime = System.currentTimeMillis();
 
             // Clean up and reset game environment
             ultimateBingo.bingoFunctions.despawnAllItems();
@@ -211,27 +215,38 @@ public class BingoCommand implements CommandExecutor {
             // Delayed broadcast with the win condition
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 
+
+                // Work out the game time to display
+                String timeLimitString;
+                if (ultimateBingo.gameTime == 0) {
+                    timeLimitString = "Time Limit: Unlimited Time";
+                } else {
+                    timeLimitString = "Time Limit: " + ultimateBingo.gameTime + " minutes";
+                }
+
+
                 if (ultimateBingo.gameMode.equalsIgnoreCase("traditional")) {
 
                     Bukkit.broadcastMessage(ChatColor.GREEN + "Traditional bingo - collect items to mark them off your card!");
 
                     if (ultimateBingo.fullCard) {
-                        Bukkit.broadcastMessage(ChatColor.GREEN + "Get a full card to win!");
+                        Bukkit.broadcastMessage(ChatColor.GREEN + "Get a full card to win! " + timeLimitString);
                     } else {
-                        Bukkit.broadcastMessage(ChatColor.GREEN + "Get a single row to win!");
+                        Bukkit.broadcastMessage(ChatColor.GREEN + "Get a single row to win! " + timeLimitString);
                     }
                 } else if (ultimateBingo.gameMode.equalsIgnoreCase("speedrun")) {
 
-                    Bukkit.broadcastMessage(ChatColor.GREEN + "Speed run mode - Hunger/health resets with each item you tick off!");
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "Speed run - Hunger/health resets with each item you tick off!");
+
 
                     if (ultimateBingo.fullCard) {
-                        Bukkit.broadcastMessage(ChatColor.GREEN + "Get a full card to win!");
+                        Bukkit.broadcastMessage(ChatColor.GREEN + "Get a full card to win! " + timeLimitString);
                     } else {
-                        Bukkit.broadcastMessage(ChatColor.GREEN + "Get a single row to win!");
+                        Bukkit.broadcastMessage(ChatColor.GREEN + "Get a single row to win! " + timeLimitString);
                     }
                 }
 
-            }, 300); // Delay of 18,000 ticks, equivalent to 15 minutes
+            }, 250);
 
             // Game still active? If so, let's start it
 
@@ -249,13 +264,62 @@ public class BingoCommand implements CommandExecutor {
                     // Equip them with the speedrun gear if this mode is enabled
                     // Also give them night vision
                     if (ultimateBingo.gameMode.equals("speedrun")) {
-                        ultimateBingo.bingoFunctions.equipSpeedRunGear(player);
+                        ultimateBingo.bingoFunctions.equipSpeedRunGear(player, ultimateBingo.loadoutType);
                         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
                     }
                 }, 210); // 210 ticks = 10.5 seconds, just after the "GO!"
 
             });
         }
+    }
+
+    public void bingoGameOver() {
+
+        // Cancel any tasks that are currently scheduled
+        Bukkit.getScheduler().cancelTasks(ultimateBingo);
+
+        // Show how long the game ran for
+        Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
+
+            long duration = System.currentTimeMillis() - ultimateBingo.gameStartTime;
+
+            // Calculate and display the game duration
+            String gameDuration = ultimateBingo.bingoFunctions.formatAndShowGameDuration(duration);
+            Bukkit.broadcastMessage(ChatColor.GREEN + "Game duration: " + gameDuration);
+
+        }, 80L);  // Delay specified in ticks (80 ticks = 4 seconds)
+
+
+        // Unfreeze the player - Run in case the game was stopped mid-countdown
+        List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
+        onlinePlayers.forEach(player -> {
+            player.removePotionEffect(PotionEffectType.SLOW);
+            player.setWalkSpeed(0.2f); // Default walk speed
+            player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+        });
+
+        ultimateBingo.bingoCardActive = false;
+        ultimateBingo.bingoStarted = false;
+
+        // Get all online players as a List and scatter/teleport them all close together
+        // reset their inventory and state and despawn everything off the ground
+        List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+        ultimateBingo.bingoFunctions.safeScatterPlayers(players, ultimateBingo.bingoSpawnLocation, 5);
+        ultimateBingo.bingoSpawnLocation = null;
+
+        // Schedule a delayed task to run after 2 seconds (40 ticks)
+        Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
+            ultimateBingo.bingoFunctions.resetPlayers();
+            ultimateBingo.bingoFunctions.despawnAllItems();
+
+            // Give them a new bingo card to check the results, only if there are results to see
+            if (!bingoManager.getBingoGUIs().isEmpty()) {
+
+                ultimateBingo.bingoFunctions.giveBingoCardToAllPlayers();
+
+            }
+
+        }, 40L);  // Delay specified in ticks (40 ticks = 2 seconds)
     }
 
 
@@ -267,45 +331,59 @@ public class BingoCommand implements CommandExecutor {
 
         } else {
 
-            if (!gameCompleted) {
-                sender.sendMessage(ChatColor.RED + "Bingo has been stopped!");
-            }
-
-            // Unfreeze the player - Run in case the game was stopped mid-countdown
-            List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
-            onlinePlayers.forEach(player -> {
-                        player.removePotionEffect(PotionEffectType.SLOW);
-                        player.setWalkSpeed(0.2f); // Default walk speed
-                        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-                    });
-
             // Cancel any tasks that are currently scheduled
             Bukkit.getScheduler().cancelTasks(ultimateBingo);
 
-            ultimateBingo.bingoCardActive = false;
-            ultimateBingo.bingoStarted = false;
 
-            // Get all online players as a List and scatter/teleport them all close together
-            // reset their inventory and state and despawn everything off the ground
-            List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
-            ultimateBingo.bingoFunctions.safeScatterPlayers(players, ultimateBingo.bingoSpawnLocation, 5);
-            ultimateBingo.bingoSpawnLocation = null;
+            if (!gameCompleted) {
+                sender.sendMessage(ChatColor.RED + "Bingo has been stopped!");
+            } else {
 
-            // Schedule a delayed task to run after 2 seconds (40 ticks)
-            Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
-                ultimateBingo.bingoFunctions.resetPlayers();
-                ultimateBingo.bingoFunctions.despawnAllItems();
+                // Show how long the game ran for
+                Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
 
-                // Give them a new bingo card to check the results, only if there are results to see
-                if (!bingoManager.getBingoGUIs().isEmpty()) {
+                    long duration = System.currentTimeMillis() - ultimateBingo.gameStartTime;
 
-                    ultimateBingo.bingoFunctions.giveBingoCardToAllPlayers();
+                    // Calculate and display the game duration
+                    String gameDuration = ultimateBingo.bingoFunctions.formatAndShowGameDuration(duration);
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "Game duration: " + gameDuration);
 
-                }
-
-            }, 40L);  // Delay specified in ticks (40 ticks = 2 seconds)
+                }, 80L);  // Delay specified in ticks (80 ticks = 4 seconds)
+            }
         }
+
+        // Unfreeze the player - Run in case the game was stopped mid-countdown
+        List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
+        onlinePlayers.forEach(player -> {
+            player.removePotionEffect(PotionEffectType.SLOW);
+            player.setWalkSpeed(0.2f); // Default walk speed
+            player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+        });
+
+        ultimateBingo.bingoCardActive = false;
+        ultimateBingo.bingoStarted = false;
+
+        // Get all online players as a List and scatter/teleport them all close together
+        // reset their inventory and state and despawn everything off the ground
+        List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+        ultimateBingo.bingoFunctions.safeScatterPlayers(players, ultimateBingo.bingoSpawnLocation, 5);
+        ultimateBingo.bingoSpawnLocation = null;
+
+        // Schedule a delayed task to run after 2 seconds (40 ticks)
+        Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
+            ultimateBingo.bingoFunctions.resetPlayers();
+            ultimateBingo.bingoFunctions.despawnAllItems();
+
+            // Give them a new bingo card to check the results, only if there are results to see
+            if (!bingoManager.getBingoGUIs().isEmpty()) {
+
+                ultimateBingo.bingoFunctions.giveBingoCardToAllPlayers();
+
+            }
+
+        }, 40L);  // Delay specified in ticks (40 ticks = 2 seconds)
     }
+
 
     public void teleportPlayers() {
         for (Player target : Bukkit.getOnlinePlayers()) {

@@ -44,6 +44,8 @@ public final class UltimateBingo extends JavaPlugin {
     public boolean revealCards = true;
     public boolean bingoStarted = false;
     public Material bingoCardMaterial = Material.COMPASS;
+    public long gameStartTime;
+    public int loadoutType = 1;
 
     public static UltimateBingo instance;
 

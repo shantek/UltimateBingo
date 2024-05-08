@@ -143,6 +143,7 @@ public class ConfigFile {
             config.set("console-logs", ultimateBingo.consoleLogs);
             config.set("respawn-teleport", ultimateBingo.respawnTeleport);
             config.set("reveal-cards", ultimateBingo.revealCards);
+            config.set("game-time", ultimateBingo.gameTime);
 
             config.save(configFile);
         } catch (IOException e) {
