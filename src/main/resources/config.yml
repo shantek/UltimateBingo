@@ -7,7 +7,7 @@ respawn-teleport: true
 
 ################################################
 # Current game configuration - Don't manually change this
-# Only adjust with the /bingo command in game
+# Only adjust with the /bingo gui command in game
 ################################################
 
 difficulty: easy
@@ -16,3 +16,4 @@ unique-card: false
 full-card: false
 game-mode: traditional
 reveal-cards: true
+game-time: 0
