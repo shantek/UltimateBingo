@@ -30,7 +30,7 @@ public final class UltimateBingo extends JavaPlugin {
     public BingoCommand bingoCommand;
     public Location bingoSpawnLocation;
     public ConfigFile configFile;
-
+    public int gameTime = 0;
     private YamlConfiguration gameConfig;
     public CardTypes cardTypes;
     public boolean fullCard = false;

@@ -10,6 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
@@ -170,8 +171,6 @@ public class BingoFunctions
     }
 
     // Speed run equipment for players
-
-
     public void equipSpeedRunGear(Player player) {
         // Create and set armor
         player.getInventory().setHelmet(createEnchantedArmor(Material.NETHERITE_HELMET, new Enchantment[]{
@@ -202,6 +201,7 @@ public class BingoFunctions
         player.getInventory().addItem(new ItemStack(Material.CRAFTING_TABLE, 1));
         player.getInventory().addItem(new ItemStack(Material.JUNGLE_BOAT, 1));
     }
+
     // Utility method to create enchanted armor
     private ItemStack createEnchantedArmor(Material material, Enchantment[] enchantments, int[] levels) {
         ItemStack item = new ItemStack(material);
@@ -271,9 +271,7 @@ public class BingoFunctions
         player.teleport(playerLoc);
     }
 
-
     // Settings items for player bingo cards
-
     public ItemStack createSpyglass() {
         ItemStack spyglass = new ItemStack(Material.SPYGLASS);
         ItemMeta meta = spyglass.getItemMeta();
@@ -281,5 +279,80 @@ public class BingoFunctions
         meta.setLore(Arrays.asList(ChatColor.GRAY + "Get a peek at other players' cards!"));
         spyglass.setItemMeta(meta);
         return spyglass;
+    }
+
+    public void setGameTimer() {
+
+        // Get a reference to the plugin for us to schedule tasks
+        UltimateBingo plugin = UltimateBingo.getInstance();
+
+        if (ultimateBingo.gameTime == 0) {
+            // No game timer has been set.
+            setGameTimerTasks(plugin, 20, 0.4f);
+            setGameTimerTasks(plugin, 40, 0.5f);
+            setGameTimerTasks(plugin, 60, 0.6f);
+
+        } else {
+            // This game has a game timer, no perks will be given
+            // We'll add a timer to end the game and send some warnings prior to ending
+            setGameCountdownTask(plugin, ultimateBingo.gameTime);
+        }
+
+    }
+
+    public void setGameCountdownTask(Plugin plugin, int minutes) {
+
+        // Calculate the amount of ticks needed
+        int threeMinutesLeft = (minutes - 3) * 60 * 20;
+        int twoMinutesLeft = (minutes - 2) * 60 * 20;
+        int oneMinuteLeft = (minutes - 1) * 60 * 20;
+        int gameLength = minutes * 60 * 20;
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            Bukkit.broadcastMessage(ChatColor.GREEN + "The game will end in 3 minutes!");
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+                            }
+        }, threeMinutesLeft); // Delay of 18,000 ticks, equivalent to 15 minutes
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            Bukkit.broadcastMessage(ChatColor.GREEN + "The game will end in 3 minutes!");
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+            }
+        }, twoMinutesLeft); // Delay of 18,000 ticks, equivalent to 15 minutes
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            Bukkit.broadcastMessage(ChatColor.GREEN + "The game will end in 1 minute!");
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+            }
+        }, oneMinuteLeft); // Delay of 18,000 ticks, equivalent to 15 minutes
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+
+            ultimateBingo.bingoCommand.stopBingo(null, false);
+
+        }, gameLength); // Delay of 18,000 ticks, equivalent to 15 minutes
+
+    }
+
+    public void setGameTimerTasks(Plugin plugin, int minutes, float walkSpeed) {
+
+        // Calculate the amount of ticks needed
+        int delayTicks = minutes * 60 * 20;
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            Bukkit.broadcastMessage(ChatColor.GREEN + "The game has now been running for " + minutes + " minutes.");
+            Bukkit.broadcastMessage(ChatColor.YELLOW + "You've just received a speed boost!");
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+
+                // Increse their walk speed
+                p.setWalkSpeed(walkSpeed);
+
+            }
+        }, delayTicks); // Delay of 18,000 ticks, equivalent to 15 minutes
+
     }
 }

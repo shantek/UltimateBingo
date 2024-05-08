@@ -92,6 +92,41 @@ public class BingoGameGUIManager {
         updateGUI(player);
     }
 
+    public void toggleGameTime(Player player) {
+        switch (ultimateBingo.gameTime) {
+            case 0:
+                ultimateBingo.gameTime = 5;
+                break;
+            case 5:
+                ultimateBingo.gameTime = 10;
+                break;
+            case 10:
+                ultimateBingo.gameTime = 15;
+                break;
+            case 15:
+                ultimateBingo.gameTime = 20;
+                break;
+            case 20:
+                ultimateBingo.gameTime = 30;
+                break;
+            case 30:
+                ultimateBingo.gameTime = 40;
+                break;
+            case 40:
+                ultimateBingo.gameTime = 50;
+                break;
+            case 50:
+                ultimateBingo.gameTime = 60;
+                break;
+            case 60:
+                ultimateBingo.gameTime = 0;
+                break;
+        }
+        updateGUI(player);
+    }
+
+
+
     public void toggleCardType(Player player) {
         // Toggle boolean value
         ultimateBingo.uniqueCard = !ultimateBingo.uniqueCard;
@@ -124,6 +159,15 @@ public class BingoGameGUIManager {
             currentInventory.setItem(3, createItem(Material.NAME_TAG, "Card Type", ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL"));
             currentInventory.setItem(4, createItem(Material.BEACON, "Win Condition", ultimateBingo.fullCard ? "FULL CARD" : "SINGLE ROW"));
             currentInventory.setItem(5, createItem(Material.SPYGLASS, "Reveal Cards", ultimateBingo.revealCards ? "ENABLED" : "DISABLED"));
+
+            // Work out the game time to display
+            String gameTimeString;
+            if (ultimateBingo.gameTime == 0) {
+                gameTimeString = "Unlimited Time";
+            } else {
+                gameTimeString = ultimateBingo.gameTime + " minutes";
+            }
+            currentInventory.setItem(6, createItem(Material.CLOCK, "Time Limit", gameTimeString));
 
         } else {
             // If not viewing the Bingo configuration, open it

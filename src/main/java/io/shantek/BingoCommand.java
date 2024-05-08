@@ -170,7 +170,6 @@ public class BingoCommand implements CommandExecutor {
 
                 player.setWalkSpeed(0);
 
-
                 String cardType = ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL";
                 String bingoType = ultimateBingo.fullCard ? "FULL CARD" : "SINGLE ROW";
 
@@ -206,31 +205,8 @@ public class BingoCommand implements CommandExecutor {
 
             });
 
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                Bukkit.broadcastMessage(ChatColor.GREEN + "The game has now been running for 20 minutes.");
-                Bukkit.broadcastMessage(ChatColor.YELLOW + "You've just received a speed boost!");
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
-
-                    // Increse their walk speed
-                    p.setWalkSpeed(0.2f);
-
-                }
-            }, 18000); // Delay of 18,000 ticks, equivalent to 15 minutes
-
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "The game has now been running for 40 minutes.");
-                Bukkit.broadcastMessage(ChatColor.YELLOW + "You've just received a speed boost!");
-
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
-
-                    // Increse their walk speed
-                    p.setWalkSpeed(0.4f);
-
-                }
-            }, 36000); // Delay of 18,000 ticks, equivalent to 15 minutes
-
+            // Set the game timer for ending the game and game perks if enabled
+            ultimateBingo.bingoFunctions.setGameTimer();
 
             // Delayed broadcast with the win condition
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
@@ -257,9 +233,7 @@ public class BingoCommand implements CommandExecutor {
 
             }, 300); // Delay of 18,000 ticks, equivalent to 15 minutes
 
-
             // Game still active? If so, let's start it
-
 
             // Get all online players as a List and scatter/teleport them all close together
             List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());

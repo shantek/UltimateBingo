@@ -72,6 +72,10 @@ public class SettingsListener implements Listener {
                         bingoGameGUIManager.toggleRevealCards(player);
                         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
                         break;
+                    case 6:
+                        bingoGameGUIManager.toggleGameTime(player);
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+                        break;
                     case 8:
 
                         ultimateBingo.bingoSpawnLocation = player.getLocation();
