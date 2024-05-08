@@ -59,6 +59,7 @@ public class ConfigFile {
             ultimateBingo.revealCards = getBoolean(config, "reveal-cards", true);
             ultimateBingo.uniqueCard = getBoolean(config, "unique-card", false);
             ultimateBingo.consoleLogs = getBoolean(config, "console-logs", true);
+            ultimateBingo.gameTime = getInt(config, "game-time", 0);
 
         } catch (Exception e) {
             ultimateBingo.getLogger().log(Level.SEVERE, "An error occurred while reloading the config file", e);
@@ -67,13 +68,13 @@ public class ConfigFile {
 
     private boolean checkForMissingKeys(FileConfiguration config) {
         List<String> keysToCheck = Arrays.asList(
-                "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport", "reveal-cards");
+                "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport", "reveal-cards", "game-time");
         return keysToCheck.stream().anyMatch(key -> !config.contains(key));
     }
 
     private Map<String, Object> saveMissingKeyValues(FileConfiguration config) {
         List<String> keysToCheck = Arrays.asList(
-                "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport", "reveal-cards");
+                "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport", "reveal-cards", "game-time");
 
         Map<String, Object> missingKeyValues = new HashMap<>();
         keysToCheck.forEach(key -> {
@@ -112,6 +113,15 @@ public class ConfigFile {
     private boolean getBoolean(FileConfiguration config, String key, boolean defaultValue) {
         if (config.contains(key) && config.isBoolean(key)) {
             return config.getBoolean(key);
+        } else {
+            config.set(key, defaultValue);
+            return defaultValue;
+        }
+    }
+
+    private int getInt(FileConfiguration config, String key, int defaultValue) {
+        if (config.contains(key) && config.isInt(key)) {
+            return config.getInt(key);
         } else {
             config.set(key, defaultValue);
             return defaultValue;
