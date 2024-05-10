@@ -36,6 +36,16 @@ public class BingoGameGUIManager {
         }
         gameConfigInventory.setItem(6, createItem(Material.CLOCK, "Time Limit", gameTimeString));
 
+        // Work out the game loadout to give the player
+        String gameLoadoutString = "Empty Inventory";
+        if (ultimateBingo.loadoutType == 1) {
+            gameLoadoutString = "Boat Kit";
+        }
+        else if (ultimateBingo.loadoutType == 2) {
+            gameLoadoutString = "Flying Kit";
+        }
+        gameConfigInventory.setItem(7, createItem(Material.NETHERITE_SWORD, "Player Loadout", gameLoadoutString));
+
 
         gameConfigInventory.setItem(8, createStartGameItem());
 
@@ -136,6 +146,22 @@ public class BingoGameGUIManager {
         updateGUI(player);
     }
 
+    public void toggleLoadout(Player player) {
+        switch (ultimateBingo.loadoutType) {
+            case 0:
+                ultimateBingo.loadoutType = 1;
+                break;
+            case 1:
+                ultimateBingo.loadoutType = 2;
+                break;
+            case 2:
+                ultimateBingo.loadoutType = 0;
+                break;
+
+        }
+        updateGUI(player);
+    }
+
 
 
     public void toggleCardType(Player player) {
@@ -179,6 +205,17 @@ public class BingoGameGUIManager {
                 gameTimeString = ultimateBingo.gameTime + " minutes";
             }
             currentInventory.setItem(6, createItem(Material.CLOCK, "Time Limit", gameTimeString));
+
+            // Work out the game loadout to give the player
+            String gameLoadoutString = "Empty Inventory";
+            if (ultimateBingo.loadoutType == 1) {
+                gameLoadoutString = "Boat Kit";
+            }
+            else if (ultimateBingo.loadoutType == 2) {
+                gameLoadoutString = "Flying Kit";
+            }
+            currentInventory.setItem(7, createItem(Material.NETHERITE_SWORD, "Player Loadout", gameLoadoutString));
+
 
         } else {
             // If not viewing the Bingo configuration, open it

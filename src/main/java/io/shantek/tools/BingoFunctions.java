@@ -293,23 +293,21 @@ public class BingoFunctions
         return item;
     }
 
-    // Logic to find safe locations for teleporting
-
     // Method to scatter players and ensure they face the center horizontally
     public void safeScatterPlayers(List<Player> players, Location center, int radius) {
         World world = center.getWorld();
         Random random = new Random();
 
         for (Player player : players) {
-            Location safeLocation = findSafeLocation(world, center, radius, random);
+            Location safeLocation = findSafeLocation(world, center, radius, random, 20);
             player.teleport(safeLocation);
             setFacing(player, center);
         }
     }
 
     // Find a safe location around a given center within a specified radius
-    private Location findSafeLocation(World world, Location center, int radius, Random random) {
-        for (int i = 0; i < 10; i++) { // Attempt up to 10 times to find a safe location
+    public Location findSafeLocation(World world, Location center, int radius, Random random, int attempts) {
+        for (int i = 0; i < attempts; i++) { // Attempt up to 10 times to find a safe location
             int dx = random.nextInt(radius * 2) - radius;
             int dz = random.nextInt(radius * 2) - radius;
             Location loc = center.clone().add(dx, 0, dz);
@@ -357,9 +355,9 @@ public class BingoFunctions
 
         if (ultimateBingo.gameTime == 0) {
             // No game timer has been set.
-            setGameTimerTasks(plugin, 20, 0.4f);
-            setGameTimerTasks(plugin, 40, 0.5f);
-            setGameTimerTasks(plugin, 60, 0.6f);
+            setGameTimerTasks(plugin, 20, 0.25f);
+            setGameTimerTasks(plugin, 40, 0.30f);
+            setGameTimerTasks(plugin, 60, 0.35f);
 
         } else {
             // This game has a game timer, no perks will be given

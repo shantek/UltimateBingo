@@ -17,3 +17,4 @@ full-card: false
 game-mode: traditional
 reveal-cards: true
 game-time: 0
+player-loadout: 0

@@ -124,9 +124,6 @@ public class BingoCommand implements CommandExecutor {
 
         } else {
 
-            // Set the loadout type for speedrun
-            ultimateBingo.loadoutType = new Random().nextInt(2) + 1;
-
             // Clear any data prior to the new game
             bingoManager.clearData();
 
@@ -261,10 +258,13 @@ public class BingoCommand implements CommandExecutor {
                     ultimateBingo.bingoFunctions.giveBingoCard(player);
                     ultimateBingo.bingoCardActive = true;
 
-                    // Equip them with the speedrun gear if this mode is enabled
+                    // Equip the player loadout inventory
+                    if (ultimateBingo.loadoutType > 0) {
+                        ultimateBingo.bingoFunctions.equipSpeedRunGear(player, ultimateBingo.loadoutType);
+                    }
+
                     // Also give them night vision
                     if (ultimateBingo.gameMode.equals("speedrun")) {
-                        ultimateBingo.bingoFunctions.equipSpeedRunGear(player, ultimateBingo.loadoutType);
                         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
                     }
                 }, 210); // 210 ticks = 10.5 seconds, just after the "GO!"
