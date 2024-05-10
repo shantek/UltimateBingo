@@ -47,6 +47,10 @@ public final class UltimateBingo extends JavaPlugin {
     public long gameStartTime;
     public int loadoutType = 1;
 
+    // Very important this is never set to an item you have included in your bingo cards
+    // as this will break the functionality of your game!
+    public Material tickedItemMaterial = Material.LIME_CONCRETE;
+
     public static UltimateBingo instance;
 
     @Override

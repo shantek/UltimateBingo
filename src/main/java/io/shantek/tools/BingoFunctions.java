@@ -159,7 +159,7 @@ public class BingoFunctions
         int count = 0;
         for (ItemStack item : items) {
             // Check if the item is not null and is specifically LIME_CONCRETE
-            if (item != null && item.getType() == Material.LIME_CONCRETE) {
+            if (item != null && item.getType() == ultimateBingo.tickedItemMaterial) {
                 count++;
             }
         }
