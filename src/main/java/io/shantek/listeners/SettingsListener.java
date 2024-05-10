@@ -7,15 +7,12 @@ import io.shantek.tools.ItemBuilder;
 import io.shantek.tools.MaterialList;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Random;
 
 public class SettingsListener implements Listener {
     MaterialList materialList;
@@ -124,7 +121,6 @@ public class SettingsListener implements Listener {
                     e.setCancelled(true);
 
                     ItemStack clickedItem = e.getCurrentItem();
-                    ;
 
                     if (e.getClick().isLeftClick()) {
 
@@ -179,7 +175,6 @@ public class SettingsListener implements Listener {
 
                                 materialList.saveMaterialsToFile();
 
-
                             } else {
                                 player.sendMessage(ChatColor.RED + material.name() + " already exists in this difficulty!");
                             }
@@ -191,10 +186,7 @@ public class SettingsListener implements Listener {
                 }
             }
         }
-
-
     }
-
 
     public void createItemSettings(Player player, int difficulty){
         Inventory bingoItems = Bukkit.createInventory(player, 54, settingsManager.getDifficultyDisplay(difficulty));

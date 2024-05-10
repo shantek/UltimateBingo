@@ -22,13 +22,10 @@ public class BingoPlayerJoinListener implements Listener {
         // Get the player who just joined
         Player player = e.getPlayer();
 
-        // Check if bingo is active and if they have a card
-        // If they don't, prompt them on how to join the game
-        // Delay the message by 5 seconds
-
+        // Check if bingo is active and if they have a card. If they don't,
+        // prompt them on how to join the game. Delay the message by 5 seconds
         if (ultimateBingo.bingoStarted && !ultimateBingo.bingoManager.checkHasBingoCard(player)) {
 
-            // Delay the message by 5 seconds (100 ticks since 1 second = 20 ticks in Minecraft)
             Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateBingo, new Runnable() {
                 @Override
                 public void run() {
@@ -38,11 +35,7 @@ public class BingoPlayerJoinListener implements Listener {
         }
 
         if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && ultimateBingo.gameMode.equals("speedrun")) {
-
             player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
         }
-
-
     }
-
 }

@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import java.util.*;
 
 public class BingoManager{
@@ -19,7 +18,6 @@ public class BingoManager{
     private UltimateBingo ultimateBingo;
     public int[] slots;
     public boolean started;
-
     private BingoCommand bingoCommand;
 
     public BingoManager(UltimateBingo ultimateBingo, BingoCommand bingoCommand){
@@ -37,15 +35,15 @@ public class BingoManager{
         switch (ultimateBingo.difficulty.toLowerCase()) {
             case "normal":
                 difficultyLevel = 2;
-                TOTAL_ITEMS = 21; // Set TOTAL_ITEMS for normal difficulty
+                TOTAL_ITEMS = 21;
                 break;
             case "hard":
                 difficultyLevel = 3;
-                TOTAL_ITEMS = 30; // Set TOTAL_ITEMS for hard difficulty
+                TOTAL_ITEMS = 30;
                 break;
             default:
                 difficultyLevel = 1; // Default to "easy"
-                TOTAL_ITEMS = 14; // Set TOTAL_ITEMS for easy difficulty
+                TOTAL_ITEMS = 14;
                 break;
         }
 
@@ -79,7 +77,6 @@ public class BingoManager{
             if (ultimateBingo.revealCards) {
                 bingoGUI.setItem(17, ultimateBingo.bingoFunctions.createSpyglass()); // Add Spyglass to slot 53 (last slot)
             }
-
             bingoGUIs.put(playerId, bingoGUI);
 
             // Store the card for each player
@@ -99,13 +96,12 @@ public class BingoManager{
         return bingoGUIs.containsKey(playerId);
     }
 
-
     public void createUniqueBingoCards() {
         started = true;
         playerBingoCards = new HashMap<>();
         bingoGUIs = new HashMap<>();
 
-// Determine difficulty level and set TOTAL_ITEMS based on it
+        // Determine difficulty level and set TOTAL_ITEMS based on it
         int difficultyLevel;
         switch (ultimateBingo.difficulty.toLowerCase()) {
             case "normal":
@@ -225,9 +221,6 @@ public class BingoManager{
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack item = inv.getItem(i);
             if (item != null && item.getType() == completedMaterial) {
-
-
-
                 item.setType(Material.LIME_CONCRETE);
                 ItemMeta meta = item.getItemMeta();
                 meta.setDisplayName(ChatColor.GREEN + "Completed: " + completedMaterial.name());
@@ -300,8 +293,6 @@ public class BingoManager{
                                 , ChatColor.GREEN.toString() + ChatColor.BOLD + "Woop woop!");
                     }
                     ultimateBingo.bingoCommand.stopBingo(player, true);
-
-
                 }
                 break;
             }
@@ -316,7 +307,6 @@ public class BingoManager{
         if (playerBingoCards != null) {
             playerBingoCards.clear();
         }
-
     }
 
     public void setBingoCards(int amount) {
@@ -357,7 +347,7 @@ public class BingoManager{
         UUID idOfLeastTickedCard = null;
         int fewestTickedItems = Integer.MAX_VALUE;
         for (Map.Entry<UUID, List<ItemStack>> entry : playerBingoCards.entrySet()) {
-            int tickedItemsCount = countTickedItems(entry.getValue());
+            int tickedItemsCount = ultimateBingo.bingoFunctions.countTickedItems(entry.getValue());
             if (tickedItemsCount < fewestTickedItems) {
                 fewestTickedItems = tickedItemsCount;
                 idOfLeastTickedCard = entry.getKey();
@@ -371,7 +361,7 @@ public class BingoManager{
 
         // Clone the Bingo GUI and card list
         Inventory originalGui = bingoGUIs.get(idOfLeastTickedCard);
-        Inventory clonedGui = cloneInventory(originalGui);
+        Inventory clonedGui = ultimateBingo.bingoFunctions.cloneInventory(originalGui);
         List<ItemStack> clonedCardList = new ArrayList<>(playerBingoCards.get(idOfLeastTickedCard));
 
         // Assign the cloned GUI and card list to the new player
@@ -382,35 +372,6 @@ public class BingoManager{
         Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " has just joined bingo!");
     }
 
-    private int countTickedItems(List<ItemStack> items) {
-        int count = 0;
-        for (ItemStack item : items) {
-            // Check if the item is not null and is specifically LIME_CONCRETE
-            if (item != null && item.getType() == Material.LIME_CONCRETE) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-
-    // Utility method to clone an inventory
-    private Inventory cloneInventory(Inventory original) {
-
-        // Store the string for the card type
-        String newCardInfo = ultimateBingo.uniqueCard ? "unique" : "identical";
-        newCardInfo += ultimateBingo.fullCard ? "/full card" : "/single row";
-        newCardInfo = "(" + newCardInfo + ")";
-
-        Inventory clone = Bukkit.createInventory(null, original.getSize(), ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + newCardInfo);
-        for (int i = 0; i < original.getSize(); i++) {
-            ItemStack originalItem = original.getItem(i);
-            if (originalItem != null) {
-                clone.setItem(i, new ItemStack(originalItem));
-            }
-        }
-        return clone;
-    }
 
 
 }

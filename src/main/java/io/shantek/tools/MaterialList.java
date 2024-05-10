@@ -12,6 +12,9 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class MaterialList {
+
+    // This file creates the default material list to use for the bingo cards
+
     UltimateBingo ultimateBingo;
     public MaterialList(UltimateBingo megaBingo){
         this.ultimateBingo = megaBingo;
@@ -55,7 +58,6 @@ public class MaterialList {
                 impossible.add(material);
                 break;
         }
-
     }
 
     public void removeItem(Material  material, int difficulty){

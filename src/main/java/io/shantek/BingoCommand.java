@@ -10,12 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitTask;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 
 public class BingoCommand implements CommandExecutor {
     UltimateBingo ultimateBingo;
@@ -27,6 +23,8 @@ public class BingoCommand implements CommandExecutor {
         this.settingsManager = settingsManager;
         this.bingoManager = bingoManager;
     }
+
+    //region Command functionality
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
@@ -49,30 +47,9 @@ public class BingoCommand implements CommandExecutor {
                         player.openInventory(ultimateBingo.bingoGameGUIManager.createGameGUI(player));
                     }
 
-                } else if (args[0].equalsIgnoreCase("card")) {
-                    if (ultimateBingo.revealCards) {
-
-                        if (args.length > 1) {
-                            String playerName = args[1]; // Name of the player to reveal
-                            Player otherPlayer = Bukkit.getPlayerExact(playerName); // Get the exact player by name
-
-                            if (otherPlayer != null && otherPlayer.isOnline()) {
-                                // If the player exists and is online, proceed with your method
-                                openBingoOtherPlayer(player, otherPlayer);
-                            } else {
-                                // If no such player is found or they are offline, send an error message
-                                player.sendMessage(ChatColor.RED + "Invalid player name or player is offline.");
-                            }
-                        } else {
-                            // If the command is incomplete or missing the player name argument
-                            player.sendMessage(ChatColor.RED + "Please specify a player name.");
-                        }
-                    } else {
-                        // Only available during the reveal game mode
-                        player.sendMessage(ChatColor.RED + "This command is only available during the reveal mode. No cheating!");
-                    }
-
                 } else if (args[0].equalsIgnoreCase("info")) {
+
+                    // This may be removed in the near future and implemented in to the bingo card?
                     player.sendMessage(ChatColor.WHITE + "Bingo is currently set up with the following configuration:");
                     player.sendMessage(ChatColor.GREEN + "Difficulty: " + ChatColor.YELLOW + ultimateBingo.difficulty.toUpperCase());
                     player.sendMessage(ChatColor.GREEN + "Card type: " + ChatColor.YELLOW + ultimateBingo.cardSize.toUpperCase() + "/" + (ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL"));
@@ -113,6 +90,10 @@ public class BingoCommand implements CommandExecutor {
 
         return false;
     }
+
+    //endregion
+
+    //region Start and stop the game
 
     public void startBingo(Player commandPlayer) {
         UltimateBingo plugin = UltimateBingo.getInstance();
@@ -322,7 +303,6 @@ public class BingoCommand implements CommandExecutor {
         }, 40L);  // Delay specified in ticks (40 ticks = 2 seconds)
     }
 
-
     public void stopBingo(Player sender, boolean gameCompleted) {
 
         if (!ultimateBingo.bingoStarted && !gameCompleted) {
@@ -384,17 +364,9 @@ public class BingoCommand implements CommandExecutor {
         }, 40L);  // Delay specified in ticks (40 ticks = 2 seconds)
     }
 
+    //endregion
 
-    public void teleportPlayers() {
-        for (Player target : Bukkit.getOnlinePlayers()) {
-
-            // If we have a bingo start location, teleport the players here
-            if (ultimateBingo.bingoSpawnLocation != null) {
-                target.teleport(ultimateBingo.bingoSpawnLocation);
-            }
-
-        }
-    }
+    //region Opening bingo cards
 
     public void openBingo(Player sender) {
         if (bingoManager.getBingoGUIs() != null && !bingoManager.getBingoGUIs().isEmpty()) {
@@ -439,4 +411,7 @@ public class BingoCommand implements CommandExecutor {
         }
 
     }
+
+    //endregion
+
 }

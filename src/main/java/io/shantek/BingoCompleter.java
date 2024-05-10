@@ -29,7 +29,6 @@ public class BingoCompleter implements TabCompleter {
             complete.add("card");
             return StringUtil.copyPartialMatches(args[0], complete, new ArrayList<>());
 
-
         } else if (args.length == 2 && args[0].equalsIgnoreCase("card")) {
 
             List<String> playerNames = new ArrayList<>();

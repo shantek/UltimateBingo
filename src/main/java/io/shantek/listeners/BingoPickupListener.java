@@ -1,6 +1,5 @@
 package io.shantek.listeners;
 
-import io.shantek.managers.BingoManager;
 import io.shantek.UltimateBingo;
 import io.shantek.tools.MaterialList;
 import org.bukkit.Material;
@@ -23,7 +22,6 @@ public class BingoPickupListener implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             if (ultimateBingo.bingoStarted) {
-               // BingoManager bingoManager = ultimateBingo.getBingoManager();
                 Material pickedItem = event.getItem().getItemStack().getType();
 
                 UUID uuid = player.getUniqueId();

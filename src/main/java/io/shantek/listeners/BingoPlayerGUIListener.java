@@ -2,22 +2,16 @@ package io.shantek.listeners;
 
 import io.shantek.UltimateBingo;
 import io.shantek.managers.BingoPlayerGUIManager;
-import io.shantek.managers.SettingsManager;
-import io.shantek.tools.ItemBuilder;
 import io.shantek.tools.MaterialList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
 
 public class BingoPlayerGUIListener implements Listener {
     MaterialList materialList;
@@ -56,39 +50,13 @@ public class BingoPlayerGUIListener implements Listener {
                         player.openInventory(ultimateBingo.bingoPlayerGUIManager.setupPlayersBingoCardsInventory());
                         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
                         break;
-                        /*
-                    case 2:
-                        bingoGameGUIManager.toggleCardSize(player);
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-                        break;
-                    case 3:
-                        bingoGameGUIManager.toggleCardType(player);
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-                        break;
-                    case 4:
-                        bingoGameGUIManager.toggleWinCondition(player);
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-                        break;
-                    case 5:
-                        bingoGameGUIManager.toggleRevealCards(player);
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-                        break;
-                    case 8:
-                        ultimateBingo.bingoCommand.startBingo(player);
-                        ultimateBingo.bingoSpawnLocation = player.getLocation();
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-                        player.closeInventory();
-                        break;
-
-                         */
-                    default:
-                        // This case handles any undefined slots, no action is taken
-                        break;
                 }
             }
 
         } else if (e.getView().getTitle().contains("Player Bingo Cards")) {
-            e.setCancelled(true);  // Prevent dragging items
+
+            // Prevent any items from being dragged
+            e.setCancelled(true);
 
             // Deal with the back to menu
             int slot = e.getRawSlot();
@@ -130,7 +98,6 @@ public class BingoPlayerGUIListener implements Listener {
 
             }
         }
-
     }
 }
 

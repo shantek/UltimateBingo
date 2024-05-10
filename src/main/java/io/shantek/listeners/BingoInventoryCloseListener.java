@@ -18,6 +18,8 @@ public class BingoInventoryCloseListener implements Listener {
     UltimateBingo ultimateBingo;
     private final Set<InventoryType> validInventoryTypes;
 
+    // All the inventory types listed here will be included in the close listener.
+    // Use this to refine what you want to check, should you decide to change it.
     public BingoInventoryCloseListener(UltimateBingo ultimateBingo) {
         this.ultimateBingo = ultimateBingo;
         // Initialize the set of valid inventory types
@@ -50,7 +52,7 @@ public class BingoInventoryCloseListener implements Listener {
             InventoryHolder holder = inventory.getHolder();
 
             boolean isValidType = validInventoryTypes.contains(inventory.getType());
-            boolean isSpecialChest = (holder instanceof StorageMinecart); // Add similar checks for other special types like ChestBoat if available
+            boolean isSpecialChest = (holder instanceof StorageMinecart);
 
             // Check if the inventory type is valid or if it's a special chest
             if (isValidType || isSpecialChest) {

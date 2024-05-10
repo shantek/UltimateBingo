@@ -23,6 +23,8 @@ public class BingoFunctions
         this.ultimateBingo = ultimateBingo;
     }
 
+    //region Resetting the players
+
     // Reset the players state at the start and end of games
     public void resetPlayers(){
         for (Player player : Bukkit.getOnlinePlayers()){
@@ -89,6 +91,10 @@ public class BingoFunctions
         }
     }
 
+    //endregion
+
+    //region Bingo card functionality
+
     public void giveBingoCard(Player player) {
         PlayerInventory inventory = player.getInventory(); // Get the player's inventory
 
@@ -141,12 +147,46 @@ public class BingoFunctions
         }
         return false; // No Bingo card found
     }
+
     // Give all players a bingo card
     public void giveBingoCardToAllPlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             giveBingoCard(player);
         }
     }
+
+    public int countTickedItems(List<ItemStack> items) {
+        int count = 0;
+        for (ItemStack item : items) {
+            // Check if the item is not null and is specifically LIME_CONCRETE
+            if (item != null && item.getType() == Material.LIME_CONCRETE) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // Utility method to clone an inventory
+    public Inventory cloneInventory(Inventory original) {
+
+        // Store the string for the card type
+        String newCardInfo = ultimateBingo.uniqueCard ? "unique" : "identical";
+        newCardInfo += ultimateBingo.fullCard ? "/full card" : "/single row";
+        newCardInfo = "(" + newCardInfo + ")";
+
+        Inventory clone = Bukkit.createInventory(null, original.getSize(), ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + newCardInfo);
+        for (int i = 0; i < original.getSize(); i++) {
+            ItemStack originalItem = original.getItem(i);
+            if (originalItem != null) {
+                clone.setItem(i, new ItemStack(originalItem));
+            }
+        }
+        return clone;
+    }
+
+    //endregion
+
+    //region Resetting the world
 
     // Reset the time and weather at the start of the game
     public void resetTimeAndWeather() {
@@ -171,10 +211,16 @@ public class BingoFunctions
         }
     }
 
+    //endregion
+
+    //region Item stacks and equipping
+
     // Speed run equipment for players
     public void equipSpeedRunGear(Player player, int loadout) {
 
         if (loadout == 1) {
+
+            //region First loadout - Boat
 
             // Create and set armor
             player.getInventory().setHelmet(createEnchantedArmor(Material.NETHERITE_HELMET, new Enchantment[]{
@@ -206,7 +252,11 @@ public class BingoFunctions
             player.getInventory().addItem(new ItemStack(Material.CRAFTING_TABLE, 1));
             player.getInventory().addItem(new ItemStack(Material.JUNGLE_BOAT, 1));
 
+            //endregion
+
         } else if (loadout == 2) {
+
+            //region Second loadout - Wings
 
             // Create and set armor
             player.getInventory().setHelmet(createEnchantedArmor(Material.NETHERITE_HELMET, new Enchantment[]{
@@ -228,9 +278,9 @@ public class BingoFunctions
             player.getInventory().setItemInOffHand(shield);
 
             // Give player their basic tools
-            ItemStack fireworkStack = createFireworkRocket(3);
+            ItemStack fireworkStack = createFireworkRocket();
             player.getInventory().addItem(fireworkStack);
-            
+
             player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_SWORD, new Enchantment[]{Enchantment.DAMAGE_ALL, Enchantment.KNOCKBACK, Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS, Enchantment.SWEEPING_EDGE}, new int[]{5, 2, 2, 3, 3}));
             player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_PICKAXE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.LOOT_BONUS_BLOCKS, Enchantment.DURABILITY}, new int[]{5, 3, 3}));
             player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_AXE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.DURABILITY, Enchantment.MENDING, Enchantment.SILK_TOUCH}, new int[]{5, 3, 1, 1}));
@@ -241,16 +291,17 @@ public class BingoFunctions
             player.getInventory().addItem(new ItemStack(Material.PURPLE_BED));
             player.getInventory().addItem(new ItemStack(Material.CRAFTING_TABLE, 1));
 
+            //endregion
 
         }
     }
 
-    private ItemStack createFireworkRocket(int flightDuration) {
+    private ItemStack createFireworkRocket() {
         ItemStack firework = new ItemStack(Material.FIREWORK_ROCKET, 64); // Create a stack of 64 rockets
         FireworkMeta fireworkMeta = (FireworkMeta) firework.getItemMeta();
 
         // Configure the flight duration
-        fireworkMeta.setPower(flightDuration);
+        fireworkMeta.setPower(3);
 
         // Set the item meta back to the firework stack
         firework.setItemMeta(fireworkMeta);
@@ -292,6 +343,20 @@ public class BingoFunctions
         item.setItemMeta(meta);
         return item;
     }
+
+    // Settings items for player bingo cards
+    public ItemStack createSpyglass() {
+        ItemStack spyglass = new ItemStack(Material.SPYGLASS);
+        ItemMeta meta = spyglass.getItemMeta();
+        meta.setDisplayName(ChatColor.GOLD + "View Players Cards");
+        meta.setLore(Arrays.asList(ChatColor.GRAY + "Get a peek at other players' cards!"));
+        spyglass.setItemMeta(meta);
+        return spyglass;
+    }
+
+    //endregion
+
+    //region Teleporting functionality
 
     // Method to scatter players and ensure they face the center horizontally
     public void safeScatterPlayers(List<Player> players, Location center, int radius) {
@@ -338,15 +403,9 @@ public class BingoFunctions
         player.teleport(playerLoc);
     }
 
-    // Settings items for player bingo cards
-    public ItemStack createSpyglass() {
-        ItemStack spyglass = new ItemStack(Material.SPYGLASS);
-        ItemMeta meta = spyglass.getItemMeta();
-        meta.setDisplayName(ChatColor.GOLD + "View Players Cards");
-        meta.setLore(Arrays.asList(ChatColor.GRAY + "Get a peek at other players' cards!"));
-        spyglass.setItemMeta(meta);
-        return spyglass;
-    }
+    //endregion
+
+    //region Game timers
 
     public void setGameTimer() {
 
@@ -439,7 +498,6 @@ public class BingoFunctions
     }
 
     // Format duration from minutes to a readable format
-
     public String formatAndShowGameDuration(long durationMillis) {
         // Convert milliseconds to minutes
         long totalMinutes = durationMillis / 1000 / 60;
@@ -456,4 +514,5 @@ public class BingoFunctions
         }
     }
 
+    //endregion
 }

@@ -5,7 +5,6 @@ import io.shantek.tools.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +18,6 @@ public class BingoGameGUIManager {
 
     public Inventory createGameGUI(Player player) {
         Inventory gameConfigInventory = Bukkit.createInventory(player, 9, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo Configuration");
-
         gameConfigInventory.setItem(0, createItem(Material.PAPER, "Game mode", ultimateBingo.gameMode));
         gameConfigInventory.setItem(1, createItem(Material.SHIELD, "Difficulty", ultimateBingo.difficulty));
         gameConfigInventory.setItem(2, createItem(Material.MAP, "Card Size", ultimateBingo.cardSize));
@@ -45,8 +43,6 @@ public class BingoGameGUIManager {
             gameLoadoutString = "Flying Kit";
         }
         gameConfigInventory.setItem(7, createItem(Material.NETHERITE_SWORD, "Player Loadout", gameLoadoutString));
-
-
         gameConfigInventory.setItem(8, createStartGameItem());
 
         return gameConfigInventory;
@@ -64,9 +60,9 @@ public class BingoGameGUIManager {
                 .withLore(ChatColor.GRAY + "Click to start the game").build();
     }
 
+    //region Toggle and update the GUI
+
     public void toggleGameMode(Player player) {
-
-
         switch (ultimateBingo.gameMode.toLowerCase()) {
             case "traditional":
                 ultimateBingo.gameMode = "speedrun";
@@ -82,7 +78,6 @@ public class BingoGameGUIManager {
 
     public void toggleDifficulty(Player player) {
         // Cycle through difficulties. Assuming there are three fixed difficulties.
-
         switch (ultimateBingo.difficulty.toLowerCase()) {
             case "easy":
                 ultimateBingo.difficulty = "normal";
@@ -162,8 +157,6 @@ public class BingoGameGUIManager {
         updateGUI(player);
     }
 
-
-
     public void toggleCardType(Player player) {
         // Toggle boolean value
         ultimateBingo.uniqueCard = !ultimateBingo.uniqueCard;
@@ -223,4 +216,5 @@ public class BingoGameGUIManager {
         }
     }
 
+    //endregion
 }

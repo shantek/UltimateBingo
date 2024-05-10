@@ -80,20 +80,16 @@ public final class UltimateBingo extends JavaPlugin {
     }
 
     private void registerEventListeners() {
-        // Possibly remove these 2 checks, they should work with the Inventory Close listener.
-
         // Register each listener with the Bukkit plugin manager
         Bukkit.getPluginManager().registerEvents(new RespawnListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoPickupListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoInteractListener(this), this);
-        //Bukkit.getPluginManager().registerEvents(new BingoInventoryOpenListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoInventoryCloseListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoPlayerJoinListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BingoGUIListener(this), this);
         SettingsManager settingsManager = new SettingsManager(this);
         Bukkit.getPluginManager().registerEvents(new SettingsListener(materialList, settingsManager, bingoGameGUIManager, this), this);
         Bukkit.getPluginManager().registerEvents(new BingoPlayerGUIListener(materialList, bingoPlayerGUIManager, this), this);
-
     }
 
     public BingoManager getBingoManager() {

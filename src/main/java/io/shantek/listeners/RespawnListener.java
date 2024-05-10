@@ -23,9 +23,7 @@ public class RespawnListener implements Listener {
         Player player = event.getPlayer();
 
         // Only teleport the player back to bingo spawn if enabled in the settings
-        // Enabled by default
         if (ultimateBingo.bingoStarted && ultimateBingo.respawnTeleport) {
-
             // Delay the sendTitle message by 10 ticks
             Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
                 player.sendTitle(ChatColor.YELLOW + "TELEPORTING", ChatColor.WHITE + "One Moment", 10, 40, 10);
@@ -45,8 +43,6 @@ public class RespawnListener implements Listener {
                 }
 
             }, 70L); // Delay teleportation by 3.5 seconds (70 ticks) after respawn
-
-
         }
     }
 }
