@@ -25,6 +25,16 @@ jobs:
       with:
         maven-version: 3.8.1
 
+    - name: Fetch commit messages
+      id: fetch_commits
+      run: |
+        git fetch --tags
+        LAST_TAG=$(git describe --tags --abbrev=0 ${GITHUB_SHA}^)
+        COMMIT_MESSAGES=$(git log $LAST_TAG..HEAD --pretty=format:"%s")
+        echo "COMMIT_MESSAGES<<EOF" >> $GITHUB_ENV
+        echo "$COMMIT_MESSAGES" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+
     - name: Build project
       run: mvn package -B
 
@@ -41,6 +51,7 @@ jobs:
       with:
         tag_name: v${{ env.VERSION }}
         release_name: Release ${{ env.VERSION }}
+        body: ${{ env.COMMIT_MESSAGES }}
         draft: false
         prerelease: false
       env:
