@@ -73,7 +73,6 @@ public final class UltimateBingo extends JavaPlugin {
 
         // Register event listeners
         registerEventListeners();
-
         materialList.createMaterials();
 
         // Check if the data folder already exists, create if it doesn't
@@ -99,6 +98,7 @@ public final class UltimateBingo extends JavaPlugin {
     public BingoManager getBingoManager() {
         return bingoManager;
     }
+
     public MaterialList getMaterialList(){
         return materialList;
     }
@@ -111,13 +111,11 @@ public final class UltimateBingo extends JavaPlugin {
     public void onDisable() {
         bingoManager.clearData();
         bingoManager.started = false;
-
         instance = null;
     }
 
     public static UltimateBingo getInstance() {
         return instance;
     }
-
 
 }

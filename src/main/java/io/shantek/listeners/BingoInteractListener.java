@@ -18,7 +18,6 @@ public class BingoInteractListener implements Listener {
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-
         ItemStack item = event.getItemDrop().getItemStack();
         if (item.getType() == ultimateBingo.bingoCardMaterial && item.getItemMeta().hasDisplayName() &&
                 item.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
@@ -27,7 +26,6 @@ public class BingoInteractListener implements Listener {
     }
 
     // Used to catch the player swiping with the bingo card item to open the bingo gui
-
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
 

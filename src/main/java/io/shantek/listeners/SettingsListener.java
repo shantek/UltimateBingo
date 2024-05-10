@@ -31,7 +31,6 @@ public class SettingsListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
-
         if (!(e.getWhoClicked() instanceof Player)) return;
 
         Player player = (Player) e.getWhoClicked();

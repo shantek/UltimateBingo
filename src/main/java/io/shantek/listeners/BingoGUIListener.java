@@ -31,7 +31,6 @@ public class BingoGUIListener implements Listener {
                     player.closeInventory();
                     player.openInventory(ultimateBingo.bingoPlayerGUIManager.setupPlayersBingoCardsInventory());
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-
                 }
             }
             // Cancel all other events

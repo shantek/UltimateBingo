@@ -30,7 +30,6 @@ public class BingoPlayerGUIListener implements Listener {
     public void onInventoryClick(InventoryClickEvent e) {
 
         if (!(e.getWhoClicked() instanceof Player)) return;
-
         Player player = (Player) e.getWhoClicked();
 
         // Ensure the event was triggered in the Bingo configuration GUI
