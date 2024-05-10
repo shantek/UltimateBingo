@@ -12,57 +12,61 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Fetch all history for all tags and branches
 
-    - name: Set up JDK 16
-      uses: actions/setup-java@v2
-      with:
-        distribution: adopt
-        java-version: 16
+      - name: Set up JDK 16
+        uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 16
 
-    - name: Set up Maven
-      uses: stCarolas/setup-maven@v4.2
-      with:
-        maven-version: 3.8.1
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v4.2
+        with:
+          maven-version: 3.8.1
 
-    - name: Fetch commit messages
-      id: fetch_commits
-      run: |
-        git fetch --tags
-        LAST_TAG=$(git describe --tags --abbrev=0 ${GITHUB_SHA}^)
-        COMMIT_MESSAGES=$(git log $LAST_TAG..HEAD --pretty=format:"%s")
-        echo "COMMIT_MESSAGES<<EOF" >> $GITHUB_ENV
-        echo "$COMMIT_MESSAGES" >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV
+      - name: Fetch commit messages
+        id: fetch_commits
+        run: |
+          git fetch --tags
+          LAST_TAG=$(git describe --tags --abbrev=0 $(git rev-list --tags --max-count=1))
+          COMMIT_MESSAGES=$(git log $LAST_TAG..HEAD --pretty=format:"- %s")
+          echo "COMMIT_MESSAGES<<EOF" >> $GITHUB_ENV
+          echo "Full Changelog:" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+          echo "$COMMIT_MESSAGES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
-    - name: Build project
-      run: mvn package -B
+      - name: Build project
+        run: mvn package -B
 
-    - name: Get version from pom.xml
-      id: version
-      run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+      - name: Get version from pom.xml
+        id: version
+        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
-    - name: List files in target directory
-      run: ls -al ./target/
+      - name: List files in target directory
+        run: ls -al ./target/
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      with:
-        tag_name: v${{ env.VERSION }}
-        release_name: Release ${{ env.VERSION }}
-        body: ${{ env.COMMIT_MESSAGES }}
-        draft: false
-        prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: v${{ env.VERSION }}
+          release_name: Release ${{ env.VERSION }}
+          body: ${{ env.COMMIT_MESSAGES }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./target/UltimateBingo-${{ env.VERSION }}.jar
-        asset_name: UltimateBingo-${{ env.VERSION }}.jar
-        asset_content_type: application/java-archive
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/UltimateBingo-${{ env.VERSION }}.jar
+          asset_name: UltimateBingo-${{ env.VERSION }}.jar
+          asset_content_type: application/java-archive
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
