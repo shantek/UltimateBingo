@@ -370,6 +370,10 @@ public class BingoManager{
 
         player.sendMessage(ChatColor.GREEN + "You've been given an in-progress bingo card, good luck!");
         Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " has just joined bingo!");
+
+        // Give them their loadout gear
+        ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.loadoutType);
+
     }
 
 
