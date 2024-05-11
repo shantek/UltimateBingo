@@ -190,10 +190,10 @@ public class BingoManager{
 
         // Define the distribution of items across difficulties based on the type
         int[] distribution = switch (type) {
-            case 1 -> new int[]{15, 10, 5, 0, 0};
-            case 2 -> new int[]{10, 10, 5, 5, 0};
-            case 3 -> new int[]{5, 5, 8, 6, 6};
-            default -> new int[]{15, 10, 5, 0, 0};
+            case 1 -> new int[]{15, 15, 0, 0, 0};
+            case 2 -> new int[]{5, 10, 10, 5, 0};
+            case 3 -> new int[]{0, 5, 10, 10, 5};
+            default -> new int[]{15, 15, 0, 0, 0};
         };
 
         // Generate materials based on the defined distribution
