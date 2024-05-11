@@ -354,6 +354,31 @@ public class BingoFunctions
         return spyglass;
     }
 
+    public void topUpFirstFireworkRocketsStack(Player player) {
+
+        if (ultimateBingo.loadoutType == 2) {
+
+            PlayerInventory inventory = player.getInventory();
+            ItemStack[] items = inventory.getContents();
+            boolean rocketsFound = false;
+
+            // Scan inventory for the first stack of rockets and top it up to 64 if found
+            for (ItemStack item : items) {
+                if (item != null && item.getType() == Material.FIREWORK_ROCKET) {
+                    item.setAmount(64);  // Set the count to 64
+                    rocketsFound = true;
+                    break;  // Stop after finding the first stack
+                }
+            }
+
+            // Player has no rockets, let's give them a stack
+            if (!rocketsFound) {
+                ItemStack fireworkStack = createFireworkRocket();
+                player.getInventory().addItem(fireworkStack);
+            }
+        }
+    }
+
     //endregion
 
     //region Teleporting functionality
