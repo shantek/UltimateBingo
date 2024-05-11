@@ -74,9 +74,8 @@ public class BingoCommand implements CommandExecutor {
                     if (!ultimateBingo.bingoManager.checkHasBingoCard(player)) {
 
                         // They aren't in the game, let's give them a card and let them join
-                        ultimateBingo.bingoManager.joinGameInProgress(player);
                         ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
-                        ultimateBingo.bingoFunctions.giveBingoCard(player);
+                        ultimateBingo.bingoManager.joinGameInProgress(player);
 
                     }
 
