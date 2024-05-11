@@ -241,7 +241,7 @@ public class BingoCommand implements CommandExecutor {
 
                     // Equip the player loadout inventory
                     if (ultimateBingo.loadoutType > 0) {
-                        ultimateBingo.bingoFunctions.equipSpeedRunGear(player, ultimateBingo.loadoutType);
+                        ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.loadoutType);
                     }
 
                     // Also give them night vision
