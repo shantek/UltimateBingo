@@ -39,8 +39,8 @@ public class RespawnListener implements Listener {
 
                 boolean keepInventory = player.getWorld().getGameRuleValue(GameRule.KEEP_INVENTORY);
 
-                // Equip them with fresh speed run gear after respawning, if keep inventory is off
-                if (ultimateBingo.gameMode.equals("speedrun") && !keepInventory) {
+                // Equip them with fresh loadout gear after respawning, if keep inventory is off
+                if (!keepInventory) {
                     ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.loadoutType);
                 }
 
