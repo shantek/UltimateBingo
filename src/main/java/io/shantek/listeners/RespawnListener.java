@@ -9,6 +9,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.entity.Player;
 import io.shantek.UltimateBingo;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class RespawnListener implements Listener {
 
@@ -39,7 +41,12 @@ public class RespawnListener implements Listener {
 
                 // Equip them with fresh speed run gear after respawning, if keep inventory is off
                 if (ultimateBingo.gameMode.equals("speedrun") && !keepInventory) {
-                    ultimateBingo.bingoFunctions.equipSpeedRunGear(player, ultimateBingo.loadoutType);
+                    ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.loadoutType);
+                }
+
+                // Also give them night vision
+                if (ultimateBingo.gameMode.equals("speedrun")) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
                 }
 
             }, 70L); // Delay teleportation by 3.5 seconds (70 ticks) after respawn
