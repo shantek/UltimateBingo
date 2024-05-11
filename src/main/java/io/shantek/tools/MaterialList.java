@@ -288,6 +288,7 @@ public class MaterialList {
         add(Material.GREEN_CARPET, 4);
         add(Material.CACTUS, 4);
         add(Material.MINECART, 4);
+        add(Material.GOLDEN_APPLE, 4);
 
         add(Material.EMERALD_BLOCK, 5);
         add(Material.SLIME_BLOCK,5);
