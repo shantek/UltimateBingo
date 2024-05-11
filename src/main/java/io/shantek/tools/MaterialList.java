@@ -175,6 +175,8 @@ public class MaterialList {
         add(Material.APPLE, 1);
         add(Material.FLINT, 1);
         add(Material.FLINT_AND_STEEL, 1);
+        add(Material.OAK_STAIRS, 1);
+        add(Material.OAK_BUTTON, 1);
 
         add(Material.GOLD_INGOT, 2);
         add(Material.REDSTONE,2);
@@ -206,7 +208,9 @@ public class MaterialList {
         add(Material.RED_WOOL, 2);
         add(Material.MUD, 2);
         add(Material.PACKED_MUD, 2);
-        add(Material.GLOW_INK_SAC, 2);
+        add(Material.SMOOTH_STONE, 2);
+        add(Material.RED_DYE, 2);
+        add(Material.YELLOW_DYE, 2);
 
         add(Material.LAPIS_LAZULI,3);
         add(Material.BOOKSHELF,3);
@@ -240,6 +244,11 @@ public class MaterialList {
         add(Material.KELP, 3);
         add(Material.GUNPOWDER,3);
         add(Material.BOWL, 3);
+        add(Material.GLASS_PANE, 3);
+        add(Material.ORANGE_DYE, 3);
+        add(Material.BROWN_DYE, 3);
+        add(Material.WHITE_DYE, 3);
+        add(Material.PURPLE_DYE, 3);
 
         add(Material.DIAMOND, 4);
         add(Material.JUKEBOX,4);
@@ -288,7 +297,9 @@ public class MaterialList {
         add(Material.GREEN_CARPET, 4);
         add(Material.CACTUS, 4);
         add(Material.MINECART, 4);
-        add(Material.GOLDEN_APPLE, 4);
+        add(Material.NETHERRACK, 4);
+        add(Material.GLOW_INK_SAC, 4);
+        add(Material.ROOTED_DIRT, 4);
 
         add(Material.EMERALD_BLOCK, 5);
         add(Material.SLIME_BLOCK,5);
@@ -311,6 +322,13 @@ public class MaterialList {
         add(Material.POWDER_SNOW_BUCKET, 5);
         add(Material.GOAT_HORN, 5);
         add(Material.EGG,5);
+        add(Material.MUD_BRICKS, 5);
+        add(Material.CRYING_OBSIDIAN, 5);
+        add(Material.EXPERIENCE_BOTTLE, 5);
+        add(Material.BONE_BLOCK, 5);
+        add(Material.DIAMOND_BLOCK, 5);
+        add(Material.DIAMOND_PICKAXE, 5);
+        add(Material.DIAMOND_HOE, 5);
 
         saveMaterialsToFile();
     }
