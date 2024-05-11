@@ -297,7 +297,6 @@ public class MaterialList {
         add(Material.TRIDENT, 5);
         add(Material.DIAMOND_CHESTPLATE, 5);
         add(Material.DIAMOND_BOOTS, 5);
-        add(Material.ENCHANTED_GOLDEN_APPLE, 5);
         add(Material.SADDLE, 5);
         add(Material.NAME_TAG, 5);
         add(Material.MANGROVE_LOG,5);
