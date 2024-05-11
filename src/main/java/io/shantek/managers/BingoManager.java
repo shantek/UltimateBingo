@@ -7,6 +7,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
 import java.util.*;
 
 public class BingoManager{
@@ -226,6 +229,9 @@ public class BingoManager{
                 meta.setDisplayName(ChatColor.GREEN + "Completed: " + completedMaterial.name());
                 item.setItemMeta(meta);
 
+                // Top up their rockets if using the correct loadout
+                ultimateBingo.bingoFunctions.topUpFirstFireworkRocketsStack(player);
+
                 String removedUnderscore = completedMaterial.name().toLowerCase().replace('_', ' ');
                 player.sendMessage(ChatColor.GREEN + "You ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from your bingo card!");
 
@@ -371,8 +377,15 @@ public class BingoManager{
         player.sendMessage(ChatColor.GREEN + "You've been given an in-progress bingo card, good luck!");
         Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " has just joined bingo!");
 
+        // Give them a bingo card
+        ultimateBingo.bingoFunctions.giveBingoCard(player);
+
         // Give them their loadout gear
         ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.loadoutType);
+
+        if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && ultimateBingo.gameMode.equals("speedrun")) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
+        }
 
     }
 
