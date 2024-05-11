@@ -182,7 +182,6 @@ public class MaterialList {
         add(Material.SPIDER_EYE,2);
         add(Material.NOTE_BLOCK,2);
         add(Material.COOKED_CHICKEN,2);
-        add(Material.EGG,2);
         add(Material.COOKED_PORKCHOP,2);
         add(Material.RABBIT,2);
         add(Material.TROPICAL_FISH,2);
@@ -311,6 +310,7 @@ public class MaterialList {
         add(Material.SCULK_VEIN, 5);
         add(Material.POWDER_SNOW_BUCKET, 5);
         add(Material.GOAT_HORN, 5);
+        add(Material.EGG,5);
 
         saveMaterialsToFile();
     }
