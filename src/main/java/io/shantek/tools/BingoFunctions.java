@@ -216,7 +216,7 @@ public class BingoFunctions
     //region Item stacks and equipping
 
     // Speed run equipment for players
-    public void equipSpeedRunGear(Player player, int loadout) {
+    public void equipLoadoutGear(Player player, int loadout) {
 
         if (loadout == 1) {
 
