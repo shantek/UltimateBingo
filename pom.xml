@@ -6,7 +6,7 @@
 
   <groupId>io.shantek</groupId>
   <artifactId>UltimateBingo</artifactId>
-  <version>0.5.2</version>
+  <version>0.6.0</version>
   <packaging>jar</packaging>
 
   <name>UltimateBingo</name>
