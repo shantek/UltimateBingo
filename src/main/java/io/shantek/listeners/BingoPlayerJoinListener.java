@@ -3,6 +3,7 @@ package io.shantek.listeners;
 import io.shantek.UltimateBingo;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.entity.Player;
@@ -17,6 +18,7 @@ public class BingoPlayerJoinListener implements Listener {
         this.ultimateBingo = ultimateBingo;
     }
 
+    @EventHandler
     public void onJoin(PlayerJoinEvent e) {
 
         // Get the player who just joined
