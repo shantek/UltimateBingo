@@ -220,6 +220,19 @@ public class BingoFunctions
 
         if (loadout == 1) {
 
+            //region First loadout - Basic starter gear
+
+            player.getInventory().addItem(new ItemStack(Material.WOODEN_SWORD));
+            player.getInventory().addItem(new ItemStack(Material.WOODEN_AXE));
+            player.getInventory().addItem(new ItemStack(Material.WOODEN_PICKAXE));
+            player.getInventory().addItem(new ItemStack(Material.WOODEN_SHOVEL));
+            player.getInventory().addItem(new ItemStack(Material.WOODEN_HOE));
+            player.getInventory().addItem(new ItemStack(Material.CRAFTING_TABLE, 1));
+
+            //endregion
+
+        } else if (loadout == 2) {
+
             //region First loadout - Boat
 
             // Create and set armor
@@ -254,7 +267,7 @@ public class BingoFunctions
 
             //endregion
 
-        } else if (loadout == 2) {
+        } else if (loadout == 3) {
 
             //region Second loadout - Wings
 
