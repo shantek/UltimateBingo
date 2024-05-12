@@ -369,7 +369,7 @@ public class BingoFunctions
 
     public void topUpFirstFireworkRocketsStack(Player player) {
 
-        if (ultimateBingo.loadoutType == 2) {
+        if (ultimateBingo.loadoutType == 3) {
 
             PlayerInventory inventory = player.getInventory();
             ItemStack[] items = inventory.getContents();

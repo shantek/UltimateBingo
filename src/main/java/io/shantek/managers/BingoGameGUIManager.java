@@ -37,9 +37,12 @@ public class BingoGameGUIManager {
         // Work out the game loadout to give the player
         String gameLoadoutString = "Empty Inventory";
         if (ultimateBingo.loadoutType == 1) {
-            gameLoadoutString = "Boat Kit";
+            gameLoadoutString = "Basic Kit";
         }
         else if (ultimateBingo.loadoutType == 2) {
+            gameLoadoutString = "Boat Kit";
+        }
+        else if (ultimateBingo.loadoutType == 3) {
             gameLoadoutString = "Flying Kit";
         }
         gameConfigInventory.setItem(7, createItem(Material.NETHERITE_SWORD, "Player Loadout", gameLoadoutString));
@@ -150,6 +153,9 @@ public class BingoGameGUIManager {
                 ultimateBingo.loadoutType = 2;
                 break;
             case 2:
+                ultimateBingo.loadoutType = 3;
+                break;
+            case 3:
                 ultimateBingo.loadoutType = 0;
                 break;
 
@@ -202,9 +208,12 @@ public class BingoGameGUIManager {
             // Work out the game loadout to give the player
             String gameLoadoutString = "Empty Inventory";
             if (ultimateBingo.loadoutType == 1) {
-                gameLoadoutString = "Boat Kit";
+                gameLoadoutString = "Basic Kit";
             }
             else if (ultimateBingo.loadoutType == 2) {
+                gameLoadoutString = "Boat Kit";
+            }
+            else if (ultimateBingo.loadoutType == 3) {
                 gameLoadoutString = "Flying Kit";
             }
             currentInventory.setItem(7, createItem(Material.NETHERITE_SWORD, "Player Loadout", gameLoadoutString));
