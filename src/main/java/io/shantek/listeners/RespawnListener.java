@@ -50,6 +50,12 @@ public class RespawnListener implements Listener {
                 }
 
             }, 70L); // Delay teleportation by 3.5 seconds (70 ticks) after respawn
+        } else {
+
+            // If they previously had a bingo card and died after the game was active, give them another card
+            if (ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+                ultimateBingo.bingoFunctions.giveBingoCard(player);
+            }
         }
     }
 }
