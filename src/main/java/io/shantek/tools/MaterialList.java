@@ -329,6 +329,7 @@ public class MaterialList {
         add(Material.DIAMOND_BLOCK, 5);
         add(Material.DIAMOND_PICKAXE, 5);
         add(Material.DIAMOND_HOE, 5);
+        add(Material.LILY_PAD, 5);
 
         saveMaterialsToFile();
     }
