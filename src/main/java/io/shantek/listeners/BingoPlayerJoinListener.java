@@ -22,16 +22,24 @@ public class BingoPlayerJoinListener implements Listener {
         // Get the player who just joined
         Player player = e.getPlayer();
 
-        // Check if bingo is active and if they have a card. If they don't,
-        // prompt them on how to join the game. Delay the message by 5 seconds
-        if (ultimateBingo.bingoStarted && !ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+        if (!ultimateBingo.bingoStarted) {
+            // If they joined and a game isn't active, reset their inventory in case they
+            // carried anything over from a prior game
+            ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
 
-            Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateBingo, new Runnable() {
-                @Override
-                public void run() {
-                    player.sendMessage(ChatColor.GREEN + "A bingo game is currently in progress. Type /bingo to join in!");
-                }
-            }, 100L); // 100 ticks delay
+            // Give them a replacement card so they can view results from a prior game
+            if (ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+                ultimateBingo.bingoFunctions.giveBingoCard(player);
+            }
+
+        } else if (ultimateBingo.bingoStarted && !ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+
+            // Check if bingo is active and if they have a card. If they don't,
+            // prompt them on how to join the game. Delay the message by 5 seconds
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateBingo, () -> {
+                player.sendMessage(ChatColor.GREEN + "A bingo game is currently in progress. Type /bingo to join in!");
+            }, 100);
         }
 
         if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && ultimateBingo.gameMode.equals("speedrun")) {
