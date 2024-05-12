@@ -121,35 +121,56 @@ public class SettingsListener implements Listener {
 
                     ItemStack clickedItem = e.getCurrentItem();
 
+                    boolean itemRemoved = false;
+
                     if (e.getClick().isLeftClick()) {
 
                         if (isEasyDifficulty) {
-                            materialList.removeItem(clickedItem.getType(), 1);
-                            createItemSettings(player, 1);
-                        }
 
-                        if (isNormalDifficulty) {
-                            materialList.removeItem(clickedItem.getType(), 2);
-                            createItemSettings(player, 2);
+                            if (materialList.easy.size() <= 15) {
+                                player.sendMessage(ChatColor.RED + "This category needs a minimum of 15 items.");
+                            } else {
+                                itemRemoved = true;
+                                materialList.removeItem(clickedItem.getType(), 1);
+                                createItemSettings(player, 1);
+                            }
+                        } else if (isNormalDifficulty) {
+                            if (materialList.normal.size() <= 15) {
+                                player.sendMessage(ChatColor.RED + "This category needs a minimum of 15 items.");
+                            } else {
+                                itemRemoved = true;
+                                materialList.removeItem(clickedItem.getType(), 2);
+                                createItemSettings(player, 2);
+                            }
+                        } else if (isHardDifficulty) {
+                            if (materialList.hard.size() <= 10) {
+                                player.sendMessage(ChatColor.RED + "This category needs a minimum of 10 items.");
+                            } else {
+                                itemRemoved = true;
+                                materialList.removeItem(clickedItem.getType(), 3);
+                                createItemSettings(player, 3);
+                            }
+                        } else if (isExtremeDifficulty) {
+                            if (materialList.extreme.size() <= 10) {
+                                player.sendMessage(ChatColor.RED + "This category needs a minimum of 10 items.");
+                            } else {
+                                itemRemoved = true;
+                                materialList.removeItem(clickedItem.getType(), 4);
+                                createItemSettings(player, 4);
+                            }
+                        } else if (isImpossibleDifficulty) {
+                            if (materialList.impossible.size() <= 5) {
+                                player.sendMessage(ChatColor.RED + "This category needs a minimum of 5 items.");
+                            } else {
+                                itemRemoved = true;
+                                materialList.removeItem(clickedItem.getType(), 5);
+                                createItemSettings(player, 5);
+                            }
                         }
-
-                        if (isHardDifficulty) {
-                            materialList.removeItem(clickedItem.getType(), 3);
-                            createItemSettings(player, 3);
+                        if (itemRemoved) {
+                            player.sendMessage(ChatColor.GREEN + "You removed "
+                                    + ChatColor.GOLD + clickedItem.getType().name() + ChatColor.GREEN + " from the Bingo Items");
                         }
-
-                        if (isExtremeDifficulty) {
-                            materialList.removeItem(clickedItem.getType(), 4);
-                            createItemSettings(player, 4);
-                        }
-
-                        if (isImpossibleDifficulty) {
-                            materialList.removeItem(clickedItem.getType(), 5);
-                            createItemSettings(player, 5);
-                        }
-
-                        player.sendMessage(ChatColor.GREEN + "You removed "
-                                + ChatColor.GOLD + clickedItem.getType().name() + ChatColor.GREEN + " from the Bingo Items");
                     }
                 }
             }
