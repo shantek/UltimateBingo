@@ -167,8 +167,6 @@ public class MaterialList {
         add(Material.SPRUCE_CHEST_BOAT, 1);
         add(Material.SPRUCE_BUTTON, 1);
         add(Material.BIRCH_DOOR,1);
-        add(Material.WOODEN_HOE,1);
-        add(Material.WOODEN_SHOVEL,1);
         add(Material.OAK_SAPLING, 1);
         add(Material.BIRCH_SAPLING, 1);
         add(Material.WHITE_WOOL, 1);
@@ -177,6 +175,7 @@ public class MaterialList {
         add(Material.FLINT_AND_STEEL, 1);
         add(Material.OAK_STAIRS, 1);
         add(Material.OAK_BUTTON, 1);
+        add(Material.FLOWER_POT, 1);
 
         add(Material.GOLD_INGOT, 2);
         add(Material.REDSTONE,2);
@@ -189,7 +188,6 @@ public class MaterialList {
         add(Material.TROPICAL_FISH,2);
         add(Material.BOOK,2);
         add(Material.CAULDRON, 2);
-        add(Material.BEETROOT, 2);
         add(Material.LIGHTNING_ROD, 2);
         add(Material.RAIL, 2);
         add(Material.SNOW_BLOCK, 2);
@@ -211,6 +209,7 @@ public class MaterialList {
         add(Material.SMOOTH_STONE, 2);
         add(Material.RED_DYE, 2);
         add(Material.YELLOW_DYE, 2);
+        add(Material.BRICK, 2);
 
         add(Material.LAPIS_LAZULI,3);
         add(Material.BOOKSHELF,3);
@@ -249,6 +248,7 @@ public class MaterialList {
         add(Material.BROWN_DYE, 3);
         add(Material.WHITE_DYE, 3);
         add(Material.PURPLE_DYE, 3);
+        add(Material.BEETROOT, 3);
 
         add(Material.DIAMOND, 4);
         add(Material.JUKEBOX,4);
