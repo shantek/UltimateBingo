@@ -94,6 +94,15 @@ public class BingoFunctions
     //endregion
 
     //region Bingo card functionality
+    public int countCompleted(Inventory inventory) {
+        int count = 0;
+        for (ItemStack item : inventory.getContents()) {
+            if (item != null && item.getType() == ultimateBingo.tickedItemMaterial) {
+                count++;
+            }
+        }
+        return count;
+    }
 
     public void giveBingoCard(Player player) {
         PlayerInventory inventory = player.getInventory(); // Get the player's inventory
@@ -107,7 +116,7 @@ public class BingoFunctions
         ItemStack bingoCard = new ItemStack(ultimateBingo.bingoCardMaterial);
         ItemMeta itemMeta = bingoCard.getItemMeta();
 
-        if (itemMeta != null) { // Always good to check for null when working with ItemMeta
+        if (itemMeta != null) {
             // Set display name for the Bingo Card
             itemMeta.setDisplayName(ChatColor.GOLD + "Bingo Card");
 
@@ -236,32 +245,32 @@ public class BingoFunctions
             //region First loadout - Boat
 
             // Create and set armor
-            player.getInventory().setHelmet(createEnchantedArmor(Material.NETHERITE_HELMET, new Enchantment[]{
+            player.getInventory().setHelmet(createEnchantedArmor(Material.IRON_HELMET, new Enchantment[]{
                     Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.WATER_WORKER, Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.VANISHING_CURSE, Enchantment.BINDING_CURSE
-            }, new int[]{4, 1, 1, 3, 1, 1}));
-            player.getInventory().setChestplate(createEnchantedArmor(Material.NETHERITE_CHESTPLATE, new Enchantment[]{
+            }, new int[]{1, 1, 1, 1, 1, 1}));
+            player.getInventory().setChestplate(createEnchantedArmor(Material.IRON_CHESTPLATE, new Enchantment[]{
                     Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.VANISHING_CURSE, Enchantment.BINDING_CURSE
-            }, new int[]{4, 1, 3, 1, 1}));
-            player.getInventory().setLeggings(createEnchantedArmor(Material.NETHERITE_LEGGINGS, new Enchantment[]{
+            }, new int[]{1, 1, 1, 1, 1}));
+            player.getInventory().setLeggings(createEnchantedArmor(Material.IRON_LEGGINGS, new Enchantment[]{
                     Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.VANISHING_CURSE, Enchantment.BINDING_CURSE
-            }, new int[]{4, 1, 3, 1, 1}));
-            player.getInventory().setBoots(createEnchantedArmor(Material.NETHERITE_BOOTS, new Enchantment[]{
+            }, new int[]{1, 1, 1, 1, 1}));
+            player.getInventory().setBoots(createEnchantedArmor(Material.IRON_BOOTS, new Enchantment[]{
                     Enchantment.PROTECTION_FALL, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.VANISHING_CURSE, Enchantment.BINDING_CURSE
-            }, new int[]{4, 4, 1, 3, 1, 1}));
+            }, new int[]{1, 1, 1, 1, 1, 1}));
 
             // Equip shield
             ItemStack shield = new ItemStack(Material.SHIELD);
             player.getInventory().setItemInOffHand(shield);
 
             // Give player their basic tools
-            player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_SWORD, new Enchantment[]{Enchantment.DAMAGE_ALL, Enchantment.KNOCKBACK, Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS, Enchantment.SWEEPING_EDGE}, new int[]{5, 2, 2, 3, 3}));
-            player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_PICKAXE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.LOOT_BONUS_BLOCKS, Enchantment.DURABILITY}, new int[]{5, 3, 3}));
-            player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_AXE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.DURABILITY, Enchantment.MENDING, Enchantment.SILK_TOUCH}, new int[]{5, 3, 1, 1}));
-            player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_SHOVEL, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.DURABILITY, Enchantment.MENDING}, new int[]{5, 3, 1}));
-            player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_HOE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.DURABILITY, Enchantment.MENDING}, new int[]{5, 3, 1}));
+            player.getInventory().addItem(createEnchantedItem(Material.IRON_SWORD, new Enchantment[]{Enchantment.DAMAGE_ALL, Enchantment.KNOCKBACK, Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS, Enchantment.SWEEPING_EDGE}, new int[]{1, 1, 1, 1, 1}));
+            player.getInventory().addItem(createEnchantedItem(Material.IRON_PICKAXE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.LOOT_BONUS_BLOCKS, Enchantment.DURABILITY}, new int[]{1, 1, 1}));
+            player.getInventory().addItem(createEnchantedItem(Material.IRON_AXE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.DURABILITY, Enchantment.MENDING, Enchantment.SILK_TOUCH}, new int[]{1, 1, 1, 1}));
+            player.getInventory().addItem(createEnchantedItem(Material.IRON_SHOVEL, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.DURABILITY, Enchantment.MENDING}, new int[]{1, 1, 1}));
+            player.getInventory().addItem(createEnchantedItem(Material.IRON_HOE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.DURABILITY, Enchantment.MENDING}, new int[]{1, 1, 1}));
 
             // Add additional items
-            player.getInventory().addItem(new ItemStack(Material.PURPLE_BED));
+            player.getInventory().addItem(new ItemStack(Material.RED_BED));
             player.getInventory().addItem(new ItemStack(Material.CRAFTING_TABLE, 1));
             player.getInventory().addItem(new ItemStack(Material.JUNGLE_BOAT, 1));
 

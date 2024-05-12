@@ -50,8 +50,8 @@ public class BingoPlayerGUIManager {
         // Get all online players and populate the inventory
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (ultimateBingo.bingoManager.bingoGUIs.containsKey(player.getUniqueId())) {  // Check if the player has a bingo card
-                ItemStack item = new ItemStack(ultimateBingo.bingoCardMaterial); // Create a filled map item
-                ItemMeta meta = item.getItemMeta();  // Get the meta of the item
+                ItemStack item = new ItemStack(ultimateBingo.bingoCardMaterial);
+                ItemMeta meta = item.getItemMeta();
 
                 if (meta != null) {
                     meta.setDisplayName(ChatColor.GREEN + player.getName());
@@ -59,6 +59,11 @@ public class BingoPlayerGUIManager {
                     lore.add(ChatColor.GRAY + "Click to view " + player.getName() + "'s Bingo Card");
                     meta.setLore(lore);  // Set lore
                     item.setItemMeta(meta);  // Apply the meta back to the item
+
+                    int countCompleted = ultimateBingo.bingoFunctions.countCompleted(ultimateBingo.bingoManager.getBingoGUIs().get(player.getUniqueId()));
+                    if (countCompleted > 0) {
+                        item.setAmount(countCompleted);
+                    }
 
                     inventory.addItem(item);  // Add the item to the inventory
                 }
