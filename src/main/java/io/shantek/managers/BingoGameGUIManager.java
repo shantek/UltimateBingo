@@ -18,12 +18,12 @@ public class BingoGameGUIManager {
 
     public Inventory createGameGUI(Player player) {
         Inventory gameConfigInventory = Bukkit.createInventory(player, 9, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo Configuration");
-        gameConfigInventory.setItem(0, createItem(Material.PAPER, "Game mode", ultimateBingo.gameMode));
-        gameConfigInventory.setItem(1, createItem(Material.SHIELD, "Difficulty", ultimateBingo.difficulty));
-        gameConfigInventory.setItem(2, createItem(Material.MAP, "Card Size", ultimateBingo.cardSize));
-        gameConfigInventory.setItem(3, createItem(Material.NAME_TAG, "Card Type", ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL"));
-        gameConfigInventory.setItem(4, createItem(Material.BEACON, "Win Condition", ultimateBingo.fullCard ? "FULL CARD" : "SINGLE ROW"));
-        gameConfigInventory.setItem(5, createItem(Material.SPYGLASS, "Reveal Cards", ultimateBingo.revealCards ? "ENABLED" : "DISABLED"));
+        gameConfigInventory.setItem(0, createItem(setGUIIcon("gamemode"), "Game mode", ultimateBingo.gameMode));
+        gameConfigInventory.setItem(1, createItem(setGUIIcon("difficulty"), "Difficulty", ultimateBingo.difficulty));
+        gameConfigInventory.setItem(2, createItem(setGUIIcon("cardsize"), "Card Size", ultimateBingo.cardSize));
+        gameConfigInventory.setItem(3, createItem(setGUIIcon("uniqueCard"), "Card Type", ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL"));
+        gameConfigInventory.setItem(4, createItem(setGUIIcon("wincondition"), "Win Condition", ultimateBingo.fullCard ? "FULL CARD" : "SINGLE ROW"));
+        gameConfigInventory.setItem(5, createItem(setGUIIcon("reveal"), "Reveal Cards", ultimateBingo.revealCards ? "ENABLED" : "DISABLED"));
 
         // Work out the game time to display
         String gameTimeString;
@@ -38,14 +38,12 @@ public class BingoGameGUIManager {
         String gameLoadoutString = "Empty Inventory";
         if (ultimateBingo.loadoutType == 1) {
             gameLoadoutString = "Basic Kit";
-        }
-        else if (ultimateBingo.loadoutType == 2) {
+        } else if (ultimateBingo.loadoutType == 2) {
             gameLoadoutString = "Boat Kit";
-        }
-        else if (ultimateBingo.loadoutType == 3) {
+        } else if (ultimateBingo.loadoutType == 3) {
             gameLoadoutString = "Flying Kit";
         }
-        gameConfigInventory.setItem(7, createItem(Material.NETHERITE_SWORD, "Player Loadout", gameLoadoutString));
+        gameConfigInventory.setItem(7, createItem(setGUIIcon("loadout"), "Player Loadout", gameLoadoutString));
         gameConfigInventory.setItem(8, createStartGameItem());
 
         return gameConfigInventory;
@@ -189,12 +187,12 @@ public class BingoGameGUIManager {
                 ChatColor.stripColor(startGameItem.getItemMeta().getDisplayName()).equals("Start Game")) {
             // The inventory is confirmed to be the Bingo Configuration GUI
             // Update existing inventory directly
-            currentInventory.setItem(0, createItem(Material.PAPER, "Game mode", ultimateBingo.gameMode));
-            currentInventory.setItem(1, createItem(Material.SHIELD, "Difficulty", ultimateBingo.difficulty));
-            currentInventory.setItem(2, createItem(Material.MAP, "Card Size", ultimateBingo.cardSize));
-            currentInventory.setItem(3, createItem(Material.NAME_TAG, "Card Type", ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL"));
-            currentInventory.setItem(4, createItem(Material.BEACON, "Win Condition", ultimateBingo.fullCard ? "FULL CARD" : "SINGLE ROW"));
-            currentInventory.setItem(5, createItem(Material.SPYGLASS, "Reveal Cards", ultimateBingo.revealCards ? "ENABLED" : "DISABLED"));
+            currentInventory.setItem(0, createItem(setGUIIcon("gamemode"), "Game mode", ultimateBingo.gameMode));
+            currentInventory.setItem(1, createItem(setGUIIcon("difficulty"), "Difficulty", ultimateBingo.difficulty));
+            currentInventory.setItem(2, createItem(setGUIIcon("cardsize"), "Card Size", ultimateBingo.cardSize));
+            currentInventory.setItem(3, createItem(setGUIIcon("uniqueCard"), "Card Type", ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL"));
+            currentInventory.setItem(4, createItem(setGUIIcon("wincondition"), "Win Condition", ultimateBingo.fullCard ? "FULL CARD" : "SINGLE ROW"));
+            currentInventory.setItem(5, createItem(setGUIIcon("reveal"), "Reveal Cards", ultimateBingo.revealCards ? "ENABLED" : "DISABLED"));
 
             // Work out the game time to display
             String gameTimeString;
@@ -209,14 +207,12 @@ public class BingoGameGUIManager {
             String gameLoadoutString = "Empty Inventory";
             if (ultimateBingo.loadoutType == 1) {
                 gameLoadoutString = "Basic Kit";
-            }
-            else if (ultimateBingo.loadoutType == 2) {
+            } else if (ultimateBingo.loadoutType == 2) {
                 gameLoadoutString = "Boat Kit";
-            }
-            else if (ultimateBingo.loadoutType == 3) {
+            } else if (ultimateBingo.loadoutType == 3) {
                 gameLoadoutString = "Flying Kit";
             }
-            currentInventory.setItem(7, createItem(Material.NETHERITE_SWORD, "Player Loadout", gameLoadoutString));
+            currentInventory.setItem(7, createItem(setGUIIcon("loadout"), "Player Loadout", gameLoadoutString));
 
 
         } else {
@@ -226,4 +222,64 @@ public class BingoGameGUIManager {
     }
 
     //endregion
+
+    private Material setGUIIcon(String type) {
+
+        Material materialToDisplay = Material.AIR;
+
+        if (type.equalsIgnoreCase("loadout")) {
+            return switch (ultimateBingo.loadoutType) {
+                case 1 -> materialToDisplay = Material.WOODEN_PICKAXE; // Starter kit
+                case 2 -> materialToDisplay = Material.OAK_BOAT; // Boat kit
+                case 3 -> materialToDisplay = Material.FIREWORK_ROCKET; // Rocket kit
+                default -> materialToDisplay = Material.CRAFTING_TABLE; // Empty inventory loadout
+            };
+
+        } else if (type.equalsIgnoreCase("difficulty")) {
+            return switch (ultimateBingo.difficulty) {
+                case "easy" -> materialToDisplay = Material.COPPER_INGOT;
+                case "hard" -> materialToDisplay = Material.NETHERITE_INGOT;
+                default -> materialToDisplay = Material.IRON_INGOT;
+
+            };
+        } else if (type.equalsIgnoreCase("cardsize")) {
+            return switch (ultimateBingo.cardSize) {
+                case "small" -> materialToDisplay = Material.PAPER;
+                case "medium" -> materialToDisplay = Material.BOOK;
+                default -> materialToDisplay = Material.WRITABLE_BOOK;
+
+            };
+
+        } else if (type.equalsIgnoreCase("gamemode")) {
+            if (ultimateBingo.gameMode.equalsIgnoreCase("speedrun")) {
+                materialToDisplay = Material.DIAMOND_BOOTS;
+            } else {
+                materialToDisplay = Material.FURNACE;
+            }
+        } else if (type.equalsIgnoreCase("uniquecard")) {
+            if (ultimateBingo.uniqueCard) {
+                materialToDisplay = Material.FILLED_MAP;
+            } else {
+                materialToDisplay = Material.MAP;
+            }
+        } else if (type.equalsIgnoreCase("wincondition")) {
+            if (ultimateBingo.fullCard) {
+                materialToDisplay = ultimateBingo.tickedItemMaterial;
+            } else {
+                materialToDisplay = Material.BLAZE_ROD;
+            }
+        } else if (type.equalsIgnoreCase("reveal")) {
+            if (ultimateBingo.revealCards) {
+                materialToDisplay = Material.SPYGLASS;
+            } else {
+                materialToDisplay = Material.BLACK_CONCRETE;
+            }
+        }
+
+
+        return materialToDisplay;
+
+
+    }
 }
+
