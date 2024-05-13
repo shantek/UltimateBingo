@@ -39,7 +39,7 @@ public final class UltimateBingo extends JavaPlugin {
     public boolean bingoStarted = false;
     public Material bingoCardMaterial = Material.COMPASS;
     public long gameStartTime;
-
+    public boolean playedSinceReboot = false;
 
     // Saved config for setting up games
     public String fullCard = "full card";

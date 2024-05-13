@@ -282,7 +282,7 @@ public class BingoGameGUIManager {
 
     public void setGameConfiguration() {
 
-        ultimateBingo.currentLoadoutType = ultimateBingo.bingoFunctions.validateOrDefaultInt(ultimateBingo.loadoutType, 3, 0);
+        ultimateBingo.currentLoadoutType = ultimateBingo.bingoFunctions.validateOrDefaultInt(ultimateBingo.loadoutType, 4, 0);
         ultimateBingo.currentDifficulty = ultimateBingo.bingoFunctions.validateOrDefault(ultimateBingo.difficulty, optionsMap.get("difficulty"), "normal");
         ultimateBingo.currentCardSize = ultimateBingo.bingoFunctions.validateOrDefault(ultimateBingo.cardSize, optionsMap.get("cardSize"), "medium");
         ultimateBingo.currentGameMode = ultimateBingo.bingoFunctions.validateOrDefault(ultimateBingo.gameMode, optionsMap.get("gameMode"), "traditional");
