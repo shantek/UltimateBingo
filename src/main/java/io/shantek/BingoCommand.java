@@ -50,13 +50,31 @@ public class BingoCommand implements CommandExecutor {
 
                 } else if (args[0].equalsIgnoreCase("info")) {
 
+                    // Work out the game time to display
+                    String timeLimitString;
+                    if (ultimateBingo.gameTime == 0) {
+                        timeLimitString = "Unlimited Time";
+                    } else {
+
+                      if (ultimateBingo.bingoStarted) {
+                          // Work out how long is left and display it here if the game is active
+                          timeLimitString = ultimateBingo.gameTime + " minutes";
+
+                        } else {
+                            // Game isn't active, just show the preset time limit
+                            timeLimitString = ultimateBingo.gameTime + " minutes";
+
+                        }
+                    }
+
+
                     // This may be removed in the near future and implemented in to the bingo card?
                     player.sendMessage(ChatColor.WHITE + "Bingo is currently set up with the following configuration:");
                     player.sendMessage(ChatColor.GREEN + "Difficulty: " + ChatColor.YELLOW + ultimateBingo.currentDifficulty.toUpperCase());
                     player.sendMessage(ChatColor.GREEN + "Card type: " + ChatColor.YELLOW + ultimateBingo.currentCardSize.toUpperCase() + "/" + (ultimateBingo.currentUniqueCard ? "UNIQUE" : "IDENTICAL"));
                     player.sendMessage(ChatColor.GREEN + "Game mode: " + ChatColor.YELLOW + ultimateBingo.currentGameMode.toUpperCase());
                     player.sendMessage(ChatColor.GREEN + "Win condition: " + ChatColor.YELLOW + (ultimateBingo.currentFullCard ? "FULL CARD" : "BINGO"));
-
+                    player.sendMessage(ChatColor.GREEN + "Time limit: " + ChatColor.YELLOW + (timeLimitString));
                 } else if (args[0].equalsIgnoreCase("settings") && player.hasPermission("shantek.ultimatebingo.settings")) {
                     ultimateBingo.getMaterialList().createMaterials();
                     Inventory settingsGUI = settingsManager.createSettingsGUI(player);
