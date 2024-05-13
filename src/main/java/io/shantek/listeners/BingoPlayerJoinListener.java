@@ -30,7 +30,7 @@ public class BingoPlayerJoinListener implements Listener {
             ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
 
             // Give them a replacement card so they can view results from a prior game
-            if (ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+            if (ultimateBingo.bingoManager.checkHasBingoCard(player) && ultimateBingo.playedSinceReboot) {
                 ultimateBingo.bingoFunctions.giveBingoCard(player);
             }
 
