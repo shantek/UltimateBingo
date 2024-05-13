@@ -22,7 +22,7 @@ public class CardTypes {
         UUID playerId = player.getUniqueId();
         Inventory inv = ultimateBingo.bingoManager.getBingoGUIs().get(playerId);
 
-        if (ultimateBingo.fullCard) {
+        if (ultimateBingo.currentFullCard) {
             // Check for a full card bingo instead of individual lines
         }
         for (int i : new int[]{10, 19, 28}) {

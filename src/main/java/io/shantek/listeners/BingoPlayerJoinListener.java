@@ -44,7 +44,7 @@ public class BingoPlayerJoinListener implements Listener {
             }, 100);
         }
 
-        if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && ultimateBingo.gameMode.equals("speedrun")) {
+        if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && ultimateBingo.currentGameMode.equals("speedrun")) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
         }
     }

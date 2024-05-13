@@ -23,6 +23,8 @@ public class BingoFunctions
         this.ultimateBingo = ultimateBingo;
     }
 
+    private Random random = new Random();
+
     //region Resetting the players
 
     // Reset the players state at the start and end of games
@@ -94,6 +96,7 @@ public class BingoFunctions
     //endregion
 
     //region Bingo card functionality
+
     public int countCompleted(Inventory inventory) {
         int count = 0;
         for (ItemStack item : inventory.getContents()) {
@@ -122,8 +125,8 @@ public class BingoFunctions
 
             // Set lore with two lines
             List<String> lore = new ArrayList<>();
-            lore.add(ChatColor.GRAY + "Card type: " + (ultimateBingo.uniqueCard ? ChatColor.BLUE + "Unique" : ChatColor.BLUE + "Identical") + "/" + ultimateBingo.difficulty);
-            lore.add(ChatColor.GRAY + "Win condition: " + (ultimateBingo.fullCard ? ChatColor.BLUE + "Full card" : ChatColor.BLUE + "Single row"));
+            lore.add(ChatColor.GRAY + "Card type: " + (ultimateBingo.currentUniqueCard ? ChatColor.BLUE + "Unique" : ChatColor.BLUE + "Identical") + "/" + ultimateBingo.currentDifficulty);
+            lore.add(ChatColor.GRAY + "Win condition: " + (ultimateBingo.currentFullCard ? ChatColor.BLUE + "Full card" : ChatColor.BLUE + "Single row"));
 
             itemMeta.setLore(lore); // Apply the lore to the item meta
             bingoCard.setItemMeta(itemMeta); // Apply the modified item meta back to the item stack
@@ -179,8 +182,8 @@ public class BingoFunctions
     public Inventory cloneInventory(Inventory original) {
 
         // Store the string for the card type
-        String newCardInfo = ultimateBingo.uniqueCard ? "unique" : "identical";
-        newCardInfo += ultimateBingo.fullCard ? "/full card" : "/single row";
+        String newCardInfo = ultimateBingo.currentUniqueCard ? "unique" : "identical";
+        newCardInfo += ultimateBingo.currentFullCard ? "/full card" : "/single row";
         newCardInfo = "(" + newCardInfo + ")";
 
         Inventory clone = Bukkit.createInventory(null, original.getSize(), ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + newCardInfo);
@@ -378,7 +381,7 @@ public class BingoFunctions
 
     public void topUpFirstFireworkRocketsStack(Player player) {
 
-        if (ultimateBingo.loadoutType == 3) {
+        if (ultimateBingo.currentLoadoutType == 3) {
 
             PlayerInventory inventory = player.getInventory();
             ItemStack[] items = inventory.getContents();
@@ -559,6 +562,41 @@ public class BingoFunctions
                     hours, (hours == 1 ? "" : "s"),
                     minutes, (minutes == 1 ? "" : "s"));
         }
+    }
+
+    //endregion
+
+    //region Bingo configuration functions
+
+    public String validateOrDefault(String input, String[] validOptions, String defaultOption) {
+        input = input.toLowerCase();
+        for (String option : validOptions) {
+            if (option.equals(input)) {
+                return option;
+            }
+        }
+        return validOptions[random.nextInt(validOptions.length)];
+    }
+
+    public int validateOrDefaultInt(int input, int range, int defaultOption) {
+        try {
+            if (input >= 0 && input < range) {
+                return input;
+            }
+        } catch (NumberFormatException e) {
+            // Log or handle error if necessary
+        }
+        return random.nextInt(range);
+    }
+
+    public boolean validateOrDefaultBoolean(String input, String[] validOptions, boolean defaultOption) {
+        input = input.toLowerCase();
+        if (validOptions[0].equals(input)) {
+            return true;
+        } else if (validOptions[1].equals(input)) {
+            return false;
+        }
+        return random.nextBoolean();
     }
 
     //endregion

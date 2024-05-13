@@ -33,19 +33,33 @@ public final class UltimateBingo extends JavaPlugin {
     public int gameTime = 0;
     private YamlConfiguration gameConfig;
     public CardTypes cardTypes;
-    public boolean fullCard = false;
-    public String difficulty;
-    public String cardSize;
-    public boolean uniqueCard;
     public boolean consoleLogs = true;
     public boolean bingoCardActive = false;
-    public String gameMode = "traditional";
     public boolean respawnTeleport = true;
-    public boolean revealCards = true;
     public boolean bingoStarted = false;
     public Material bingoCardMaterial = Material.COMPASS;
     public long gameStartTime;
-    public int loadoutType = 1;
+
+
+    // Saved config for setting up games
+    public String fullCard1 = "full card";
+    public String difficulty1;
+    public String cardSize1;
+    public String uniqueCard1;
+    public String gameMode1 = "traditional";
+    public String revealCards1 = "enabled";
+    public int loadoutType1 = 1;
+
+    // Current game configuration - Implemented to allow
+    // random assignment of game setup
+    public boolean currentFullCard = false;
+    public String currentDifficulty;
+    public String currentCardSize;
+    public boolean currentUniqueCard;
+    public String currentGameMode = "traditional";
+    public boolean currentRevealCards = true;
+    public int currentLoadoutType = 1;
+
 
     // Very important this is never set to an item you have included in your bingo cards
     // as this will break the functionality of your game!

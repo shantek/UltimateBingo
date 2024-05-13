@@ -26,7 +26,7 @@ public class BingoGUIListener implements Listener {
 
             // Spyglass item was clicked - Check if the option is enabled and open the player cards menu
             if (slot == 17) {
-                if (ultimateBingo.revealCards) {
+                if (ultimateBingo.currentRevealCards) {
                     e.setCancelled(true);
                     player.closeInventory();
                     player.openInventory(ultimateBingo.bingoPlayerGUIManager.setupPlayersBingoCardsInventory());

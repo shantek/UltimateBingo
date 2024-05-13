@@ -51,16 +51,16 @@ public class ConfigFile {
             config.save(configFile);  // Save once after all updates
 
 
-            ultimateBingo.difficulty = getString(config, "difficulty", "normal").toLowerCase();
-            ultimateBingo.cardSize = getString(config, "card-size", "medium").toLowerCase();
-            ultimateBingo.gameMode = getString(config, "game-mode", "traditional").toLowerCase();
-            ultimateBingo.fullCard = getBoolean(config, "full-card", false);
+            ultimateBingo.difficulty1 = getString(config, "difficulty", "normal").toLowerCase();
+            ultimateBingo.cardSize1 = getString(config, "card-size", "medium").toLowerCase();
+            ultimateBingo.gameMode1 = getString(config, "game-mode", "traditional").toLowerCase();
+            ultimateBingo.fullCard1 = getString(config, "full-card", "full card");
             ultimateBingo.respawnTeleport = getBoolean(config, "respawn-teleport", true);
-            ultimateBingo.revealCards = getBoolean(config, "reveal-cards", true);
-            ultimateBingo.uniqueCard = getBoolean(config, "unique-card", false);
+            ultimateBingo.revealCards1 = getString(config, "reveal-cards", "enabled");
+            ultimateBingo.uniqueCard1 = getString(config, "unique-card", "identical");
             ultimateBingo.consoleLogs = getBoolean(config, "console-logs", true);
             ultimateBingo.gameTime = getInt(config, "game-time", 0);
-            ultimateBingo.loadoutType = getInt(config, "player-loadout", 0);
+            ultimateBingo.loadoutType1 = getInt(config, "player-loadout", 0);
 
         } catch (Exception e) {
             ultimateBingo.getLogger().log(Level.SEVERE, "An error occurred while reloading the config file", e);
@@ -136,21 +136,29 @@ public class ConfigFile {
 
             // Update config values with current game state
 
-            config.set("difficulty", ultimateBingo.difficulty.toLowerCase());
-            config.set("card-size", ultimateBingo.cardSize.toLowerCase());
-            config.set("game-mode", ultimateBingo.gameMode.toLowerCase());
-            config.set("full-card", ultimateBingo.fullCard);
-            config.set("unique-card", ultimateBingo.uniqueCard);
+            config.set("difficulty", ultimateBingo.difficulty1.toLowerCase());
+            config.set("card-size", ultimateBingo.cardSize1.toLowerCase());
+            config.set("game-mode", ultimateBingo.gameMode1.toLowerCase());
+            config.set("full-card", ultimateBingo.fullCard1);
+            config.set("unique-card", ultimateBingo.uniqueCard1);
             config.set("console-logs", ultimateBingo.consoleLogs);
             config.set("respawn-teleport", ultimateBingo.respawnTeleport);
-            config.set("reveal-cards", ultimateBingo.revealCards);
+            config.set("reveal-cards", ultimateBingo.revealCards1);
             config.set("game-time", ultimateBingo.gameTime);
-            config.set("player-loadout", ultimateBingo.loadoutType);
+            config.set("player-loadout", ultimateBingo.loadoutType1);
 
             config.save(configFile);
         } catch (IOException e) {
             ultimateBingo.getLogger().log(Level.SEVERE, "An error occurred while saving the config file", e);
         }
+    }
+
+    public void loadCurrentConfig() {
+
+
+
+
+
     }
 
 }

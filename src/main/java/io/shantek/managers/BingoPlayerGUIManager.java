@@ -24,15 +24,10 @@ public class BingoPlayerGUIManager {
     public Inventory createPlayerGUI(Player player) {
         Inventory gameConfigInventory = Bukkit.createInventory(player, 9, ChatColor.GOLD.toString() + ChatColor.BOLD + "Welcome to Ultimate Bingo");
 
-        gameConfigInventory.setItem(0, createItem(ultimateBingo.bingoCardMaterial, "Replacement Bingo Card", "Win condition: " + (ultimateBingo.fullCard ? "Full Card" : "Single Row")));
+        gameConfigInventory.setItem(0, createItem(ultimateBingo.bingoCardMaterial, "Replacement Bingo Card", "Win condition: " + ultimateBingo.fullCard1.toUpperCase()));
 
         // Only show the reveal cards option if this is enabled
-        if (ultimateBingo.revealCards) { gameConfigInventory.setItem(1, createItem(Material.SPYGLASS, "View Players Cards", "Get a peak at other players cards!"));}
-       // gameConfigInventory.setItem(2, createItem(Material.MAP, "Card Size", ultimateBingo.cardSize));
-       // gameConfigInventory.setItem(3, createItem(Material.NAME_TAG, "Card Type", ultimateBingo.uniqueCard ? "UNIQUE" : "IDENTICAL"));
-       // gameConfigInventory.setItem(4, createItem(Material.BEACON, "Win Condition", ultimateBingo.fullCard ? "FULL CARD" : "SINGLE ROW"));
-       // gameConfigInventory.setItem(5, createItem(Material.SPYGLASS, "Reveal Cards", ultimateBingo.revealCards ? "ENABLED" : "DISABLED"));
-       // gameConfigInventory.setItem(8, createStartGameItem());
+        if (ultimateBingo.currentRevealCards) { gameConfigInventory.setItem(1, createItem(Material.SPYGLASS, "View Players Cards", "Get a peak at other players cards!"));}
 
         return gameConfigInventory;
     }
@@ -81,14 +76,4 @@ public class BingoPlayerGUIManager {
 
         return inventory;
     }
-
-    /*
-    private ItemStack createStartGameItem() {
-        return new ItemBuilder(Material.ENDER_PEARL)
-                .withDisplayName(ChatColor.GREEN + "Start Game")
-                .withLore(ChatColor.GRAY + "Click to start the game").build();
-    }
-    */
-
-
 }

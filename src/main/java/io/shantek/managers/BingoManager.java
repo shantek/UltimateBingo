@@ -35,7 +35,7 @@ public class BingoManager{
 
         // Determine difficulty level and set TOTAL_ITEMS based on it
         int difficultyLevel;
-        switch (ultimateBingo.difficulty.toLowerCase()) {
+        switch (ultimateBingo.currentDifficulty.toLowerCase()) {
             case "normal":
                 difficultyLevel = 2;
                 TOTAL_ITEMS = 21;
@@ -62,8 +62,8 @@ public class BingoManager{
             UUID playerId = player.getUniqueId();
 
             // Store the string for the card type
-            String cardInfo = ultimateBingo.uniqueCard ? "unique" : "identical";
-            cardInfo += ultimateBingo.fullCard ? "/full card" : "/single row";
+            String cardInfo = ultimateBingo.currentUniqueCard ? "unique" : "identical";
+            cardInfo += ultimateBingo.currentFullCard ? "/full card" : "/single row";
             cardInfo = "(" + cardInfo + ")";
 
             // Create a new inventory for each player
@@ -77,7 +77,7 @@ public class BingoManager{
             }
 
             // Add the Spyglass to the last slot if the feature is enabled
-            if (ultimateBingo.revealCards) {
+            if (ultimateBingo.currentRevealCards) {
                 bingoGUI.setItem(17, ultimateBingo.bingoFunctions.createSpyglass()); // Add Spyglass to slot 53 (last slot)
             }
             bingoGUIs.put(playerId, bingoGUI);
@@ -106,7 +106,7 @@ public class BingoManager{
 
         // Determine difficulty level and set TOTAL_ITEMS based on it
         int difficultyLevel;
-        switch (ultimateBingo.difficulty.toLowerCase()) {
+        switch (ultimateBingo.currentDifficulty.toLowerCase()) {
             case "normal":
                 difficultyLevel = 2;
                 TOTAL_ITEMS = 21; // Set TOTAL_ITEMS for normal difficulty
@@ -129,8 +129,8 @@ public class BingoManager{
             UUID playerId = player.getUniqueId();
 
             // Store the string for the card type
-            String cardInfo = ultimateBingo.uniqueCard ? "unique" : "identical";
-            cardInfo += ultimateBingo.fullCard ? "/full card" : "/single row";
+            String cardInfo = ultimateBingo.currentUniqueCard ? "unique" : "identical";
+            cardInfo += ultimateBingo.currentFullCard ? "/full card" : "/single row";
             cardInfo = "(" + cardInfo + ")";
 
             // Create a new inventory for each player
@@ -152,7 +152,7 @@ public class BingoManager{
             }
 
             // Add the Spyglass to the last slot if the feature is enabled
-            if (ultimateBingo.revealCards) {
+            if (ultimateBingo.currentRevealCards) {
                 bingoGUI.setItem(17, ultimateBingo.bingoFunctions.createSpyglass()); // Add Spyglass to slot 53 (last slot)
             }
 
@@ -168,7 +168,7 @@ public class BingoManager{
         int[] mediumSlots = {10, 11, 12, 13, 19, 20, 21, 22, 28, 29, 30, 31, 37, 38, 39, 40};
         int[] largeSlots = {10, 11, 12, 13, 14, 19, 20, 21, 22, 23, 28, 29, 30, 31, 32, 37, 38, 39, 40, 41, 46, 47, 48, 49, 50};
 
-        return switch (ultimateBingo.cardSize.toLowerCase()) {
+        return switch (ultimateBingo.currentCardSize.toLowerCase()) {
             case "small" -> smallSlots;
             case "medium" -> mediumSlots;
             case "large" -> largeSlots;
@@ -235,7 +235,7 @@ public class BingoManager{
                 String removedUnderscore = completedMaterial.name().toLowerCase().replace('_', ' ');
                 player.sendMessage(ChatColor.GREEN + "You ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from your bingo card!");
 
-                if (ultimateBingo.gameMode.equals("speedrun")) {
+                if (ultimateBingo.currentGameMode.equals("speedrun")) {
                     // Reset the players stats
                     ultimateBingo.bingoFunctions.resetIndividualPlayer(player, false);
                 }
@@ -247,7 +247,7 @@ public class BingoManager{
                     if (!target.equals(player)) { // Exclude the player who triggered the event
 
                         // Show more info if reveal mode is enabled. If not, be more cryptic in what they did
-                        if (ultimateBingo.revealCards) {
+                        if (ultimateBingo.currentRevealCards) {
                             target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
 
                         } else {
@@ -257,11 +257,11 @@ public class BingoManager{
                 }
 
                 // Check for bingo based on the card type and size
-                String cardSize = ultimateBingo.cardSize;
+                String cardSize = ultimateBingo.currentCardSize;
                 boolean hasBingo = false;
 
                 // If it's a full card, we'll check the entire card instead
-                if (ultimateBingo.fullCard) {
+                if (ultimateBingo.currentFullCard) {
                   if (ultimateBingo.cardTypes.checkFullCard(player)) {
                       hasBingo = true;
                   }
@@ -381,9 +381,9 @@ public class BingoManager{
         ultimateBingo.bingoFunctions.giveBingoCard(player);
 
         // Give them their loadout gear
-        ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.loadoutType);
+        ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.currentLoadoutType);
 
-        if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && ultimateBingo.gameMode.equals("speedrun")) {
+        if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && ultimateBingo.currentGameMode.equals("speedrun")) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
         }
 

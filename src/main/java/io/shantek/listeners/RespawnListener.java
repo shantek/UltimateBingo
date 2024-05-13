@@ -41,11 +41,11 @@ public class RespawnListener implements Listener {
 
                 // Equip them with fresh loadout gear after respawning, if keep inventory is off
                 if (!keepInventory) {
-                    ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.loadoutType);
+                    ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.currentLoadoutType);
                 }
 
                 // Also give them night vision
-                if (ultimateBingo.gameMode.equals("speedrun")) {
+                if (ultimateBingo.currentGameMode.equals("speedrun")) {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
                 }
 

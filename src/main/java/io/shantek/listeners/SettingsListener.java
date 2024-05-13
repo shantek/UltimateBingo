@@ -14,6 +14,8 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Random;
+
 public class SettingsListener implements Listener {
     MaterialList materialList;
     private SettingsManager settingsManager;
@@ -28,6 +30,8 @@ public class SettingsListener implements Listener {
         this.ultimateBingo = ultimateBingo;
         sentWarning = false;
     }
+
+    Random random = new Random(); // Create a Random object
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
@@ -76,6 +80,110 @@ public class SettingsListener implements Listener {
                         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
                         break;
                     case 8:
+
+                        // Set all the game config ready to play
+                        ultimateBingo.bingoGameGUIManager.setGameConfiguration();
+
+                        // Possibly delete this
+                        /*
+                        // Set the selected game loadout to use
+                        if (ultimateBingo.loadoutType1 >= 0 && ultimateBingo.loadoutType1 <= 2) {
+                            ultimateBingo.currentLoadoutType = ultimateBingo.loadoutType1;
+                        } else {
+                            // Determine a random loadout
+                            ultimateBingo.currentLoadoutType = random.nextInt(3);;
+                        }
+
+                        // Set the selected game difficulty to use
+                        if (ultimateBingo.difficulty1.equalsIgnoreCase("easy") || ultimateBingo.difficulty1.equalsIgnoreCase("normal") ||
+                                ultimateBingo.difficulty1.equalsIgnoreCase("hard")) {
+                            ultimateBingo.currentDifficulty = ultimateBingo.difficulty1;
+                        } else {
+                            // Determine a random game difficulty
+                            int randomDifficulty = random.nextInt(3);
+                            if (randomDifficulty == 0) {
+                                ultimateBingo.currentDifficulty = "normal";
+                            } else if (randomDifficulty == 1) {
+                                ultimateBingo.currentDifficulty = "hard";
+                            } else {
+                                ultimateBingo.currentDifficulty = "easy";
+                            }
+                        }
+
+                        // Set the selected card size to use
+                        if (ultimateBingo.cardSize1.equalsIgnoreCase("small") || ultimateBingo.cardSize1.equalsIgnoreCase("medium") ||
+                                ultimateBingo.cardSize1.equalsIgnoreCase("large")) {
+                            ultimateBingo.currentCardSize = ultimateBingo.cardSize1;
+                        } else {
+                            // Determine a random card size
+                            int randomCardSize = random.nextInt(3);
+                            if (randomCardSize == 0) {
+                                ultimateBingo.currentCardSize = "normal";
+                            } else if (randomCardSize == 1) {
+                                ultimateBingo.currentCardSize = "hard";
+                            } else {
+                                ultimateBingo.currentCardSize = "easy";
+                            }
+                        }
+
+                        // Set the game mode
+                        if (ultimateBingo.gameMode1.equalsIgnoreCase("speedrun") || ultimateBingo.gameMode1.equalsIgnoreCase("traditional")) {
+                            ultimateBingo.currentGameMode = ultimateBingo.gameMode1.toLowerCase();
+                        } else {
+                            // Determine a random game mode
+                            int randomUnique = random.nextInt(2);
+                            if (randomUnique == 0) {
+                                ultimateBingo.currentGameMode = "speedrun";
+                            } else {
+                                ultimateBingo.currentGameMode = "traditional";
+                            }
+                        }
+
+                        // Set the selected card size to use
+                        if (ultimateBingo.uniqueCard1.equalsIgnoreCase("unique")) {
+                            ultimateBingo.currentUniqueCard = true;
+                        } else if (ultimateBingo.uniqueCard1.equalsIgnoreCase("identical")) {
+                            ultimateBingo.currentUniqueCard = false;
+                        } else {
+                            // Determine a random card size
+                            int randomUnique = random.nextInt(2);
+                            if (randomUnique == 0) {
+                                ultimateBingo.currentUniqueCard = true;
+                            } else {
+                                ultimateBingo.currentUniqueCard = false;
+                            }
+                        }
+
+                        // Set the win condition of the game
+                        if (ultimateBingo.fullCard1.equalsIgnoreCase("full card")) {
+                            ultimateBingo.currentFullCard = true;
+                        } else if (ultimateBingo.fullCard1.equalsIgnoreCase("single row")) {
+                            ultimateBingo.currentFullCard = false;
+                        } else {
+                            // Determine a random win condition for the game
+                            int randomUnique = random.nextInt(2);
+                            if (randomUnique == 0) {
+                                ultimateBingo.currentFullCard = true;
+                            } else {
+                                ultimateBingo.currentFullCard = false;
+                            }
+                        }
+
+                        // Reveal mode enabled or disabled?
+                        if (ultimateBingo.revealCards1.equalsIgnoreCase("enabled")) {
+                            ultimateBingo.currentRevealCards = true;
+                        } else if (ultimateBingo.revealCards1.equalsIgnoreCase("disabled")) {
+                            ultimateBingo.currentRevealCards = false;
+                        } else {
+                            // Determine random enabled or disabled for reveal mode
+                            int randomUnique = random.nextInt(2);
+                            if (randomUnique == 0) {
+                                ultimateBingo.currentRevealCards = true;
+                            } else {
+                                ultimateBingo.currentRevealCards = false;
+                            }
+                        }
+                        */
 
                         ultimateBingo.bingoSpawnLocation = player.getLocation();
                         ultimateBingo.bingoCommand.startBingo(player);
