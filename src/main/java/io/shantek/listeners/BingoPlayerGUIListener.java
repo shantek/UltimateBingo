@@ -75,7 +75,7 @@ public class BingoPlayerGUIListener implements Listener {
 
                 // Ensure the event was triggered in the list of player bingo cards
                 ItemStack clickedItem = e.getCurrentItem();
-                if (clickedItem == null || clickedItem.getType() != ultimateBingo.bingoCardMaterial) {
+                if (clickedItem == null || clickedItem.getType() != Material.PLAYER_HEAD) {
                     return; // Not a valid item, ignore the click
                 }
 
