@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,22 +45,23 @@ public class BingoPlayerGUIManager {
         // Get all online players and populate the inventory
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (ultimateBingo.bingoManager.bingoGUIs.containsKey(player.getUniqueId())) {  // Check if the player has a bingo card
-                ItemStack item = new ItemStack(ultimateBingo.bingoCardMaterial);
-                ItemMeta meta = item.getItemMeta();
+                ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
+                SkullMeta meta = (SkullMeta) playerHead.getItemMeta();
+                meta.setOwningPlayer(player);
 
                 if (meta != null) {
                     meta.setDisplayName(ChatColor.GREEN + player.getName());
                     List<String> lore = new ArrayList<>();
                     lore.add(ChatColor.GRAY + "Click to view " + player.getName() + "'s Bingo Card");
                     meta.setLore(lore);  // Set lore
-                    item.setItemMeta(meta);  // Apply the meta back to the item
+                    playerHead.setItemMeta(meta);
 
                     int countCompleted = ultimateBingo.bingoFunctions.countCompleted(ultimateBingo.bingoManager.getBingoGUIs().get(player.getUniqueId()));
                     if (countCompleted > 0) {
-                        item.setAmount(countCompleted);
+                        playerHead.setAmount(countCompleted);
                     }
 
-                    inventory.addItem(item);  // Add the item to the inventory
+                    inventory.addItem(playerHead);  // Add the item to the inventory
                 }
             }
         }
