@@ -243,6 +243,7 @@ public class BingoCommand implements CommandExecutor {
             }, 350);
 
             // Game still active? If so, let's start it
+            ultimateBingo.playedSinceReboot = true;
 
             // Get all online players as a List and scatter/teleport them all close together
             List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
