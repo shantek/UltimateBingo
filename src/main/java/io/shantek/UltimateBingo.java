@@ -42,13 +42,13 @@ public final class UltimateBingo extends JavaPlugin {
 
 
     // Saved config for setting up games
-    public String fullCard1 = "full card";
-    public String difficulty1;
-    public String cardSize1;
-    public String uniqueCard1;
-    public String gameMode1 = "traditional";
-    public String revealCards1 = "enabled";
-    public int loadoutType1 = 1;
+    public String fullCard = "full card";
+    public String difficulty;
+    public String cardSize;
+    public String uniqueCard;
+    public String gameMode = "traditional";
+    public String revealCards = "enabled";
+    public int loadoutType = 1;
 
     // Current game configuration - Implemented to allow
     // random assignment of game setup

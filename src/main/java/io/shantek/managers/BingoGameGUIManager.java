@@ -32,12 +32,12 @@ public class BingoGameGUIManager {
 
     public Inventory createGameGUI(Player player) {
         Inventory gameConfigInventory = Bukkit.createInventory(player, 9, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo Configuration");
-        gameConfigInventory.setItem(0, createItem(setGUIIcon("gamemode"), "Game mode", ultimateBingo.gameMode1));
-        gameConfigInventory.setItem(1, createItem(setGUIIcon("difficulty"), "Difficulty", ultimateBingo.difficulty1));
-        gameConfigInventory.setItem(2, createItem(setGUIIcon("cardsize"), "Card Size", ultimateBingo.cardSize1));
-        gameConfigInventory.setItem(3, createItem(setGUIIcon("uniqueCard"), "Card Type", ultimateBingo.uniqueCard1.toUpperCase()));
-        gameConfigInventory.setItem(4, createItem(setGUIIcon("wincondition"), "Win Condition", ultimateBingo.fullCard1.toUpperCase()));
-        gameConfigInventory.setItem(5, createItem(setGUIIcon("reveal"), "Reveal Cards", ultimateBingo.revealCards1.toUpperCase()));
+        gameConfigInventory.setItem(0, createItem(setGUIIcon("gamemode"), "Game mode", ultimateBingo.gameMode));
+        gameConfigInventory.setItem(1, createItem(setGUIIcon("difficulty"), "Difficulty", ultimateBingo.difficulty));
+        gameConfigInventory.setItem(2, createItem(setGUIIcon("cardsize"), "Card Size", ultimateBingo.cardSize));
+        gameConfigInventory.setItem(3, createItem(setGUIIcon("uniqueCard"), "Card Type", ultimateBingo.uniqueCard.toUpperCase()));
+        gameConfigInventory.setItem(4, createItem(setGUIIcon("wincondition"), "Win Condition", ultimateBingo.fullCard.toUpperCase()));
+        gameConfigInventory.setItem(5, createItem(setGUIIcon("reveal"), "Reveal Cards", ultimateBingo.revealCards.toUpperCase()));
 
         // Work out the game time to display
         String gameTimeString;
@@ -50,13 +50,13 @@ public class BingoGameGUIManager {
 
         // Work out the game loadout to give the player
         String gameLoadoutString = "Empty Inventory";
-        if (ultimateBingo.loadoutType1 == 1) {
+        if (ultimateBingo.loadoutType == 1) {
             gameLoadoutString = "Basic Kit";
-        } else if (ultimateBingo.loadoutType1 == 2) {
+        } else if (ultimateBingo.loadoutType == 2) {
             gameLoadoutString = "Boat Kit";
-        } else if (ultimateBingo.loadoutType1 == 3) {
+        } else if (ultimateBingo.loadoutType == 3) {
             gameLoadoutString = "Flying Kit";
-        } else if (ultimateBingo.loadoutType1 == 50) {
+        } else if (ultimateBingo.loadoutType == 50) {
             gameLoadoutString = "Random Kit";
         }
         gameConfigInventory.setItem(7, createItem(setGUIIcon("loadout"), "Player Loadout", gameLoadoutString));
@@ -80,15 +80,15 @@ public class BingoGameGUIManager {
     //region Toggle and update the GUI
 
     public void toggleGameMode(Player player) {
-        switch (ultimateBingo.gameMode1.toLowerCase()) {
+        switch (ultimateBingo.gameMode.toLowerCase()) {
             case "traditional":
-                ultimateBingo.gameMode1 = "speedrun";
+                ultimateBingo.gameMode = "speedrun";
                 break;
             case "speedrun":
-                ultimateBingo.gameMode1 = "random";
+                ultimateBingo.gameMode = "random";
                 break;
             case "random":
-                ultimateBingo.gameMode1 = "traditional";
+                ultimateBingo.gameMode = "traditional";
                 break;
 
         }
@@ -98,18 +98,18 @@ public class BingoGameGUIManager {
 
     public void toggleDifficulty(Player player) {
         // Cycle through difficulties. Assuming there are three fixed difficulties.
-        switch (ultimateBingo.difficulty1.toLowerCase()) {
+        switch (ultimateBingo.difficulty.toLowerCase()) {
             case "easy":
-                ultimateBingo.difficulty1 = "normal";
+                ultimateBingo.difficulty = "normal";
                 break;
             case "normal":
-                ultimateBingo.difficulty1 = "hard";
+                ultimateBingo.difficulty = "hard";
                 break;
             case "hard":
-                ultimateBingo.difficulty1 = "random";
+                ultimateBingo.difficulty = "random";
                 break;
             case "random":
-                ultimateBingo.difficulty1 = "easy";
+                ultimateBingo.difficulty = "easy";
                 break;
         }
 
@@ -117,18 +117,18 @@ public class BingoGameGUIManager {
     }
 
     public void toggleCardSize(Player player) {
-        switch (ultimateBingo.cardSize1.toLowerCase()) {
+        switch (ultimateBingo.cardSize.toLowerCase()) {
             case "small":
-                ultimateBingo.cardSize1 = "medium";
+                ultimateBingo.cardSize = "medium";
                 break;
             case "medium":
-                ultimateBingo.cardSize1 = "large";
+                ultimateBingo.cardSize = "large";
                 break;
             case "large":
-                ultimateBingo.cardSize1 = "random";
+                ultimateBingo.cardSize = "random";
                 break;
             case "random":
-                ultimateBingo.cardSize1 = "small";
+                ultimateBingo.cardSize = "small";
                 break;
         }
         updateGUI(player);
@@ -168,21 +168,21 @@ public class BingoGameGUIManager {
     }
 
     public void toggleLoadout(Player player) {
-        switch (ultimateBingo.loadoutType1) {
+        switch (ultimateBingo.loadoutType) {
             case 0:
-                ultimateBingo.loadoutType1 = 1;
+                ultimateBingo.loadoutType = 1;
                 break;
             case 1:
-                ultimateBingo.loadoutType1 = 2;
+                ultimateBingo.loadoutType = 2;
                 break;
             case 2:
-                ultimateBingo.loadoutType1 = 3;
+                ultimateBingo.loadoutType = 3;
                 break;
             case 3:
-                ultimateBingo.loadoutType1 = 50;
+                ultimateBingo.loadoutType = 50;
                 break;
             case 50:
-                ultimateBingo.loadoutType1 = 0;
+                ultimateBingo.loadoutType = 0;
                 break;
 
         }
@@ -190,45 +190,45 @@ public class BingoGameGUIManager {
     }
 
     public void toggleCardType(Player player) {
-        switch (ultimateBingo.uniqueCard1) {
+        switch (ultimateBingo.uniqueCard) {
             case "unique":
-                ultimateBingo.uniqueCard1 = "identical";
+                ultimateBingo.uniqueCard = "identical";
                 break;
             case "identical":
-                ultimateBingo.uniqueCard1 = "random";
+                ultimateBingo.uniqueCard = "random";
                 break;
             case "random":
-                ultimateBingo.uniqueCard1 = "unique";
+                ultimateBingo.uniqueCard = "unique";
                 break;
         }
         updateGUI(player);
     }
 
     public void toggleWinCondition(Player player) {
-        switch (ultimateBingo.fullCard1) {
+        switch (ultimateBingo.fullCard) {
             case "full card":
-                ultimateBingo.fullCard1 = "single row";
+                ultimateBingo.fullCard = "single row";
                 break;
             case "single row":
-                ultimateBingo.fullCard1 = "random";
+                ultimateBingo.fullCard = "random";
                 break;
             case "random":
-                ultimateBingo.fullCard1 = "full card";
+                ultimateBingo.fullCard = "full card";
                 break;
         }
         updateGUI(player);
     }
 
     public void toggleRevealCards(Player player) {
-        switch (ultimateBingo.revealCards1) {
+        switch (ultimateBingo.revealCards) {
             case "enabled":
-                ultimateBingo.revealCards1 = "disabled";
+                ultimateBingo.revealCards = "disabled";
                 break;
             case "disabled":
-                ultimateBingo.revealCards1 = "random";
+                ultimateBingo.revealCards = "random";
                 break;
             case "random":
-                ultimateBingo.revealCards1 = "enabled";
+                ultimateBingo.revealCards = "enabled";
                 break;
         }
         updateGUI(player);
@@ -242,12 +242,12 @@ public class BingoGameGUIManager {
                 ChatColor.stripColor(startGameItem.getItemMeta().getDisplayName()).equals("Start Game")) {
             // The inventory is confirmed to be the Bingo Configuration GUI
             // Update existing inventory directly
-            currentInventory.setItem(0, createItem(setGUIIcon("gamemode"), "Game mode", ultimateBingo.gameMode1));
-            currentInventory.setItem(1, createItem(setGUIIcon("difficulty"), "Difficulty", ultimateBingo.difficulty1));
-            currentInventory.setItem(2, createItem(setGUIIcon("cardsize"), "Card Size", ultimateBingo.cardSize1));
-            currentInventory.setItem(3, createItem(setGUIIcon("uniqueCard"), "Card Type", ultimateBingo.uniqueCard1.toUpperCase()));
-            currentInventory.setItem(4, createItem(setGUIIcon("wincondition"), "Win Condition", ultimateBingo.fullCard1.toUpperCase()));
-            currentInventory.setItem(5, createItem(setGUIIcon("reveal"), "Reveal Cards", ultimateBingo.revealCards1.toUpperCase()));
+            currentInventory.setItem(0, createItem(setGUIIcon("gamemode"), "Game mode", ultimateBingo.gameMode));
+            currentInventory.setItem(1, createItem(setGUIIcon("difficulty"), "Difficulty", ultimateBingo.difficulty));
+            currentInventory.setItem(2, createItem(setGUIIcon("cardsize"), "Card Size", ultimateBingo.cardSize));
+            currentInventory.setItem(3, createItem(setGUIIcon("uniqueCard"), "Card Type", ultimateBingo.uniqueCard.toUpperCase()));
+            currentInventory.setItem(4, createItem(setGUIIcon("wincondition"), "Win Condition", ultimateBingo.fullCard.toUpperCase()));
+            currentInventory.setItem(5, createItem(setGUIIcon("reveal"), "Reveal Cards", ultimateBingo.revealCards.toUpperCase()));
 
             // Work out the game time to display
             String gameTimeString;
@@ -260,13 +260,13 @@ public class BingoGameGUIManager {
 
             // Work out the game loadout to give the player
             String gameLoadoutString = "Empty Inventory";
-            if (ultimateBingo.loadoutType1 == 1) {
+            if (ultimateBingo.loadoutType == 1) {
                 gameLoadoutString = "Basic Kit";
-            } else if (ultimateBingo.loadoutType1 == 2) {
+            } else if (ultimateBingo.loadoutType == 2) {
                 gameLoadoutString = "Boat Kit";
-            } else if (ultimateBingo.loadoutType1 == 3) {
+            } else if (ultimateBingo.loadoutType == 3) {
                 gameLoadoutString = "Flying Kit";
-            } else if (ultimateBingo.loadoutType1 == 50) {
+            } else if (ultimateBingo.loadoutType == 50) {
                 gameLoadoutString = "Random Kit";
             }
             currentInventory.setItem(7, createItem(setGUIIcon("loadout"), "Player Loadout", gameLoadoutString));
@@ -282,13 +282,13 @@ public class BingoGameGUIManager {
 
     public void setGameConfiguration() {
 
-        ultimateBingo.currentLoadoutType = ultimateBingo.bingoFunctions.validateOrDefaultInt(ultimateBingo.loadoutType1, 3, 0);
-        ultimateBingo.currentDifficulty = ultimateBingo.bingoFunctions.validateOrDefault(ultimateBingo.difficulty1, optionsMap.get("difficulty"), "normal");
-        ultimateBingo.currentCardSize = ultimateBingo.bingoFunctions.validateOrDefault(ultimateBingo.cardSize1, optionsMap.get("cardSize"), "medium");
-        ultimateBingo.currentGameMode = ultimateBingo.bingoFunctions.validateOrDefault(ultimateBingo.gameMode1, optionsMap.get("gameMode"), "traditional");
-        ultimateBingo.currentUniqueCard = ultimateBingo.bingoFunctions.validateOrDefaultBoolean(ultimateBingo.uniqueCard1, optionsMap.get("uniqueCard"), true);
-        ultimateBingo.currentFullCard = ultimateBingo.bingoFunctions.validateOrDefaultBoolean(ultimateBingo.fullCard1, optionsMap.get("fullCard"), true);
-        ultimateBingo.currentRevealCards = ultimateBingo.bingoFunctions.validateOrDefaultBoolean(ultimateBingo.revealCards1, optionsMap.get("revealCards"), true);
+        ultimateBingo.currentLoadoutType = ultimateBingo.bingoFunctions.validateOrDefaultInt(ultimateBingo.loadoutType, 3, 0);
+        ultimateBingo.currentDifficulty = ultimateBingo.bingoFunctions.validateOrDefault(ultimateBingo.difficulty, optionsMap.get("difficulty"), "normal");
+        ultimateBingo.currentCardSize = ultimateBingo.bingoFunctions.validateOrDefault(ultimateBingo.cardSize, optionsMap.get("cardSize"), "medium");
+        ultimateBingo.currentGameMode = ultimateBingo.bingoFunctions.validateOrDefault(ultimateBingo.gameMode, optionsMap.get("gameMode"), "traditional");
+        ultimateBingo.currentUniqueCard = ultimateBingo.bingoFunctions.validateOrDefaultBoolean(ultimateBingo.uniqueCard, optionsMap.get("uniqueCard"), true);
+        ultimateBingo.currentFullCard = ultimateBingo.bingoFunctions.validateOrDefaultBoolean(ultimateBingo.fullCard, optionsMap.get("fullCard"), true);
+        ultimateBingo.currentRevealCards = ultimateBingo.bingoFunctions.validateOrDefaultBoolean(ultimateBingo.revealCards, optionsMap.get("revealCards"), true);
 
     }
 
@@ -297,7 +297,7 @@ public class BingoGameGUIManager {
         Material materialToDisplay = Material.AIR;
 
         if (type.equalsIgnoreCase("loadout")) {
-            return switch (ultimateBingo.loadoutType1) {
+            return switch (ultimateBingo.loadoutType) {
                 case 1 -> materialToDisplay = Material.WOODEN_PICKAXE; // Starter kit
                 case 2 -> materialToDisplay = Material.OAK_BOAT; // Boat kit
                 case 3 -> materialToDisplay = Material.FIREWORK_ROCKET; // Rocket kit
@@ -306,7 +306,7 @@ public class BingoGameGUIManager {
             };
 
         } else if (type.equalsIgnoreCase("difficulty")) {
-            return switch (ultimateBingo.difficulty1) {
+            return switch (ultimateBingo.difficulty) {
                 case "easy" -> materialToDisplay = Material.COPPER_INGOT;
                 case "hard" -> materialToDisplay = Material.NETHERITE_INGOT;
                 case "random" -> materialToDisplay = Material.DIAMOND;
@@ -314,7 +314,7 @@ public class BingoGameGUIManager {
 
             };
         } else if (type.equalsIgnoreCase("cardsize")) {
-            return switch (ultimateBingo.cardSize1) {
+            return switch (ultimateBingo.cardSize) {
                 case "small" -> materialToDisplay = Material.PAPER;
                 case "medium" -> materialToDisplay = Material.BOOK;
                 case "random" -> materialToDisplay = Material.SUGAR_CANE;
@@ -323,33 +323,33 @@ public class BingoGameGUIManager {
             };
 
         } else if (type.equalsIgnoreCase("gamemode")) {
-            if (ultimateBingo.gameMode1.equalsIgnoreCase("speedrun")) {
+            if (ultimateBingo.gameMode.equalsIgnoreCase("speedrun")) {
                 materialToDisplay = Material.DIAMOND_BOOTS;
-            } else if (ultimateBingo.gameMode1.equalsIgnoreCase("random")) {
+            } else if (ultimateBingo.gameMode.equalsIgnoreCase("random")) {
                 materialToDisplay = Material.LADDER;
             } else {
                 materialToDisplay = Material.FURNACE;
             }
         } else if (type.equalsIgnoreCase("uniquecard")) {
-            if (ultimateBingo.uniqueCard1.equalsIgnoreCase("unique")) {
+            if (ultimateBingo.uniqueCard.equalsIgnoreCase("unique")) {
                 materialToDisplay = Material.FILLED_MAP;
-            } else if (ultimateBingo.uniqueCard1.equalsIgnoreCase("random")) {
+            } else if (ultimateBingo.uniqueCard.equalsIgnoreCase("random")) {
                 materialToDisplay = Material.SUGAR;
             } else {
                 materialToDisplay = Material.MAP;
             }
         } else if (type.equalsIgnoreCase("wincondition")) {
-            if (ultimateBingo.fullCard1.equalsIgnoreCase("full card")) {
+            if (ultimateBingo.fullCard.equalsIgnoreCase("full card")) {
                 materialToDisplay = ultimateBingo.tickedItemMaterial;
-            } else if (ultimateBingo.fullCard1.equalsIgnoreCase("random")) {
+            } else if (ultimateBingo.fullCard.equalsIgnoreCase("random")) {
                 materialToDisplay = Material.BEACON;
             } else {
                 materialToDisplay = Material.BLAZE_ROD;
             }
         } else if (type.equalsIgnoreCase("reveal")) {
-            if (ultimateBingo.revealCards1.equalsIgnoreCase("enabled")) {
+            if (ultimateBingo.revealCards.equalsIgnoreCase("enabled")) {
                 materialToDisplay = Material.SPYGLASS;
-            } else if (ultimateBingo.revealCards1.equalsIgnoreCase("random")) {
+            } else if (ultimateBingo.revealCards.equalsIgnoreCase("random")) {
                     materialToDisplay = Material.MINECART;
             } else {
                 materialToDisplay = Material.BLACK_CONCRETE;

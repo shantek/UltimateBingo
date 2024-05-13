@@ -17,6 +17,7 @@ public class BingoCommand implements CommandExecutor {
     UltimateBingo ultimateBingo;
     SettingsManager settingsManager;
     BingoManager bingoManager;
+    String loadoutType = "Empty Inventory";
 
     public BingoCommand(UltimateBingo ultimateBingo, SettingsManager settingsManager, BingoManager bingoManager) {
         this.ultimateBingo = ultimateBingo;
@@ -140,6 +141,21 @@ public class BingoCommand implements CommandExecutor {
                 ultimateBingo.bingoManager.createBingoCards();
             }
 
+            // Set game strings for countdown
+            String cardType = ultimateBingo.currentUniqueCard ? "UNIQUE" : "IDENTICAL";
+            String bingoType = ultimateBingo.currentFullCard ? "FULL CARD" : "SINGLE ROW";
+            String revealType = ultimateBingo.currentRevealCards ? "ENABLED" : "DISABLED";
+
+            if (ultimateBingo.currentLoadoutType == 0) {
+                loadoutType = "Naked Kit";
+            } else if (ultimateBingo.currentLoadoutType == 1) {
+                loadoutType = "Starter Kit";
+            } else if (ultimateBingo.currentLoadoutType == 2) {
+                loadoutType = "Boat Kit";
+            } else if (ultimateBingo.currentLoadoutType == 3) {
+                loadoutType = "Flying Kit";
+            }
+
             // Store a reference to all online players
             List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
 
@@ -151,16 +167,17 @@ public class BingoCommand implements CommandExecutor {
 
                 player.setWalkSpeed(0);
 
-                String cardType = ultimateBingo.currentUniqueCard ? "UNIQUE" : "IDENTICAL";
-                String bingoType = ultimateBingo.currentFullCard ? "FULL CARD" : "SINGLE ROW";
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                    player.sendTitle(ChatColor.YELLOW + cardType, ChatColor.WHITE + ultimateBingo.currentCardSize.toUpperCase() + ", " + ultimateBingo.currentDifficulty.toUpperCase(), 10, 40, 10);
+                }, 20);
 
                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    player.sendTitle(ChatColor.YELLOW + cardType, ChatColor.WHITE + ultimateBingo.currentDifficulty.toUpperCase(), 10, 40, 10);
-                }, 20); // 20 ticks = 1 second for initial pause
+                    player.sendTitle(ChatColor.YELLOW + bingoType, ChatColor.WHITE + "REVEAL MODE " + revealType, 10, 40, 10);
+                }, 80);
 
                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    player.sendTitle(ChatColor.YELLOW + bingoType, ChatColor.WHITE + "Game mode: " + ultimateBingo.currentGameMode.toUpperCase(), 10, 40, 10);
-                }, 60); // 2 seconds later
+                    player.sendTitle(ChatColor.YELLOW + ultimateBingo.currentGameMode.toUpperCase(), ChatColor.WHITE + loadoutType.toUpperCase() , 10, 40, 10);
+                }, 140);
 
                 // Countdown with chimes, with bold and colorful text
                 for (int i = 3; i > 0; i--) {
@@ -170,7 +187,7 @@ public class BingoCommand implements CommandExecutor {
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                         player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + String.valueOf(count), "", 10, 20, 10);
                         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
-                    }, 100 + 30 * (3 - count)); // Countdown starts at 5 seconds
+                    }, 200 + 30 * (3 - count)); // Countdown starts at 5 seconds
 
                 }
                 // Final "GO!" message and chime, bold and green
@@ -181,7 +198,7 @@ public class BingoCommand implements CommandExecutor {
                     // Unfreeze players
                     player.removePotionEffect(PotionEffectType.SLOW);
                     player.setWalkSpeed(0.2f); // Default walk speed
-                }, 190); // 1.5 seconds after "1"
+                }, 290); // 1.5 seconds after "1"
 
 
             });
@@ -223,7 +240,7 @@ public class BingoCommand implements CommandExecutor {
                     }
                 }
 
-            }, 250);
+            }, 350);
 
             // Game still active? If so, let's start it
 
@@ -247,7 +264,7 @@ public class BingoCommand implements CommandExecutor {
                     if (ultimateBingo.currentGameMode.equals("speedrun")) {
                         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
                     }
-                }, 210); // 210 ticks = 10.5 seconds, just after the "GO!"
+                }, 310); // 210 ticks = 10.5 seconds, just after the "GO!"
 
             });
         }
