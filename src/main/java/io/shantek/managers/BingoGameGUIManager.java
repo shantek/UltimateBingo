@@ -49,7 +49,7 @@ public class BingoGameGUIManager {
         gameConfigInventory.setItem(6, createItem(Material.CLOCK, "Time Limit", gameTimeString));
 
         // Work out the game loadout to give the player
-        String gameLoadoutString = "Empty Inventory";
+        String gameLoadoutString = "Naked Kit";
         if (ultimateBingo.loadoutType == 1) {
             gameLoadoutString = "Basic Kit";
         } else if (ultimateBingo.loadoutType == 2) {
@@ -248,6 +248,7 @@ public class BingoGameGUIManager {
             currentInventory.setItem(3, createItem(setGUIIcon("uniqueCard"), "Card Type", ultimateBingo.uniqueCard.toUpperCase()));
             currentInventory.setItem(4, createItem(setGUIIcon("wincondition"), "Win Condition", ultimateBingo.fullCard.toUpperCase()));
             currentInventory.setItem(5, createItem(setGUIIcon("reveal"), "Reveal Cards", ultimateBingo.revealCards.toUpperCase()));
+            currentInventory.setItem(5, createItem(setGUIIcon("reveal"), "Reveal Cards", ultimateBingo.revealCards.toUpperCase()));
 
             // Work out the game time to display
             String gameTimeString;
@@ -259,7 +260,7 @@ public class BingoGameGUIManager {
             currentInventory.setItem(6, createItem(Material.CLOCK, "Time Limit", gameTimeString));
 
             // Work out the game loadout to give the player
-            String gameLoadoutString = "Empty Inventory";
+            String gameLoadoutString = "Naked Kit";
             if (ultimateBingo.loadoutType == 1) {
                 gameLoadoutString = "Basic Kit";
             } else if (ultimateBingo.loadoutType == 2) {
@@ -302,7 +303,7 @@ public class BingoGameGUIManager {
                 case 2 -> materialToDisplay = Material.OAK_BOAT; // Boat kit
                 case 3 -> materialToDisplay = Material.FIREWORK_ROCKET; // Rocket kit
                 case 50 -> materialToDisplay = Material.SHULKER_BOX; // Random kit
-                default -> materialToDisplay = Material.CRAFTING_TABLE; // Empty inventory loadout
+                default -> materialToDisplay = Material.CRAFTING_TABLE; // Naked kit
             };
 
         } else if (type.equalsIgnoreCase("difficulty")) {
