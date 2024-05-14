@@ -25,6 +25,9 @@ public class BingoPlayerJoinListener implements Listener {
         Player player = e.getPlayer();
 
         if (!ultimateBingo.bingoStarted) {
+            player.setWalkSpeed(0.2f);
+            player.removePotionEffect(PotionEffectType.SLOW);
+
             // If they joined and a game isn't active, reset their inventory in case they
             // carried anything over from a prior game
             ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
@@ -38,10 +41,16 @@ public class BingoPlayerJoinListener implements Listener {
 
             // Check if bingo is active and if they have a card. If they don't,
             // prompt them on how to join the game. Delay the message by 5 seconds
+            player.setWalkSpeed(0.2f);
+            player.removePotionEffect(PotionEffectType.SLOW);
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateBingo, () -> {
                 player.sendMessage(ChatColor.GREEN + "A bingo game is currently in progress. Type /bingo to join in!");
             }, 100);
+        } else if (ultimateBingo.bingoStarted && ultimateBingo.bingoCardActive) {
+            player.setWalkSpeed(0.2f);
+            player.removePotionEffect(PotionEffectType.SLOW);
+
         }
 
         if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && ultimateBingo.currentGameMode.equals("speedrun")) {
