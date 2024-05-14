@@ -9,8 +9,10 @@
 
 
 
-<i>This project is based on <a href="https://github.com/ElmerLion/megabingo" target="_blank">Mega Bingo by Elmer Lion</a></i>
+<i>This project is based on <a href="https://github.com/ElmerLion/megabingo">Mega Bingo by Elmer Lion</a></i>
 
+### Discord
+Want to discuss the plugin? Have some feedback? <a href="https://www.shantek.co/discord">Jump on my Discord</a>!
 
 ### License
 Distributed under the GNU General Public License v3.0.
