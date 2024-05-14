@@ -9,8 +9,8 @@
 
 
 
-_ This project is based on Mega Bingo by Elmer Lion
-You can find the original project here https://github.com/ElmerLion/megabingo
+<i>This project is based on <a href="https://github.com/ElmerLion/megabingo" target="_blank">Mega Bingo by Elmer Lion</a></i>
+
 
 ### License
 Distributed under the GNU General Public License v3.0.
