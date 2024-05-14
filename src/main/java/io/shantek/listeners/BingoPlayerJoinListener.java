@@ -24,6 +24,15 @@ public class BingoPlayerJoinListener implements Listener {
         // Get the player who just joined
         Player player = e.getPlayer();
 
+        if (!ultimateBingo.playedSinceReboot) {
+            // A game hasn't been played since the reboot - Reset the player
+            player.setWalkSpeed(0.2f);
+            player.removePotionEffect(PotionEffectType.SLOW);
+            ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
+            return;
+        }
+
+        // A game has been played since reboot - see what we need to do with the player
         if (!ultimateBingo.bingoStarted) {
             player.setWalkSpeed(0.2f);
             player.removePotionEffect(PotionEffectType.SLOW);
@@ -33,7 +42,7 @@ public class BingoPlayerJoinListener implements Listener {
             ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
 
             // Give them a replacement card so they can view results from a prior game
-            if (ultimateBingo.bingoManager.checkHasBingoCard(player) && ultimateBingo.playedSinceReboot) {
+            if (ultimateBingo.bingoManager.checkHasBingoCard(player)) {
                 ultimateBingo.bingoFunctions.giveBingoCard(player);
             }
 
