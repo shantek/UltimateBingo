@@ -27,6 +27,22 @@ jobs:
         with:
           maven-version: 3.8.1
 
+      - name: Get version from pom.xml
+        id: version
+        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+
+      - name: Check if tag exists
+        id: tag_exists
+        run: |
+          if git rev-parse "v${{ env.VERSION }}" >/dev/null 2>&1; then
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
+
+      - name: Exit if tag exists
+        if: env.TAG_EXISTS == 'true'
+        run: exit 0
+
       - name: Fetch commit messages
         id: fetch_commits
         run: |
@@ -41,10 +57,6 @@ jobs:
 
       - name: Build project
         run: mvn package -B
-
-      - name: Get version from pom.xml
-        id: version
-        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
       - name: List files in target directory
         run: ls -al ./target/
