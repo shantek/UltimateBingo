@@ -38,6 +38,7 @@ jobs:
             echo "TAG_EXISTS=true" >> $GITHUB_ENV
           else
             echo "TAG_EXISTS=false" >> $GITHUB_ENV
+          fi
 
       - name: Exit if tag exists
         if: env.TAG_EXISTS == 'true'
