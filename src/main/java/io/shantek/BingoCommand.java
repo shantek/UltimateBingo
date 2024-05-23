@@ -181,7 +181,6 @@ public class BingoCommand implements CommandExecutor {
             onlinePlayers.forEach(player -> {
 
                 // Freeze players
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100000, 10, false, false));
                 player.setWalkSpeed(0);
 
                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
@@ -227,7 +226,6 @@ public class BingoCommand implements CommandExecutor {
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 
 
-                // Work out the game time to display
                 String timeLimitString;
                 if (ultimateBingo.gameTime == 0) {
                     timeLimitString = "Time Limit: Unlimited Time";
