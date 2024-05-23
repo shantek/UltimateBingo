@@ -6,11 +6,7 @@
 package io.shantek;
 
 import io.shantek.listeners.*;
-import io.shantek.managers.BingoManager;
-import io.shantek.managers.SettingsManager;
-import io.shantek.managers.ConfigFile;
-import io.shantek.managers.BingoGameGUIManager;
-import io.shantek.managers.BingoPlayerGUIManager;
+import io.shantek.managers.*;
 import io.shantek.tools.MaterialList;
 import io.shantek.tools.BingoFunctions;
 import org.bukkit.Bukkit;
@@ -18,7 +14,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import io.shantek.managers.CardTypes;
 
 public final class UltimateBingo extends JavaPlugin {
     public BingoManager bingoManager;
@@ -40,6 +35,7 @@ public final class UltimateBingo extends JavaPlugin {
     public Material bingoCardMaterial = Material.COMPASS;
     public long gameStartTime;
     public boolean playedSinceReboot = false;
+    public Metrics metrics;
 
     // Saved config for setting up games
     public String fullCard = "full card";
@@ -94,6 +90,10 @@ public final class UltimateBingo extends JavaPlugin {
 
         // Load the game configuration
         configFile.reloadConfigFile();
+
+        // Register bstats
+        int pluginId = 21982;
+        Metrics metrics = new Metrics(this, pluginId);
     }
 
     private void registerEventListeners() {
