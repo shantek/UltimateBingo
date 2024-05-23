@@ -325,14 +325,23 @@ public class BingoFunctions
         ItemStack firework = new ItemStack(Material.FIREWORK_ROCKET, 64); // Create a stack of 64 rockets
         FireworkMeta fireworkMeta = (FireworkMeta) firework.getItemMeta();
 
-        // Configure the flight duration
-        fireworkMeta.setPower(3);
+        if (fireworkMeta != null) {
+            // Use reflection to ensure the effects list is initialized without adding effects
+            try {
+                java.lang.reflect.Field effectsField = fireworkMeta.getClass().getDeclaredField("effects");
+                effectsField.setAccessible(true);
+                effectsField.set(fireworkMeta, new ArrayList<FireworkEffect>());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        // Set the item meta back to the firework stack
-        firework.setItemMeta(fireworkMeta);
+            // Set the flight duration to level 3
+            fireworkMeta.setPower(3);
+            firework.setItemMeta(fireworkMeta);
+       }
+
         return firework;
     }
-
     private ItemStack createEnchantedElytra(Enchantment[] enchantments, int[] levels) {
         // Create an Elytra item
         ItemStack elytra = new ItemStack(Material.ELYTRA);
