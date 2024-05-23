@@ -181,8 +181,7 @@ public class BingoCommand implements CommandExecutor {
             onlinePlayers.forEach(player -> {
 
                 // Freeze players
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100000, 255, false, false));
-
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100000, 10, false, false));
                 player.setWalkSpeed(0);
 
                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
