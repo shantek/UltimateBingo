@@ -248,7 +248,6 @@ public class MaterialList {
         add(Material.BROWN_DYE, 3);
         add(Material.WHITE_DYE, 3);
         add(Material.PURPLE_DYE, 3);
-        add(Material.BEETROOT, 3);
 
         add(Material.DIAMOND, 4);
         add(Material.JUKEBOX,4);
@@ -282,7 +281,6 @@ public class MaterialList {
         add(Material.YELLOW_CONCRETE, 4);
         add(Material.WHITE_CONCRETE, 4);
         add(Material.BLACK_CONCRETE, 4);
-        add(Material.NAUTILUS_SHELL, 4);
         add(Material.SMALL_DRIPLEAF, 4);
         add(Material.JACK_O_LANTERN, 4);
         add(Material.SMITHING_TABLE, 4);
@@ -330,6 +328,8 @@ public class MaterialList {
         add(Material.DIAMOND_PICKAXE, 5);
         add(Material.DIAMOND_HOE, 5);
         add(Material.LILY_PAD, 5);
+        add(Material.BEETROOT, 5);
+        add(Material.NAUTILUS_SHELL, 5);
 
         saveMaterialsToFile();
     }
