@@ -12,6 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BingoCommand implements CommandExecutor {
     UltimateBingo ultimateBingo;
@@ -42,10 +43,37 @@ public class BingoCommand implements CommandExecutor {
 
                 } else if (args[0].equalsIgnoreCase("gui") && player.hasPermission("shantek.ultimatebingo.play")) {
 
-                    if (ultimateBingo.bingoStarted) {
-                        player.sendMessage(ChatColor.RED + "A bingo game is in progress. Finish the game or use /bingo stop");
+                    // Lets check if the bingoitems.yml file contains enough items in each category to start a game
+
+                    // Define the minimum requirements for each difficulty level
+                    int[] minimumRequirements = {15, 15, 10, 10, 5};
+                    boolean foundError = false;
+
+                    // Get the materials map
+                    Map<Integer, List<Material>> materials = ultimateBingo.getMaterialList().getMaterials();
+
+                    // Check each difficulty level
+                    for (int difficulty = 1; difficulty <= 5; difficulty++) {
+                        List<Material> difficultyMaterials = materials.get(difficulty);
+                        int requiredItems = minimumRequirements[difficulty - 1];
+
+                        if (difficultyMaterials.size() < requiredItems) {
+                            player.sendMessage(ChatColor.WHITE + "Group " + difficulty + " requires " + requiredItems + " items, found " + difficultyMaterials.size() + ".");
+                            foundError = true;
+                        }
+                    }
+
+                    // If any error is found, print a final message
+                    if (foundError) {
+                        player.sendMessage(ChatColor.RED + "The bingoitems.yml file must not be manually modified. Please delete the file and reboot or manually add enough items to each category using /bingo settings for the game to begin.");
                     } else {
-                        player.openInventory(ultimateBingo.bingoGameGUIManager.createGameGUI(player));
+
+                        if (ultimateBingo.bingoStarted) {
+                            player.sendMessage(ChatColor.RED + "A bingo game is in progress. Finish the game or use /bingo stop");
+                        } else {
+                            player.openInventory(ultimateBingo.bingoGameGUIManager.createGameGUI(player));
+                        }
+
                     }
 
                 } else if (args[0].equalsIgnoreCase("info")) {
