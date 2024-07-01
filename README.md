@@ -1,5 +1,7 @@
 **NOTE: This plugin is intended to be used on a minigames or fresh server as player inventory is reset at the start and end of every game. DO NOT RUN THIS ON YOUR LIVE SMP SERVER!**
 
+#### Looking for the latest dev builds? You can find them [here!](https://shantek.dev/job/UltimateBingo/)
+
 [![License: GPL](https://img.shields.io/badge/license-GPL-blue.svg)](LICENSE)
 [![Discord](https://img.shields.io/discord/628396916639793152.svg?color=%237289da&label=discord)](https://shantek.co/discord)
 
