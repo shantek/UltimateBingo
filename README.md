@@ -28,7 +28,6 @@ The items used to populate your card are split in to 5 groups. Easy, Normal or H
 
 Both difficulty and card size also come with a Random option to help mix up your bingo games.
 
-
 ## Card Type
 ### Unique Card
 All players are given a unique card. The plugin pulls a list of items slightly larger than the selected card size, shuffles them and generates a unique card for each player. This is done to ensure players have similar cards but the order is completley different for every player.
@@ -88,7 +87,6 @@ The ultimate gear for those speed runs. Max enchanted Netherite gear, elytra and
 **shantek.ultimatebingo.stop** - Grant access to stop an active bingo game.
 
 **shantek.ultimatebingo.settings** - Ability to add/remove items from the bingo card config
-
 
 
 ## External Links
