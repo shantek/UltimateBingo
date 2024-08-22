@@ -21,7 +21,7 @@ public class BingoInteractListener implements Listener {
         ItemStack item = event.getItemDrop().getItemStack();
         if (item.getType() == ultimateBingo.bingoCardMaterial && item.getItemMeta().hasDisplayName() &&
                 item.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
-            event.setCancelled(true);
+                event.setCancelled(true);
         }
     }
 

@@ -51,6 +51,7 @@ public class ConfigFile {
             config.save(configFile);  // Save once after all updates
 
 
+            ultimateBingo.bingoWorld = getString(config, "bingo-world", "default").toLowerCase();
             ultimateBingo.difficulty = getString(config, "difficulty", "normal").toLowerCase();
             ultimateBingo.cardSize = getString(config, "card-size", "medium").toLowerCase();
             ultimateBingo.gameMode = getString(config, "game-mode", "traditional").toLowerCase();
@@ -59,6 +60,7 @@ public class ConfigFile {
             ultimateBingo.revealCards = getString(config, "reveal-cards", "enabled");
             ultimateBingo.uniqueCard = getString(config, "unique-card", "identical");
             ultimateBingo.consoleLogs = getBoolean(config, "console-logs", true);
+            ultimateBingo.multiWorldBingo = getBoolean(config, "multi-world-server", false);
             ultimateBingo.gameTime = getInt(config, "game-time", 0);
             ultimateBingo.loadoutType = getInt(config, "player-loadout", 0);
 
@@ -69,13 +71,13 @@ public class ConfigFile {
 
     private boolean checkForMissingKeys(FileConfiguration config) {
         List<String> keysToCheck = Arrays.asList(
-                "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport", "reveal-cards", "game-time", "player-loadout");
+                "multi-world-server", "bingo-world", "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport", "reveal-cards", "game-time", "player-loadout");
         return keysToCheck.stream().anyMatch(key -> !config.contains(key));
     }
 
     private Map<String, Object> saveMissingKeyValues(FileConfiguration config) {
         List<String> keysToCheck = Arrays.asList(
-                "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport", "reveal-cards", "game-time", "player-loadout");
+                "multi-world-server", "bingo-world", "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport", "reveal-cards", "game-time", "player-loadout");
 
         Map<String, Object> missingKeyValues = new HashMap<>();
         keysToCheck.forEach(key -> {
@@ -146,6 +148,8 @@ public class ConfigFile {
             config.set("reveal-cards", ultimateBingo.revealCards);
             config.set("game-time", ultimateBingo.gameTime);
             config.set("player-loadout", ultimateBingo.loadoutType);
+            config.set("multi-world-server", ultimateBingo.multiWorldBingo);
+            config.set("bingo-world", ultimateBingo.bingoWorld);
 
             config.save(configFile);
         } catch (IOException e) {

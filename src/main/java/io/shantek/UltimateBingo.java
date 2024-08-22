@@ -45,6 +45,8 @@ public final class UltimateBingo extends JavaPlugin {
     public String gameMode = "traditional";
     public String revealCards = "enabled";
     public int loadoutType = 1;
+    public String bingoWorld = "default";
+    public boolean multiWorldBingo = false;
 
     // Current game configuration - Implemented to allow
     // random assignment of game setup
@@ -77,6 +79,7 @@ public final class UltimateBingo extends JavaPlugin {
         bingoFunctions = new BingoFunctions(this);
         cardTypes = new CardTypes(this);
         configFile = new ConfigFile(this);
+
 
         getCommand("bingo").setExecutor(new BingoCommand(this, settingsManager, bingoManager));
         getCommand("bingo").setTabCompleter(new BingoCompleter());

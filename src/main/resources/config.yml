@@ -4,6 +4,16 @@ console-logs: true
 # Respawn players back to bingo spawn after a death
 respawn-teleport: true
 
+# Set this to true if you're using this on a SMP that has a dedicated bingo world
+# Also be sure to set the name of your dedicated bingo world to ensure players
+# aren't forced in to a new game or have their inventory cleared unless they are
+# in the dedicated bingo world
+multi-world-bingo: false
+
+# This is only checked if the above setting is set to true. If you're using a plugin
+# like multiverse, create a world dedicated for your bingo game and set the name here
+bingo-world: default
+
 
 ################################################
 # Current game configuration - Don't manually change this
