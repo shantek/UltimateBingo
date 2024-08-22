@@ -8,7 +8,7 @@ respawn-teleport: true
 # Also be sure to set the name of your dedicated bingo world to ensure players
 # aren't forced in to a new game or have their inventory cleared unless they are
 # in the dedicated bingo world
-multi-world-bingo: false
+multi-world-server: false
 
 # This is only checked if the above setting is set to true. If you're using a plugin
 # like multiverse, create a world dedicated for your bingo game and set the name here

@@ -25,7 +25,7 @@ public class BingoPlayerJoinListener implements Listener {
         Player player = e.getPlayer();
 
         // Check if multi world bingo is enabled and they're in the bingo world
-        if (ultimateBingo.multiWorldBingo && player.getWorld().toString().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+        if (ultimateBingo.multiWorldServer && player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
 
 
             if (!ultimateBingo.playedSinceReboot) {

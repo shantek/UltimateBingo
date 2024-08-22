@@ -59,38 +59,47 @@ public class BingoManager{
 
         // Distribute unique cards to each player
         for (Player player : Bukkit.getOnlinePlayers()) {
-            UUID playerId = player.getUniqueId();
 
-            // Store the string for the card type
-            String cardInfo = ultimateBingo.currentUniqueCard ? "unique" : "identical";
-            cardInfo += ultimateBingo.currentFullCard ? "/full card" : "/single row";
-            cardInfo = "(" + cardInfo + ")";
+            boolean givePlayerCard = true;
 
-            // Create a new inventory for each player
-            Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
+            // Check if multi world bingo is enabled and they're in the bingo world
+            givePlayerCard = ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase());
 
-            // Populate the card inventory with selected materials
-            for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
-                Material material = availableMaterials.get(i);
-                ItemStack item = new ItemStack(material);
-                bingoGUI.setItem(slots[i], item);
-            }
 
-            // Add the Spyglass to the last slot if the feature is enabled
-            if (ultimateBingo.currentRevealCards) {
-                bingoGUI.setItem(17, ultimateBingo.bingoFunctions.createSpyglass()); // Add Spyglass to slot 53 (last slot)
-            }
-            bingoGUIs.put(playerId, bingoGUI);
+            if (givePlayerCard) {
+                UUID playerId = player.getUniqueId();
 
-            // Store the card for each player
-            List<ItemStack> cards = new ArrayList<>();
-            for (int slot : slots) {
-                ItemStack item = bingoGUI.getItem(slot);
-                if (item != null) {
-                    cards.add(item);
+                // Store the string for the card type
+                String cardInfo = ultimateBingo.currentUniqueCard ? "unique" : "identical";
+                cardInfo += ultimateBingo.currentFullCard ? "/full card" : "/single row";
+                cardInfo = "(" + cardInfo + ")";
+
+                // Create a new inventory for each player
+                Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
+
+                // Populate the card inventory with selected materials
+                for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
+                    Material material = availableMaterials.get(i);
+                    ItemStack item = new ItemStack(material);
+                    bingoGUI.setItem(slots[i], item);
                 }
+
+                // Add the Spyglass to the last slot if the feature is enabled
+                if (ultimateBingo.currentRevealCards) {
+                    bingoGUI.setItem(17, ultimateBingo.bingoFunctions.createSpyglass()); // Add Spyglass to slot 53 (last slot)
+                }
+                bingoGUIs.put(playerId, bingoGUI);
+
+                // Store the card for each player
+                List<ItemStack> cards = new ArrayList<>();
+                for (int slot : slots) {
+                    ItemStack item = bingoGUI.getItem(slot);
+                    if (item != null) {
+                        cards.add(item);
+                    }
+                }
+                playerBingoCards.put(playerId, cards);
             }
-            playerBingoCards.put(playerId, cards);
         }
     }
 
@@ -126,39 +135,47 @@ public class BingoManager{
 
         // Distribute unique shuffled cards to each player
         for (Player player : Bukkit.getOnlinePlayers()) {
-            UUID playerId = player.getUniqueId();
 
-            // Store the string for the card type
-            String cardInfo = ultimateBingo.currentUniqueCard ? "unique" : "identical";
-            cardInfo += ultimateBingo.currentFullCard ? "/full card" : "/single row";
-            cardInfo = "(" + cardInfo + ")";
+            boolean activePlayer = true;
+            // Check if multi world bingo is enabled and they're in the bingo world
+            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+            activePlayer = false; }
+            if (activePlayer) {
 
-            // Create a new inventory for each player
-            Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
+                UUID playerId = player.getUniqueId();
 
-            // Shuffle the shared materials uniquely for each player
-            List<Material> playerMaterials = new ArrayList<>(sharedMaterials);
-            Collections.shuffle(playerMaterials);
+                // Store the string for the card type
+                String cardInfo = ultimateBingo.currentUniqueCard ? "unique" : "identical";
+                cardInfo += ultimateBingo.currentFullCard ? "/full card" : "/single row";
+                cardInfo = "(" + cardInfo + ")";
 
-            List<ItemStack> cards = new ArrayList<>();
-            int[] slots = determineSlotsBasedOnCardSize(); // Determine slots based on card size
+                // Create a new inventory for each player
+                Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
 
-            // Populate the bingo GUI with shuffled materials
-            for (int i = 0; i < slots.length && i < playerMaterials.size(); i++) {
-                Material material = playerMaterials.get(i);
-                ItemStack item = new ItemStack(material);
-                bingoGUI.setItem(slots[i], item);
-                cards.add(item);
+                // Shuffle the shared materials uniquely for each player
+                List<Material> playerMaterials = new ArrayList<>(sharedMaterials);
+                Collections.shuffle(playerMaterials);
+
+                List<ItemStack> cards = new ArrayList<>();
+                int[] slots = determineSlotsBasedOnCardSize(); // Determine slots based on card size
+
+                // Populate the bingo GUI with shuffled materials
+                for (int i = 0; i < slots.length && i < playerMaterials.size(); i++) {
+                    Material material = playerMaterials.get(i);
+                    ItemStack item = new ItemStack(material);
+                    bingoGUI.setItem(slots[i], item);
+                    cards.add(item);
+                }
+
+                // Add the Spyglass to the last slot if the feature is enabled
+                if (ultimateBingo.currentRevealCards) {
+                    bingoGUI.setItem(17, ultimateBingo.bingoFunctions.createSpyglass()); // Add Spyglass to slot 53 (last slot)
+                }
+
+                playerBingoCards.put(playerId, cards);
+                bingoGUIs.put(playerId, bingoGUI);
+
             }
-
-            // Add the Spyglass to the last slot if the feature is enabled
-            if (ultimateBingo.currentRevealCards) {
-                bingoGUI.setItem(17, ultimateBingo.bingoFunctions.createSpyglass()); // Add Spyglass to slot 53 (last slot)
-            }
-
-            playerBingoCards.put(playerId, cards);
-            bingoGUIs.put(playerId, bingoGUI);
-
         }
     }
 
@@ -241,17 +258,25 @@ public class BingoManager{
                 }
 
                 for (Player target : Bukkit.getOnlinePlayers()) {
-                    // PLAY FOR ALL PLAYERS
-                    target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 5);
 
-                    if (!target.equals(player)) { // Exclude the player who triggered the event
+                    boolean activePlayer = true;
+                    // Check if multi world bingo is enabled and they're in the bingo world
+                    if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+            activePlayer = false; }
+                    if (activePlayer) {
 
-                        // Show more info if reveal mode is enabled. If not, be more cryptic in what they did
-                        if (ultimateBingo.currentRevealCards) {
-                            target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
+                        // PLAY FOR ALL PLAYERS
+                        target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 5);
 
-                        } else {
-                            target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
+                        if (!target.equals(player)) { // Exclude the player who triggered the event
+
+                            // Show more info if reveal mode is enabled. If not, be more cryptic in what they did
+                            if (ultimateBingo.currentRevealCards) {
+                                target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
+
+                            } else {
+                                target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
+                            }
                         }
                     }
                 }
@@ -293,10 +318,17 @@ public class BingoManager{
 
                     Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
                     for (Player target : Bukkit.getOnlinePlayers()){
-                        target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, 1.0f, 1.0f);
 
-                        target.sendTitle(ChatColor.GOLD + player.getName() + ChatColor.GREEN +  " got BINGO!"
-                                , ChatColor.GREEN.toString() + ChatColor.BOLD + "Woop woop!");
+                        boolean activePlayer = true;
+                        // Check if multi world bingo is enabled and they're in the bingo world
+                        if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+            activePlayer = false; }
+                        if (activePlayer) {
+                            target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, 1.0f, 1.0f);
+
+                            target.sendTitle(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO!"
+                                    , ChatColor.GREEN.toString() + ChatColor.BOLD + "Woop woop!");
+                        }
                     }
                     ultimateBingo.bingoCommand.stopBingo(player, true);
                 }

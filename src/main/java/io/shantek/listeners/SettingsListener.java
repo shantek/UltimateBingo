@@ -41,7 +41,7 @@ public class SettingsListener implements Listener {
         Player player = (Player) e.getWhoClicked();
 
         // Check if multi world bingo is enabled and they're in the bingo world
-        if (ultimateBingo.multiWorldBingo && player.getWorld().toString().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+        if (ultimateBingo.multiWorldServer && player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
 
 
             // Ensure the event was triggered in the Bingo configuration GUI

@@ -30,33 +30,40 @@ public class BingoFunctions
     // Reset the players state at the start and end of games
     public void resetPlayers(){
         for (Player player : Bukkit.getOnlinePlayers()){
-            // Reset health to max health (20.0 is full health)
-            player.setHealth(20.0);
 
-            // Reset food level to max (20 is full hunger)
-            player.setFoodLevel(20);
+            boolean activePlayer = true;
+            // Check if multi world bingo is enabled and they're in the bingo world
+            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+            activePlayer = false; }
+            if (activePlayer) {
 
-            // Reset saturation to max (5.0F is full saturation)
-            player.setSaturation(5.0F);
+                // Reset health to max health (20.0 is full health)
+                player.setHealth(20.0);
 
-            // Reset exhaustion to 0 (no exhaustion)
-            player.setExhaustion(0.0F);
+                // Reset food level to max (20 is full hunger)
+                player.setFoodLevel(20);
 
-            // Reset remaining potion effects
-            for (PotionEffect effect : player.getActivePotionEffects()){
-                player.removePotionEffect(effect.getType());
+                // Reset saturation to max (5.0F is full saturation)
+                player.setSaturation(5.0F);
+
+                // Reset exhaustion to 0 (no exhaustion)
+                player.setExhaustion(0.0F);
+
+                // Reset remaining potion effects
+                for (PotionEffect effect : player.getActivePotionEffects()) {
+                    player.removePotionEffect(effect.getType());
+                }
+
+                // Clear inventory
+                player.getInventory().clear();
+
+                // Clear armor
+                player.getInventory().setArmorContents(new ItemStack[4]);
+
+                // Reset XP and levels
+                player.setExp(0);
+                player.setLevel(0);
             }
-
-            // Clear inventory
-            player.getInventory().clear();
-
-            // Clear armor
-            player.getInventory().setArmorContents(new ItemStack[4]);
-
-            // Reset XP and levels
-            player.setExp(0);
-            player.setLevel(0);
-
         }
     }
 
@@ -163,7 +170,16 @@ public class BingoFunctions
     // Give all players a bingo card
     public void giveBingoCardToAllPlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            giveBingoCard(player);
+
+            boolean activePlayer = true;
+            // Check if multi world bingo is enabled and they're in the bingo world
+            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase()))
+            {
+                activePlayer = false;
+            }
+            if (activePlayer) {
+                giveBingoCard(player);
+            }
         }
     }
 
@@ -423,9 +439,17 @@ public class BingoFunctions
         Random random = new Random();
 
         for (Player player : players) {
-            Location safeLocation = findSafeLocation(world, center, radius, random, 20);
-            player.teleport(safeLocation);
-            setFacing(player, center);
+
+            boolean activePlayer = true;
+            // Check if multi world bingo is enabled and they're in the bingo world
+            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+            activePlayer = false; }
+            if (activePlayer) {
+
+                Location safeLocation = findSafeLocation(world, center, radius, random, 20);
+                player.teleport(safeLocation);
+                setFacing(player, center);
+            }
         }
     }
 
@@ -496,21 +520,41 @@ public class BingoFunctions
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             Bukkit.broadcastMessage(ChatColor.GREEN + "The game will end in 3 minutes!");
             for (Player p : Bukkit.getOnlinePlayers()) {
-                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+
+                boolean activePlayer = true;
+                // Check if multi world bingo is enabled and they're in the bingo world
+                activePlayer = ultimateBingo.multiWorldServer && !p.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase());
+
+                if (activePlayer) {
+                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+                }
                             }
         }, threeMinutesLeft);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             Bukkit.broadcastMessage(ChatColor.GREEN + "The game will end in 2 minutes!");
             for (Player p : Bukkit.getOnlinePlayers()) {
-                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+
+                boolean activePlayer = true;
+                // Check if multi world bingo is enabled and they're in the bingo world
+                activePlayer = ultimateBingo.multiWorldServer && !p.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase());
+
+                if (activePlayer) {
+                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+                }
             }
         }, twoMinutesLeft);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             Bukkit.broadcastMessage(ChatColor.GREEN + "The game will end in 1 minute!");
             for (Player p : Bukkit.getOnlinePlayers()) {
-                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+                boolean activePlayer = true;
+                // Check if multi world bingo is enabled and they're in the bingo world
+                activePlayer = ultimateBingo.multiWorldServer && !p.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase());
+
+                if (activePlayer) {
+                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+                }
             }
         }, oneMinuteLeft);
 
@@ -522,7 +566,14 @@ public class BingoFunctions
                 Bukkit.broadcastMessage(ChatColor.GREEN + "Game ends in " + finalI + " second" + (finalI == 1 ? "" : "s") + "!");
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     // Play a tone sound effect at the player's location
-                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);
+
+                    boolean activePlayer = true;
+                    // Check if multi world bingo is enabled and they're in the bingo world
+                    if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+            activePlayer = false; }
+                    if (activePlayer) {
+                        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);
+                    }
                 }
             }, delay);
         }
@@ -546,11 +597,18 @@ public class BingoFunctions
             Bukkit.broadcastMessage(ChatColor.GREEN + "The game has now been running for " + minutes + " minutes.");
             Bukkit.broadcastMessage(ChatColor.YELLOW + "You've just received a speed boost!");
             for (Player p : Bukkit.getOnlinePlayers()) {
-                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
 
-                // Increse their walk speed
-                p.setWalkSpeed(walkSpeed);
+                boolean activePlayer = true;
+                // Check if multi world bingo is enabled and they're in the bingo world
+                activePlayer = ultimateBingo.multiWorldServer && !p.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase());
 
+                if (activePlayer) {
+
+                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+
+                    // Increse their walk speed
+                    p.setWalkSpeed(walkSpeed);
+                }
             }
         }, delayTicks); // Delay of 18,000 ticks, equivalent to 15 minutes
 

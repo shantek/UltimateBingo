@@ -33,6 +33,7 @@ public class BingoCompleter implements TabCompleter {
 
             List<String> playerNames = new ArrayList<>();
             for (Player player : Bukkit.getOnlinePlayers()) {
+
                 playerNames.add(player.getName());
             }
             return StringUtil.copyPartialMatches(args[1], playerNames, new ArrayList<>());

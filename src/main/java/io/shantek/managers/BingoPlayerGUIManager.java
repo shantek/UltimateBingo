@@ -44,24 +44,34 @@ public class BingoPlayerGUIManager {
 
         // Get all online players and populate the inventory
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (ultimateBingo.bingoManager.bingoGUIs.containsKey(player.getUniqueId())) {  // Check if the player has a bingo card
-                ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
-                SkullMeta meta = (SkullMeta) playerHead.getItemMeta();
-                meta.setOwningPlayer(player);
 
-                if (meta != null) {
-                    meta.setDisplayName(ChatColor.GREEN + player.getName());
-                    List<String> lore = new ArrayList<>();
-                    lore.add(ChatColor.GRAY + "Click to view " + player.getName() + "'s Bingo Card");
-                    meta.setLore(lore);  // Set lore
-                    playerHead.setItemMeta(meta);
+            boolean activePlayer = true;
 
-                    int countCompleted = ultimateBingo.bingoFunctions.countCompleted(ultimateBingo.bingoManager.getBingoGUIs().get(player.getUniqueId()));
-                    if (countCompleted > 0) {
-                        playerHead.setAmount(countCompleted);
+            // Check if multi world bingo is enabled and they're in the bingo world
+            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+                activePlayer = false;
+            }
+            if (activePlayer) {
+
+                if (ultimateBingo.bingoManager.bingoGUIs.containsKey(player.getUniqueId())) {  // Check if the player has a bingo card
+                    ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
+                    SkullMeta meta = (SkullMeta) playerHead.getItemMeta();
+                    meta.setOwningPlayer(player);
+
+                    if (meta != null) {
+                        meta.setDisplayName(ChatColor.GREEN + player.getName());
+                        List<String> lore = new ArrayList<>();
+                        lore.add(ChatColor.GRAY + "Click to view " + player.getName() + "'s Bingo Card");
+                        meta.setLore(lore);  // Set lore
+                        playerHead.setItemMeta(meta);
+
+                        int countCompleted = ultimateBingo.bingoFunctions.countCompleted(ultimateBingo.bingoManager.getBingoGUIs().get(player.getUniqueId()));
+                        if (countCompleted > 0) {
+                            playerHead.setAmount(countCompleted);
+                        }
+
+                        inventory.addItem(playerHead);  // Add the item to the inventory
                     }
-
-                    inventory.addItem(playerHead);  // Add the item to the inventory
                 }
             }
         }

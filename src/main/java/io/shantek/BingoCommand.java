@@ -37,7 +37,7 @@ public class BingoCommand implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("stop") && player.hasPermission("shantek.ultimatebingo.stop")) {
 
                     // Check if multi world bingo is enabled and they're in the bingo world
-                    if (ultimateBingo.multiWorldBingo && !player.getWorld().toString().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+                    if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
                         player.sendMessage(ChatColor.RED + "This command can only be run while in the bingo world.");
                     } else {
                         stopBingo(player, false);
@@ -50,7 +50,7 @@ public class BingoCommand implements CommandExecutor {
                 } else if (args[0].equalsIgnoreCase("gui") && player.hasPermission("shantek.ultimatebingo.play")) {
 
                     // Check if multi world bingo is enabled and they're in the bingo world
-                    if (ultimateBingo.multiWorldBingo && !player.getWorld().toString().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+                    if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
                         player.sendMessage(ChatColor.RED + "This command can only be run while in the bingo world.");
                     } else {
                         // Lets check if the bingoitems.yml file contains enough items in each category to start a game
@@ -129,7 +129,7 @@ public class BingoCommand implements CommandExecutor {
                 if (ultimateBingo.bingoStarted && ultimateBingo.bingoCardActive) {
 
                     // Check if multi world bingo is enabled and they're in the bingo world
-                    if (ultimateBingo.multiWorldBingo && !player.getWorld().toString().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+                    if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
 
                         player.sendMessage(ChatColor.RED + "This command can only be run while in the bingo world.");
 
@@ -226,43 +226,53 @@ public class BingoCommand implements CommandExecutor {
             // Display initial messages
             onlinePlayers.forEach(player -> {
 
-                // Freeze players
-                player.setWalkSpeed(0);
+                boolean activePlayer = true;
 
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    player.sendTitle(ChatColor.YELLOW + cardType, ChatColor.WHITE + ultimateBingo.currentCardSize.toUpperCase() + ", " + ultimateBingo.currentDifficulty.toUpperCase(), 10, 40, 10);
-                }, 20);
-
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    player.sendTitle(ChatColor.YELLOW + bingoType, ChatColor.WHITE + "REVEAL MODE " + revealType, 10, 40, 10);
-                }, 80);
-
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    player.sendTitle(ChatColor.YELLOW + ultimateBingo.currentGameMode.toUpperCase(), ChatColor.WHITE + loadoutType.toUpperCase() , 10, 40, 10);
-                }, 140);
-
-                // Countdown with chimes, with bold and colorful text
-                for (int i = 3; i > 0; i--) {
-                    final int count = i;
-
-
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                        player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + String.valueOf(count), "", 10, 20, 10);
-                        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
-                    }, 200 + 30 * (3 - count)); // Countdown starts at 5 seconds
+                // Check if multi world bingo is enabled and they're in the bingo world
+                if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+                    activePlayer = false;
 
                 }
-                // Final "GO!" message and chime, bold and green
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "GO!", "", 10, 20, 10);
-                    player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
 
-                    // Unfreeze players
-                    player.removePotionEffect(PotionEffectType.SLOW);
-                    player.setWalkSpeed(0.2f); // Default walk speed
-                }, 290); // 1.5 seconds after "1"
+                if (activePlayer) {
+
+                    // Freeze players
+                    player.setWalkSpeed(0);
+
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                        player.sendTitle(ChatColor.YELLOW + cardType, ChatColor.WHITE + ultimateBingo.currentCardSize.toUpperCase() + ", " + ultimateBingo.currentDifficulty.toUpperCase(), 10, 40, 10);
+                    }, 20);
+
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                        player.sendTitle(ChatColor.YELLOW + bingoType, ChatColor.WHITE + "REVEAL MODE " + revealType, 10, 40, 10);
+                    }, 80);
+
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                        player.sendTitle(ChatColor.YELLOW + ultimateBingo.currentGameMode.toUpperCase(), ChatColor.WHITE + loadoutType.toUpperCase(), 10, 40, 10);
+                    }, 140);
+
+                    // Countdown with chimes, with bold and colorful text
+                    for (int i = 3; i > 0; i--) {
+                        final int count = i;
 
 
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                            player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + String.valueOf(count), "", 10, 20, 10);
+                            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+                        }, 200 + 30 * (3 - count)); // Countdown starts at 5 seconds
+
+                    }
+                    // Final "GO!" message and chime, bold and green
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                        player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "GO!", "", 10, 20, 10);
+                        player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
+
+                        // Unfreeze players
+                        player.removePotionEffect(PotionEffectType.SLOW);
+                        player.setWalkSpeed(0.2f); // Default walk speed
+                    }, 290); // 1.5 seconds after "1"
+
+                }
             });
 
             // Set the game timer for ending the game and game perks if enabled
@@ -313,21 +323,28 @@ public class BingoCommand implements CommandExecutor {
             // Handle player teleportation and give bingo cards after the countdown
             onlinePlayers.forEach(player -> {
 
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    ultimateBingo.bingoFunctions.giveBingoCard(player);
-                    ultimateBingo.bingoCardActive = true;
+                boolean activePlayer = true;
 
-                    // Equip the player loadout inventory
-                    if (ultimateBingo.currentLoadoutType > 0) {
-                        ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.currentLoadoutType);
-                    }
+                // Check if multi world bingo is enabled and they're in the bingo world
+                if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+            activePlayer = false; }
+                if (activePlayer) {
 
-                    // Also give them night vision
-                    if (ultimateBingo.currentGameMode.equals("speedrun")) {
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
-                    }
-                }, 310); // 210 ticks = 10.5 seconds, just after the "GO!"
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                        ultimateBingo.bingoFunctions.giveBingoCard(player);
+                        ultimateBingo.bingoCardActive = true;
 
+                        // Equip the player loadout inventory
+                        if (ultimateBingo.currentLoadoutType > 0) {
+                            ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.currentLoadoutType);
+                        }
+
+                        // Also give them night vision
+                        if (ultimateBingo.currentGameMode.equals("speedrun")) {
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
+                        }
+                    }, 310); // 210 ticks = 10.5 seconds, just after the "GO!"
+                }
             });
         }
     }
@@ -350,6 +367,7 @@ public class BingoCommand implements CommandExecutor {
 
 
         // Unfreeze the player - Run in case the game was stopped mid-countdown
+        // This should still be run for players who aren't in the bingo world
         List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
         onlinePlayers.forEach(player -> {
             player.removePotionEffect(PotionEffectType.SLOW);
@@ -413,9 +431,11 @@ public class BingoCommand implements CommandExecutor {
         // Unfreeze the player - Run in case the game was stopped mid-countdown
         List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
         onlinePlayers.forEach(player -> {
-            player.removePotionEffect(PotionEffectType.SLOW);
-            player.setWalkSpeed(0.2f); // Default walk speed
-            player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+
+                        player.removePotionEffect(PotionEffectType.SLOW);
+                        player.setWalkSpeed(0.2f); // Default walk speed
+                        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+
         });
 
         ultimateBingo.bingoCardActive = false;

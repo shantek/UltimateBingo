@@ -60,7 +60,7 @@ public class ConfigFile {
             ultimateBingo.revealCards = getString(config, "reveal-cards", "enabled");
             ultimateBingo.uniqueCard = getString(config, "unique-card", "identical");
             ultimateBingo.consoleLogs = getBoolean(config, "console-logs", true);
-            ultimateBingo.multiWorldBingo = getBoolean(config, "multi-world-server", false);
+            ultimateBingo.multiWorldServer = getBoolean(config, "multi-world-server", false);
             ultimateBingo.gameTime = getInt(config, "game-time", 0);
             ultimateBingo.loadoutType = getInt(config, "player-loadout", 0);
 
@@ -148,7 +148,7 @@ public class ConfigFile {
             config.set("reveal-cards", ultimateBingo.revealCards);
             config.set("game-time", ultimateBingo.gameTime);
             config.set("player-loadout", ultimateBingo.loadoutType);
-            config.set("multi-world-server", ultimateBingo.multiWorldBingo);
+            config.set("multi-world-server", ultimateBingo.multiWorldServer);
             config.set("bingo-world", ultimateBingo.bingoWorld);
 
             config.save(configFile);
