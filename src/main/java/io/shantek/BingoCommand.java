@@ -35,7 +35,13 @@ public class BingoCommand implements CommandExecutor {
 
             if (args.length > 0) {
                 if (args[0].equalsIgnoreCase("stop") && player.hasPermission("shantek.ultimatebingo.stop")) {
-                    stopBingo(player, false);
+
+                    // Check if multi world bingo is enabled and they're in the bingo world
+                    if (ultimateBingo.multiWorldBingo && !player.getWorld().toString().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+                        player.sendMessage(ChatColor.RED + "This command can only be run while in the bingo world.");
+                    } else {
+                        stopBingo(player, false);
+                    }
 
                 } else if (args[0].equalsIgnoreCase("reload") && player.hasPermission("shantek.ultimatebingo.settings")) {
                     ultimateBingo.configFile.reloadConfigFile();
@@ -43,39 +49,43 @@ public class BingoCommand implements CommandExecutor {
 
                 } else if (args[0].equalsIgnoreCase("gui") && player.hasPermission("shantek.ultimatebingo.play")) {
 
-                    // Lets check if the bingoitems.yml file contains enough items in each category to start a game
-
-                    // Define the minimum requirements for each difficulty level
-                    int[] minimumRequirements = {15, 15, 10, 10, 5};
-                    boolean foundError = false;
-
-                    // Get the materials map
-                    Map<Integer, List<Material>> materials = ultimateBingo.getMaterialList().getMaterials();
-
-                    // Check each difficulty level
-                    for (int difficulty = 1; difficulty <= 5; difficulty++) {
-                        List<Material> difficultyMaterials = materials.get(difficulty);
-                        int requiredItems = minimumRequirements[difficulty - 1];
-
-                        if (difficultyMaterials.size() < requiredItems) {
-                            player.sendMessage(ChatColor.WHITE + "Group " + difficulty + " requires " + requiredItems + " items, found " + difficultyMaterials.size() + ".");
-                            foundError = true;
-                        }
-                    }
-
-                    // If any error is found, print a final message
-                    if (foundError) {
-                        player.sendMessage(ChatColor.RED + "The bingoitems.yml file must not be manually modified. Please delete the file and reboot or manually add enough items to each category using /bingo settings for the game to begin.");
+                    // Check if multi world bingo is enabled and they're in the bingo world
+                    if (ultimateBingo.multiWorldBingo && !player.getWorld().toString().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+                        player.sendMessage(ChatColor.RED + "This command can only be run while in the bingo world.");
                     } else {
+                        // Lets check if the bingoitems.yml file contains enough items in each category to start a game
 
-                        if (ultimateBingo.bingoStarted) {
-                            player.sendMessage(ChatColor.RED + "A bingo game is in progress. Finish the game or use /bingo stop");
-                        } else {
-                            player.openInventory(ultimateBingo.bingoGameGUIManager.createGameGUI(player));
+                        // Define the minimum requirements for each difficulty level
+                        int[] minimumRequirements = {15, 15, 10, 10, 5};
+                        boolean foundError = false;
+
+                        // Get the materials map
+                        Map<Integer, List<Material>> materials = ultimateBingo.getMaterialList().getMaterials();
+
+                        // Check each difficulty level
+                        for (int difficulty = 1; difficulty <= 5; difficulty++) {
+                            List<Material> difficultyMaterials = materials.get(difficulty);
+                            int requiredItems = minimumRequirements[difficulty - 1];
+
+                            if (difficultyMaterials.size() < requiredItems) {
+                                player.sendMessage(ChatColor.WHITE + "Group " + difficulty + " requires " + requiredItems + " items, found " + difficultyMaterials.size() + ".");
+                                foundError = true;
+                            }
                         }
 
-                    }
+                        // If any error is found, print a final message
+                        if (foundError) {
+                            player.sendMessage(ChatColor.RED + "The bingoitems.yml file must not be manually modified. Please delete the file and reboot or manually add enough items to each category using /bingo settings for the game to begin.");
+                        } else {
 
+                            if (ultimateBingo.bingoStarted) {
+                                player.sendMessage(ChatColor.RED + "A bingo game is in progress. Finish the game or use /bingo stop");
+                            } else {
+                                player.openInventory(ultimateBingo.bingoGameGUIManager.createGameGUI(player));
+                            }
+
+                        }
+                    }
                 } else if (args[0].equalsIgnoreCase("info")) {
 
                     // Work out the game time to display
@@ -118,16 +128,24 @@ public class BingoCommand implements CommandExecutor {
             } else {
                 if (ultimateBingo.bingoStarted && ultimateBingo.bingoCardActive) {
 
-                    if (!ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+                    // Check if multi world bingo is enabled and they're in the bingo world
+                    if (ultimateBingo.multiWorldBingo && !player.getWorld().toString().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
 
-                        // They aren't in the game, let's give them a card and let them join
-                        ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
-                        ultimateBingo.bingoManager.joinGameInProgress(player);
+                        player.sendMessage(ChatColor.RED + "This command can only be run while in the bingo world.");
 
+                    } else {
+
+
+                        if (!ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+
+                            // They aren't in the game, let's give them a card and let them join
+                            ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
+                            ultimateBingo.bingoManager.joinGameInProgress(player);
+
+                        }
+
+                        player.openInventory(ultimateBingo.bingoPlayerGUIManager.createPlayerGUI(player));
                     }
-
-                    player.openInventory(ultimateBingo.bingoPlayerGUIManager.createPlayerGUI(player));
-
                 } else if (!ultimateBingo.bingoStarted) {
                     player.sendMessage(ChatColor.RED + "Bingo hasn't started yet!");
                 }
