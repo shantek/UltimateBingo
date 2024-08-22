@@ -24,37 +24,42 @@ public class RespawnListener implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
 
-        // Only teleport the player back to bingo spawn if enabled in the settings
-        if (ultimateBingo.bingoStarted && ultimateBingo.respawnTeleport) {
-            // Delay the sendTitle message by 10 ticks
-            Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
-                player.sendTitle(ChatColor.YELLOW + "TELEPORTING", ChatColor.WHITE + "One Moment", 10, 40, 10);
-            }, 10L); // Delay showing the title by 10 ticks
+        // Check if multi world bingo is enabled and they're in the bingo world
+        if (ultimateBingo.multiWorldBingo && player.getWorld().toString().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
 
-            // Delayed teleport to handle any asynchronous issues, total delay 3.5 seconds (70 ticks from respawn)
-            Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
-                player.teleport(ultimateBingo.bingoSpawnLocation);
-                ultimateBingo.bingoFunctions.giveBingoCard(player);
-                player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 1.0f);
 
-                boolean keepInventory = player.getWorld().getGameRuleValue(GameRule.KEEP_INVENTORY);
+            // Only teleport the player back to bingo spawn if enabled in the settings
+            if (ultimateBingo.bingoStarted && ultimateBingo.respawnTeleport) {
+                // Delay the sendTitle message by 10 ticks
+                Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
+                    player.sendTitle(ChatColor.YELLOW + "TELEPORTING", ChatColor.WHITE + "One Moment", 10, 40, 10);
+                }, 10L); // Delay showing the title by 10 ticks
 
-                // Equip them with fresh loadout gear after respawning, if keep inventory is off
-                if (!keepInventory) {
-                    ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.currentLoadoutType);
+                // Delayed teleport to handle any asynchronous issues, total delay 3.5 seconds (70 ticks from respawn)
+                Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
+                    player.teleport(ultimateBingo.bingoSpawnLocation);
+                    ultimateBingo.bingoFunctions.giveBingoCard(player);
+                    player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 1.0f);
+
+                    boolean keepInventory = player.getWorld().getGameRuleValue(GameRule.KEEP_INVENTORY);
+
+                    // Equip them with fresh loadout gear after respawning, if keep inventory is off
+                    if (!keepInventory) {
+                        ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.currentLoadoutType);
+                    }
+
+                    // Also give them night vision
+                    if (ultimateBingo.currentGameMode.equals("speedrun")) {
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
+                    }
+
+                }, 70L); // Delay teleportation by 3.5 seconds (70 ticks) after respawn
+            } else {
+
+                // If they previously had a bingo card and died after the game was active, give them another card
+                if (ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+                    ultimateBingo.bingoFunctions.giveBingoCard(player);
                 }
-
-                // Also give them night vision
-                if (ultimateBingo.currentGameMode.equals("speedrun")) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
-                }
-
-            }, 70L); // Delay teleportation by 3.5 seconds (70 ticks) after respawn
-        } else {
-
-            // If they previously had a bingo card and died after the game was active, give them another card
-            if (ultimateBingo.bingoManager.checkHasBingoCard(player)) {
-                ultimateBingo.bingoFunctions.giveBingoCard(player);
             }
         }
     }

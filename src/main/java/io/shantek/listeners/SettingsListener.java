@@ -35,179 +35,185 @@ public class SettingsListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
+
         if (!(e.getWhoClicked() instanceof Player)) return;
 
         Player player = (Player) e.getWhoClicked();
 
-        // Ensure the event was triggered in the Bingo configuration GUI
-        if (e.getView().getTitle().equals(ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo Configuration")) {
-            e.setCancelled(true);  // Prevent dragging items
+        // Check if multi world bingo is enabled and they're in the bingo world
+        if (ultimateBingo.multiWorldBingo && player.getWorld().toString().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
 
-            int slot = e.getRawSlot();
-            // Ensure clicks are within the inventory size
-            if (slot >= 0 && slot < 9) {
-                switch (slot) {
-                    case 0:
-                        bingoGameGUIManager.toggleGameMode(player);
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-                        break;
-                    case 1:
-                        bingoGameGUIManager.toggleDifficulty(player);
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-                        break;
-                    case 2:
-                        bingoGameGUIManager.toggleCardSize(player);
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-                        break;
-                    case 3:
-                        bingoGameGUIManager.toggleCardType(player);
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-                        break;
-                    case 4:
-                        bingoGameGUIManager.toggleWinCondition(player);
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-                        break;
-                    case 5:
-                        bingoGameGUIManager.toggleRevealCards(player);
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-                        break;
-                    case 6:
-                        bingoGameGUIManager.toggleGameTime(player);
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-                        break;
-                    case 7:
-                        bingoGameGUIManager.toggleLoadout(player);
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-                        break;
-                    case 8:
 
-                        // Set all the game config ready to play
-                        ultimateBingo.bingoGameGUIManager.setGameConfiguration();
+            // Ensure the event was triggered in the Bingo configuration GUI
+            if (e.getView().getTitle().equals(ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo Configuration")) {
+                e.setCancelled(true);  // Prevent dragging items
 
-                        ultimateBingo.bingoSpawnLocation = player.getLocation();
-                        ultimateBingo.bingoCommand.startBingo(player);
+                int slot = e.getRawSlot();
+                // Ensure clicks are within the inventory size
+                if (slot >= 0 && slot < 9) {
+                    switch (slot) {
+                        case 0:
+                            bingoGameGUIManager.toggleGameMode(player);
+                            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+                            break;
+                        case 1:
+                            bingoGameGUIManager.toggleDifficulty(player);
+                            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+                            break;
+                        case 2:
+                            bingoGameGUIManager.toggleCardSize(player);
+                            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+                            break;
+                        case 3:
+                            bingoGameGUIManager.toggleCardType(player);
+                            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+                            break;
+                        case 4:
+                            bingoGameGUIManager.toggleWinCondition(player);
+                            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+                            break;
+                        case 5:
+                            bingoGameGUIManager.toggleRevealCards(player);
+                            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+                            break;
+                        case 6:
+                            bingoGameGUIManager.toggleGameTime(player);
+                            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+                            break;
+                        case 7:
+                            bingoGameGUIManager.toggleLoadout(player);
+                            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+                            break;
+                        case 8:
 
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-                        player.closeInventory();
-                        break;
-                    default:
-                        // This case handles any undefined slots, no action is taken
-                        break;
+                            // Set all the game config ready to play
+                            ultimateBingo.bingoGameGUIManager.setGameConfiguration();
+
+                            ultimateBingo.bingoSpawnLocation = player.getLocation();
+                            ultimateBingo.bingoCommand.startBingo(player);
+
+                            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+                            player.closeInventory();
+                            break;
+                        default:
+                            // This case handles any undefined slots, no action is taken
+                            break;
+                    }
                 }
-            }
 
-            ultimateBingo.configFile.saveConfig();
+                ultimateBingo.configFile.saveConfig();
 
-        } else if (e.getView().getTitle().equals(ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo Settings")) {
-            e.setCancelled(true);
+            } else if (e.getView().getTitle().equals(ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo Settings")) {
+                e.setCancelled(true);
 
-            if (e.getCurrentItem().getItemMeta() != null) {
-                createItemSettings(player, settingsManager.getDifficultyInt(e.getCurrentItem().getItemMeta().getDisplayName()));
-            }
+                if (e.getCurrentItem().getItemMeta() != null) {
+                    createItemSettings(player, settingsManager.getDifficultyInt(e.getCurrentItem().getItemMeta().getDisplayName()));
+                }
 
-        } else {
+            } else {
 
-            boolean isEasyDifficulty = ChatColor.translateAlternateColorCodes('&'
-                    , e.getView().getTitle()).equals(settingsManager.getDifficultyDisplay(1));
+                boolean isEasyDifficulty = ChatColor.translateAlternateColorCodes('&'
+                        , e.getView().getTitle()).equals(settingsManager.getDifficultyDisplay(1));
 
-            boolean isNormalDifficulty = ChatColor.translateAlternateColorCodes('&'
-                    , e.getView().getTitle()).equals(settingsManager.getDifficultyDisplay(2));
+                boolean isNormalDifficulty = ChatColor.translateAlternateColorCodes('&'
+                        , e.getView().getTitle()).equals(settingsManager.getDifficultyDisplay(2));
 
-            boolean isHardDifficulty = ChatColor.translateAlternateColorCodes('&'
-                    , e.getView().getTitle()).equals(settingsManager.getDifficultyDisplay(3));
+                boolean isHardDifficulty = ChatColor.translateAlternateColorCodes('&'
+                        , e.getView().getTitle()).equals(settingsManager.getDifficultyDisplay(3));
 
-            boolean isExtremeDifficulty = ChatColor.translateAlternateColorCodes('&'
-                    , e.getView().getTitle()).equals(settingsManager.getDifficultyDisplay(4));
+                boolean isExtremeDifficulty = ChatColor.translateAlternateColorCodes('&'
+                        , e.getView().getTitle()).equals(settingsManager.getDifficultyDisplay(4));
 
-            boolean isImpossibleDifficulty = ChatColor.translateAlternateColorCodes('&'
-                    , e.getView().getTitle()).equals(settingsManager.getDifficultyDisplay(5));
+                boolean isImpossibleDifficulty = ChatColor.translateAlternateColorCodes('&'
+                        , e.getView().getTitle()).equals(settingsManager.getDifficultyDisplay(5));
 
-            if (e.getClickedInventory() == e.getView().getTopInventory() && e.getCurrentItem() != null) {
-                if (isEasyDifficulty || isNormalDifficulty || isHardDifficulty || isExtremeDifficulty || isImpossibleDifficulty) {
-                    e.setCancelled(true);
+                if (e.getClickedInventory() == e.getView().getTopInventory() && e.getCurrentItem() != null) {
+                    if (isEasyDifficulty || isNormalDifficulty || isHardDifficulty || isExtremeDifficulty || isImpossibleDifficulty) {
+                        e.setCancelled(true);
 
-                    ItemStack clickedItem = e.getCurrentItem();
+                        ItemStack clickedItem = e.getCurrentItem();
 
-                    boolean itemRemoved = false;
+                        boolean itemRemoved = false;
 
-                    if (e.getClick().isLeftClick()) {
+                        if (e.getClick().isLeftClick()) {
 
-                        if (isEasyDifficulty) {
+                            if (isEasyDifficulty) {
 
-                            if (materialList.easy.size() <= 15) {
-                                player.sendMessage(ChatColor.RED + "This category needs a minimum of 15 items.");
-                            } else {
-                                itemRemoved = true;
-                                materialList.removeItem(clickedItem.getType(), 1);
-                                createItemSettings(player, 1);
+                                if (materialList.easy.size() <= 15) {
+                                    player.sendMessage(ChatColor.RED + "This category needs a minimum of 15 items.");
+                                } else {
+                                    itemRemoved = true;
+                                    materialList.removeItem(clickedItem.getType(), 1);
+                                    createItemSettings(player, 1);
+                                }
+                            } else if (isNormalDifficulty) {
+                                if (materialList.normal.size() <= 15) {
+                                    player.sendMessage(ChatColor.RED + "This category needs a minimum of 15 items.");
+                                } else {
+                                    itemRemoved = true;
+                                    materialList.removeItem(clickedItem.getType(), 2);
+                                    createItemSettings(player, 2);
+                                }
+                            } else if (isHardDifficulty) {
+                                if (materialList.hard.size() <= 10) {
+                                    player.sendMessage(ChatColor.RED + "This category needs a minimum of 10 items.");
+                                } else {
+                                    itemRemoved = true;
+                                    materialList.removeItem(clickedItem.getType(), 3);
+                                    createItemSettings(player, 3);
+                                }
+                            } else if (isExtremeDifficulty) {
+                                if (materialList.extreme.size() <= 10) {
+                                    player.sendMessage(ChatColor.RED + "This category needs a minimum of 10 items.");
+                                } else {
+                                    itemRemoved = true;
+                                    materialList.removeItem(clickedItem.getType(), 4);
+                                    createItemSettings(player, 4);
+                                }
+                            } else if (isImpossibleDifficulty) {
+                                if (materialList.impossible.size() <= 5) {
+                                    player.sendMessage(ChatColor.RED + "This category needs a minimum of 5 items.");
+                                } else {
+                                    itemRemoved = true;
+                                    materialList.removeItem(clickedItem.getType(), 5);
+                                    createItemSettings(player, 5);
+                                }
                             }
-                        } else if (isNormalDifficulty) {
-                            if (materialList.normal.size() <= 15) {
-                                player.sendMessage(ChatColor.RED + "This category needs a minimum of 15 items.");
-                            } else {
-                                itemRemoved = true;
-                                materialList.removeItem(clickedItem.getType(), 2);
-                                createItemSettings(player, 2);
+                            if (itemRemoved) {
+                                player.sendMessage(ChatColor.GREEN + "You removed "
+                                        + ChatColor.GOLD + clickedItem.getType().name() + ChatColor.GREEN + " from the Bingo Items");
                             }
-                        } else if (isHardDifficulty) {
-                            if (materialList.hard.size() <= 10) {
-                                player.sendMessage(ChatColor.RED + "This category needs a minimum of 10 items.");
-                            } else {
-                                itemRemoved = true;
-                                materialList.removeItem(clickedItem.getType(), 3);
-                                createItemSettings(player, 3);
-                            }
-                        } else if (isExtremeDifficulty) {
-                            if (materialList.extreme.size() <= 10) {
-                                player.sendMessage(ChatColor.RED + "This category needs a minimum of 10 items.");
-                            } else {
-                                itemRemoved = true;
-                                materialList.removeItem(clickedItem.getType(), 4);
-                                createItemSettings(player, 4);
-                            }
-                        } else if (isImpossibleDifficulty) {
-                            if (materialList.impossible.size() <= 5) {
-                                player.sendMessage(ChatColor.RED + "This category needs a minimum of 5 items.");
-                            } else {
-                                itemRemoved = true;
-                                materialList.removeItem(clickedItem.getType(), 5);
-                                createItemSettings(player, 5);
-                            }
-                        }
-                        if (itemRemoved) {
-                            player.sendMessage(ChatColor.GREEN + "You removed "
-                                    + ChatColor.GOLD + clickedItem.getType().name() + ChatColor.GREEN + " from the Bingo Items");
                         }
                     }
                 }
-            }
 
-            Inventory clickedInv = e.getClickedInventory();
-            if (clickedInv != null && clickedInv.getType() == InventoryType.PLAYER) {
+                Inventory clickedInv = e.getClickedInventory();
+                if (clickedInv != null && clickedInv.getType() == InventoryType.PLAYER) {
 
-                if (isEasyDifficulty || isNormalDifficulty || isHardDifficulty || isExtremeDifficulty || isImpossibleDifficulty) {
-                    e.setCancelled(true);
-                    ItemStack clickedItem = e.getCurrentItem();
+                    if (isEasyDifficulty || isNormalDifficulty || isHardDifficulty || isExtremeDifficulty || isImpossibleDifficulty) {
+                        e.setCancelled(true);
+                        ItemStack clickedItem = e.getCurrentItem();
 
-                    if (clickedItem != null) {
-                        Material material = clickedItem.getType();
+                        if (clickedItem != null) {
+                            Material material = clickedItem.getType();
 
-                        if (settingsManager.getDifficultyInt(e.getView().getTitle()) != 0) {
-                            if (!materialList.getMaterials().get(settingsManager.getDifficultyInt(e.getView().getTitle())).contains(material)) {
+                            if (settingsManager.getDifficultyInt(e.getView().getTitle()) != 0) {
+                                if (!materialList.getMaterials().get(settingsManager.getDifficultyInt(e.getView().getTitle())).contains(material)) {
 
-                                materialList.add(material, settingsManager.getDifficultyInt(e.getView().getTitle()));
-                                player.sendMessage(ChatColor.GREEN + "You added " + ChatColor.GOLD
-                                        + material.name() + ChatColor.GREEN + " to the Bingo Items!");
-                                createItemSettings(player, settingsManager.getDifficultyInt(e.getView().getTitle()));
+                                    materialList.add(material, settingsManager.getDifficultyInt(e.getView().getTitle()));
+                                    player.sendMessage(ChatColor.GREEN + "You added " + ChatColor.GOLD
+                                            + material.name() + ChatColor.GREEN + " to the Bingo Items!");
+                                    createItemSettings(player, settingsManager.getDifficultyInt(e.getView().getTitle()));
 
-                                materialList.saveMaterialsToFile();
+                                    materialList.saveMaterialsToFile();
+
+                                } else {
+                                    player.sendMessage(ChatColor.RED + material.name() + " already exists in this difficulty!");
+                                }
 
                             } else {
-                                player.sendMessage(ChatColor.RED + material.name() + " already exists in this difficulty!");
+                                player.sendMessage(ChatColor.RED + "An error occurred, please try again.");
                             }
-
-                        } else {
-                            player.sendMessage(ChatColor.RED + "An error occurred, please try again.");
                         }
                     }
                 }

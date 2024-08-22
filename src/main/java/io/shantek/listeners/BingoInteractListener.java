@@ -32,16 +32,21 @@ public class BingoInteractListener implements Listener {
         Player player = event.getPlayer();
         ItemStack itemInHand = event.getItem();
 
-        // Check if the player is holding the "Bingo card"
-        if (itemInHand != null && itemInHand.getType() == ultimateBingo.bingoCardMaterial && itemInHand.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
+        // Check if multi world bingo is enabled and they're in the bingo world
+        if (ultimateBingo.multiWorldBingo && player.getWorld().toString().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
 
-            if (ultimateBingo.bingoCardActive || (!ultimateBingo.bingoManager.getBingoGUIs().isEmpty() && ultimateBingo.bingoManager.checkHasBingoCard(player))) {
-                ultimateBingo.bingoCommand.openBingo(player);
-            } else {
-                player.sendMessage(ChatColor.RED + "Bingo hasn't started yet!");
+            // Check if the player is holding the "Bingo card"
+            if (itemInHand != null && itemInHand.getType() == ultimateBingo.bingoCardMaterial && itemInHand.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
+
+                if (ultimateBingo.bingoCardActive || (!ultimateBingo.bingoManager.getBingoGUIs().isEmpty() && ultimateBingo.bingoManager.checkHasBingoCard(player))) {
+                    ultimateBingo.bingoCommand.openBingo(player);
+                } else {
+                    player.sendMessage(ChatColor.RED + "Bingo hasn't started yet!");
+                }
+
+                event.setCancelled(true);
             }
 
-            event.setCancelled(true);
         }
     }
 }

@@ -47,26 +47,32 @@ public class BingoInventoryCloseListener implements Listener {
 
         if (ultimateBingo.bingoStarted) {
             Player player = (Player) event.getPlayer();
-            UUID uuid = player.getUniqueId();
-            Inventory inventory = event.getInventory();
-            InventoryHolder holder = inventory.getHolder();
 
-            boolean isValidType = validInventoryTypes.contains(inventory.getType());
-            boolean isSpecialChest = (holder instanceof StorageMinecart);
+            // Check if multi world bingo is enabled and they're in the bingo world
+            if (ultimateBingo.multiWorldBingo && player.getWorld().toString().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
 
-            // Check if the inventory type is valid or if it's a special chest
-            if (isValidType || isSpecialChest) {
-                Inventory bingoGUI = ultimateBingo.getBingoManager().getBingoGUIs().get(uuid);
-                Inventory playerInventory = player.getInventory();
 
-                if (bingoGUI != null) {
-                    for (int slot : ultimateBingo.getBingoManager().getSlots()) {
-                        ItemStack bingoItem = bingoGUI.getItem(slot);
-                        if (bingoItem != null && bingoItem.getType() != Material.AIR) {
-                            for (ItemStack item : playerInventory.getContents()) {
-                                if (item != null && item.getType() == bingoItem.getType()) {
-                                    ultimateBingo.getBingoManager().markItemAsComplete(player, item.getType());
-                                    break;
+                UUID uuid = player.getUniqueId();
+                Inventory inventory = event.getInventory();
+                InventoryHolder holder = inventory.getHolder();
+
+                boolean isValidType = validInventoryTypes.contains(inventory.getType());
+                boolean isSpecialChest = (holder instanceof StorageMinecart);
+
+                // Check if the inventory type is valid or if it's a special chest
+                if (isValidType || isSpecialChest) {
+                    Inventory bingoGUI = ultimateBingo.getBingoManager().getBingoGUIs().get(uuid);
+                    Inventory playerInventory = player.getInventory();
+
+                    if (bingoGUI != null) {
+                        for (int slot : ultimateBingo.getBingoManager().getSlots()) {
+                            ItemStack bingoItem = bingoGUI.getItem(slot);
+                            if (bingoItem != null && bingoItem.getType() != Material.AIR) {
+                                for (ItemStack item : playerInventory.getContents()) {
+                                    if (item != null && item.getType() == bingoItem.getType()) {
+                                        ultimateBingo.getBingoManager().markItemAsComplete(player, item.getType());
+                                        break;
+                                    }
                                 }
                             }
                         }
