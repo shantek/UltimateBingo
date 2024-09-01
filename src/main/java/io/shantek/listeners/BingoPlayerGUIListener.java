@@ -32,9 +32,14 @@ public class BingoPlayerGUIListener implements Listener {
         if (!(e.getWhoClicked() instanceof Player)) return;
         Player player = (Player) e.getWhoClicked();
 
-        // Check if multi world bingo is enabled and they're in the bingo world
-        if (ultimateBingo.multiWorldServer && player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+        boolean isActivePlayer = true;
 
+        // Check if multi world bingo is enabled and they're in the bingo world
+        if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+            isActivePlayer = false;
+        }
+
+        if (isActivePlayer || !ultimateBingo.multiWorldServer) {
 
             // Ensure the event was triggered in the Bingo configuration GUI
             if (e.getView().getTitle().equals(ChatColor.GOLD.toString() + ChatColor.BOLD + "Welcome to Ultimate Bingo")) {

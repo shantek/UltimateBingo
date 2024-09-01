@@ -136,11 +136,14 @@ public class BingoManager{
         // Distribute unique shuffled cards to each player
         for (Player player : Bukkit.getOnlinePlayers()) {
 
-            boolean activePlayer = true;
+            boolean isActivePlayer = true;
+
             // Check if multi world bingo is enabled and they're in the bingo world
             if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-            activePlayer = false; }
-            if (activePlayer) {
+                isActivePlayer = false;
+            }
+
+            if (isActivePlayer || !ultimateBingo.multiWorldServer) {
 
                 UUID playerId = player.getUniqueId();
 
@@ -259,36 +262,26 @@ public class BingoManager{
 
                 for (Player target : Bukkit.getOnlinePlayers()) {
 
-                    boolean activePlayer = true;
+                    boolean isActivePlayer = true;
+
                     // Check if multi world bingo is enabled and they're in the bingo world
-                    if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                        activePlayer = false;
+                    if (ultimateBingo.multiWorldServer && !target.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+                        isActivePlayer = false;
                     }
 
-                    if (activePlayer) {
+                    if (isActivePlayer || !ultimateBingo.multiWorldServer) {
 
                         // PLAY FOR ALL PLAYERS
                         target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 5);
 
                         if (!target.equals(player)) { // Exclude the player who triggered the event
+                            if (ultimateBingo.currentRevealCards) {
+                                target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
 
-                            boolean isActivePlayer = false;
-                            if (ultimateBingo.multiWorldServer) {
-                                // Check if the player is in the bingo world or actively playing the game
-                                if (player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld) || ultimateBingo.bingoManager.checkHasBingoCard(player)) {
-                                    isActivePlayer = true;
-                                }
+                            } else {
+                                target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
                             }
 
-                            if (isActivePlayer || !ultimateBingo.multiWorldServer) {
-                                // Show more info if reveal mode is enabled. If not, be more cryptic in what they did
-                                if (ultimateBingo.currentRevealCards) {
-                                    target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
-
-                                } else {
-                                    target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
-                                }
-                            }
                         }
                     }
                 }
@@ -332,14 +325,11 @@ public class BingoManager{
                     for (Player target : Bukkit.getOnlinePlayers()){
 
 
-                        boolean isActivePlayer = false;
+                        boolean isActivePlayer = true;
 
-                        // Check if multiworld is enabled
-                        if (ultimateBingo.multiWorldServer) {
-                            // Check if the player is in the bingo world or actively playing the game
-                            if (player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld) || ultimateBingo.bingoManager.checkHasBingoCard(player)) {
-                                isActivePlayer = true;
-                            }
+                        // Check if multi world bingo is enabled and they're in the bingo world
+                        if (ultimateBingo.multiWorldServer && !target.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+                            isActivePlayer = false;
                         }
 
                         if (isActivePlayer || !ultimateBingo.multiWorldServer) {

@@ -32,8 +32,16 @@ public class BingoInteractListener implements Listener {
         Player player = event.getPlayer();
         ItemStack itemInHand = event.getItem();
 
+        boolean isActivePlayer = true;
+
+
+
         // Check if multi world bingo is enabled and they're in the bingo world
-        if (ultimateBingo.multiWorldServer && player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+        if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+            isActivePlayer = false;
+        }
+
+        if (isActivePlayer || !ultimateBingo.multiWorldServer) {
 
             // Check if the player is holding the "Bingo card"
             if (itemInHand != null && itemInHand.getType() == ultimateBingo.bingoCardMaterial && itemInHand.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {

@@ -24,9 +24,14 @@ public class RespawnListener implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
 
-        // Check if multi world bingo is enabled and they're in the bingo world
-        if (ultimateBingo.multiWorldServer && player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+        boolean isActivePlayer = true;
 
+        // Check if multi world bingo is enabled and they're in the bingo world
+        if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+            isActivePlayer = false;
+        }
+
+        if (isActivePlayer || !ultimateBingo.multiWorldServer) {
 
             // Only teleport the player back to bingo spawn if enabled in the settings
             if (ultimateBingo.bingoStarted && ultimateBingo.respawnTeleport) {

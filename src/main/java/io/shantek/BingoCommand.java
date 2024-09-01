@@ -327,7 +327,8 @@ public class BingoCommand implements CommandExecutor {
 
                 // Check if multi world bingo is enabled and they're in the bingo world
                 if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-            activePlayer = false; }
+                    activePlayer = false;
+                }
                 if (activePlayer) {
 
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
