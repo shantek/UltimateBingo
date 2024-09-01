@@ -518,7 +518,9 @@ public class BingoFunctions
         int gameLength = minutes * 60 * 20;
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            Bukkit.broadcastMessage(ChatColor.GREEN + "The game will end in 3 minutes!");
+            ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "The game will end in 3 minutes!");
+
+
             for (Player p : Bukkit.getOnlinePlayers()) {
 
                 boolean activePlayer = true;
@@ -532,7 +534,7 @@ public class BingoFunctions
         }, threeMinutesLeft);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            Bukkit.broadcastMessage(ChatColor.GREEN + "The game will end in 2 minutes!");
+            ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "The game will end in 2 minutes!");
             for (Player p : Bukkit.getOnlinePlayers()) {
 
                 boolean activePlayer = true;
@@ -546,7 +548,7 @@ public class BingoFunctions
         }, twoMinutesLeft);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            Bukkit.broadcastMessage(ChatColor.GREEN + "The game will end in 1 minute!");
+            ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "The game will end in 1 minute!");
             for (Player p : Bukkit.getOnlinePlayers()) {
                 boolean activePlayer = true;
                 // Check if multi world bingo is enabled and they're in the bingo world
@@ -563,7 +565,7 @@ public class BingoFunctions
             final int finalI = i;  // Create a final variable to use inside the lambda
             int delay = gameLength - (i * 20);  // Calculate delay in ticks (20 ticks per second)
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                Bukkit.broadcastMessage(ChatColor.GREEN + "Game ends in " + finalI + " second" + (finalI == 1 ? "" : "s") + "!");
+                ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Game ends in " + finalI + " second" + (finalI == 1 ? "" : "s") + "!");
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     // Play a tone sound effect at the player's location
 
@@ -594,8 +596,8 @@ public class BingoFunctions
         int delayTicks = minutes * 60 * 20;
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            Bukkit.broadcastMessage(ChatColor.GREEN + "The game has now been running for " + minutes + " minutes.");
-            Bukkit.broadcastMessage(ChatColor.YELLOW + "You've just received a speed boost!");
+            ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "The game has now been running for " + minutes + " minutes.");
+            ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.YELLOW + "You've just received a speed boost!");
             for (Player p : Bukkit.getOnlinePlayers()) {
 
                 boolean activePlayer = true;
@@ -665,6 +667,34 @@ public class BingoFunctions
         }
         return random.nextBoolean();
     }
+
+    //endregion
+
+    //region Player notifications
+
+  public void broadcastMessageToBingoPlayers(String message) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            boolean isActivePlayer = false;
+
+            // Check if multiworld is enabled
+            if (ultimateBingo.multiWorldServer) {
+                // Check if the player is in the bingo world or actively playing the game
+                if (player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld) || ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+                    isActivePlayer = true;
+                }
+            } else {
+                // If multiworld is not enabled, all players are considered active
+                isActivePlayer = true;
+            }
+
+            // Send the message if the player is active
+            if (isActivePlayer) {
+                player.sendMessage(message);
+            }
+        }
+    }
+
+
 
     //endregion
 }

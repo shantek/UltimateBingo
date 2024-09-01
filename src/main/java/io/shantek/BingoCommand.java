@@ -292,22 +292,22 @@ public class BingoCommand implements CommandExecutor {
 
                 if (ultimateBingo.currentGameMode.equalsIgnoreCase("traditional")) {
 
-                    Bukkit.broadcastMessage(ChatColor.GREEN + "Traditional bingo - collect items to mark them off your card!");
+                    ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Traditional bingo - collect items to mark them off your card!");
 
                     if (ultimateBingo.currentFullCard) {
-                        Bukkit.broadcastMessage(ChatColor.GREEN + "Get a full card to win! " + timeLimitString);
+                        ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Get a full card to win! " + timeLimitString);
                     } else {
-                        Bukkit.broadcastMessage(ChatColor.GREEN + "Get a single row to win! " + timeLimitString);
+                        ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Get a single row to win! " + timeLimitString);
                     }
                 } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("speedrun")) {
 
-                    Bukkit.broadcastMessage(ChatColor.GREEN + "Speed run - Hunger/health resets with each item you tick off!");
+                    ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Speed run - Hunger/health resets with each item you tick off!");
 
 
                     if (ultimateBingo.currentFullCard) {
-                        Bukkit.broadcastMessage(ChatColor.GREEN + "Get a full card to win! " + timeLimitString);
+                        ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Get a full card to win! " + timeLimitString);
                     } else {
-                        Bukkit.broadcastMessage(ChatColor.GREEN + "Get a single row to win! " + timeLimitString);
+                        ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Get a single row to win! " + timeLimitString);
                     }
                 }
 
@@ -361,7 +361,7 @@ public class BingoCommand implements CommandExecutor {
 
             // Calculate and display the game duration
             String gameDuration = ultimateBingo.bingoFunctions.formatAndShowGameDuration(duration);
-            Bukkit.broadcastMessage(ChatColor.GREEN + "Game duration: " + gameDuration);
+            ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Game duration: " + gameDuration);
 
         }, 80L);  // Delay specified in ticks (80 ticks = 4 seconds)
 
@@ -422,7 +422,7 @@ public class BingoCommand implements CommandExecutor {
 
                     // Calculate and display the game duration
                     String gameDuration = ultimateBingo.bingoFunctions.formatAndShowGameDuration(duration);
-                    Bukkit.broadcastMessage(ChatColor.GREEN + "Game duration: " + gameDuration);
+                    ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Game duration: " + gameDuration);
 
                 }, 80L);  // Delay specified in ticks (80 ticks = 4 seconds)
             }

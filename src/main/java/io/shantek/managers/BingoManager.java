@@ -262,7 +262,9 @@ public class BingoManager{
                     boolean activePlayer = true;
                     // Check if multi world bingo is enabled and they're in the bingo world
                     if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-            activePlayer = false; }
+                        activePlayer = false;
+                    }
+
                     if (activePlayer) {
 
                         // PLAY FOR ALL PLAYERS
@@ -270,12 +272,22 @@ public class BingoManager{
 
                         if (!target.equals(player)) { // Exclude the player who triggered the event
 
-                            // Show more info if reveal mode is enabled. If not, be more cryptic in what they did
-                            if (ultimateBingo.currentRevealCards) {
-                                target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
+                            boolean isActivePlayer = false;
+                            if (ultimateBingo.multiWorldServer) {
+                                // Check if the player is in the bingo world or actively playing the game
+                                if (player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld) || ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+                                    isActivePlayer = true;
+                                }
+                            }
 
-                            } else {
-                                target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
+                            if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+                                // Show more info if reveal mode is enabled. If not, be more cryptic in what they did
+                                if (ultimateBingo.currentRevealCards) {
+                                    target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
+
+                                } else {
+                                    target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
+                                }
                             }
                         }
                     }
@@ -316,14 +328,21 @@ public class BingoManager{
                     // Disable the game
                     ultimateBingo.bingoStarted = false;
 
-                    Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
+                    ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
                     for (Player target : Bukkit.getOnlinePlayers()){
 
-                        boolean activePlayer = true;
-                        // Check if multi world bingo is enabled and they're in the bingo world
-                        if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-            activePlayer = false; }
-                        if (activePlayer) {
+
+                        boolean isActivePlayer = false;
+
+                        // Check if multiworld is enabled
+                        if (ultimateBingo.multiWorldServer) {
+                            // Check if the player is in the bingo world or actively playing the game
+                            if (player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld) || ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+                                isActivePlayer = true;
+                            }
+                        }
+
+                        if (isActivePlayer || !ultimateBingo.multiWorldServer) {
                             target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, 1.0f, 1.0f);
 
                             target.sendTitle(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO!"
@@ -407,7 +426,7 @@ public class BingoManager{
         playerBingoCards.put(playerId, clonedCardList);
 
         player.sendMessage(ChatColor.GREEN + "You've been given an in-progress bingo card, good luck!");
-        Bukkit.broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " has just joined bingo!");
+        ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " has just joined bingo!");
 
         // Give them a bingo card
         ultimateBingo.bingoFunctions.giveBingoCard(player);
