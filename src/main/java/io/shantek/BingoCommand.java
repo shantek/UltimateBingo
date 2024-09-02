@@ -1,6 +1,7 @@
 package io.shantek;
 
 import io.shantek.managers.BingoManager;
+import io.shantek.managers.PlayerStats;
 import io.shantek.managers.SettingsManager;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -10,9 +11,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class BingoCommand implements CommandExecutor {
     UltimateBingo ultimateBingo;
@@ -47,7 +50,67 @@ public class BingoCommand implements CommandExecutor {
                     ultimateBingo.configFile.reloadConfigFile();
                     player.sendMessage(ChatColor.GREEN + "Bingo config file reloaded.");
 
-                } else if (args[0].equalsIgnoreCase("gui") && player.hasPermission("shantek.ultimatebingo.play")) {
+                } else if (args[0].equalsIgnoreCase("leaderboard")) {
+                    if (args.length == 1) {
+                        List<PlayerStats> topPlayersOverall = ultimateBingo.getLeaderboard().getTopPlayersOverall();
+                        player.sendMessage(ChatColor.GREEN + "Top Players Overall:");
+                        int rank = 1;
+                        for (PlayerStats stats : topPlayersOverall) {
+                            UUID playerUUID = stats.getPlayerUUID();
+                            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerUUID);
+                            String playerName = offlinePlayer.getName() != null ? offlinePlayer.getName() : playerUUID.toString();
+                            player.sendMessage(ChatColor.YELLOW + "#" + rank + ": " + playerName + " - " + stats.getTotalWins() + " wins, " + stats.getTotalLosses() + " losses");
+                            rank++;
+                            if (rank > 10) {
+                                break;
+                            }
+                        }
+                        if (rank == 1) {
+                            player.sendMessage(ChatColor.YELLOW + "No players found for this category.");
+                        }
+                        return true;
+                    }
+
+                    if (args.length < 5) {
+                        player.sendMessage(ChatColor.RED + "Usage: /bingo leaderboard <small|medium|large> <single|full> <difficulty> <gamemode>");
+                        return true;
+                    }
+
+                    String cardSize = args[1].toLowerCase();
+                    boolean fullCard = args[2].equalsIgnoreCase("full");
+                    String difficulty = args[3].toLowerCase();
+                    String gameMode = args[4].toLowerCase();
+
+                    if (!cardSize.equals("small") && !cardSize.equals("medium") && !cardSize.equals("large")) {
+                        player.sendMessage(ChatColor.RED + "Invalid card size. Use: small, medium, or large.");
+                        return true;
+                    }
+
+                    if (!args[2].equalsIgnoreCase("single") && !args[2].equalsIgnoreCase("full")) {
+                        player.sendMessage(ChatColor.RED + "Invalid win condition. Use: single or full.");
+                        return true;
+                    }
+
+                    List<PlayerStats> topPlayers = ultimateBingo.getLeaderboard().getTopPlayers(cardSize, fullCard, difficulty, gameMode);
+
+                    player.sendMessage(ChatColor.GREEN + "Top Players for " + cardSize.toUpperCase() + " (" + (fullCard ? "Full Card" : "Single Row") + ") - " + difficulty + " - " + gameMode + ":");
+                    int rank = 1;
+                    for (PlayerStats stats : topPlayers) {
+                        UUID playerUUID = stats.getPlayerUUID();
+                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerUUID);
+                        String playerName = offlinePlayer.getName() != null ? offlinePlayer.getName() : playerUUID.toString();
+                        player.sendMessage(ChatColor.YELLOW + "#" + rank + ": " + playerName + " - " + stats.getWins(cardSize, fullCard, difficulty, gameMode) + " wins, " + stats.getLosses(cardSize, fullCard, difficulty, gameMode) + " losses");
+                        rank++;
+                        if (rank > 10) {
+                            break;
+                        }
+                    }
+                    if (rank == 1) {
+                        player.sendMessage(ChatColor.YELLOW + "No players found for this category.");
+                    }
+                    return true;
+                }
+                else if (args[0].equalsIgnoreCase("gui") && player.hasPermission("shantek.ultimatebingo.play")) {
 
                     // Check if multi world bingo is enabled and they're in the bingo world
                     if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
@@ -90,13 +153,11 @@ public class BingoCommand implements CommandExecutor {
 
                     if (ultimateBingo.bingoStarted) {
 
-
                         // Work out the game time to display
                         String timeLimitString;
                         if (ultimateBingo.gameTime == 0) {
                             timeLimitString = "Unlimited Time";
                         } else {
-
 
                             // Calculate remaining time
                             long elapsedTime = System.currentTimeMillis() - ultimateBingo.gameStartTime;
@@ -107,7 +168,6 @@ public class BingoCommand implements CommandExecutor {
                             timeLimitString = ultimateBingo.gameTime + " minutes (" + remainingMinutes + " remaining)";
 
                         }
-
 
                         // This may be removed in the near future and implemented in to the bingo card?
                         player.sendMessage(ChatColor.WHITE + "Bingo is currently set up with the following configuration:");
@@ -121,7 +181,6 @@ public class BingoCommand implements CommandExecutor {
                         player.sendMessage(ChatColor.GREEN + "Win condition: " + ChatColor.YELLOW + (ultimateBingo.currentFullCard ? "FULL CARD" : "BINGO"));
                         player.sendMessage(ChatColor.GREEN + "Time limit: " + ChatColor.YELLOW + (timeLimitString));
                     } else {
-
                         player.sendMessage(ChatColor.YELLOW + "Bingo isn't currently running!");
                     }
                 } else if (args[0].equalsIgnoreCase("settings") && player.hasPermission("shantek.ultimatebingo.settings")) {
@@ -292,14 +351,12 @@ public class BingoCommand implements CommandExecutor {
             // Delayed broadcast with the win condition
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 
-
                 String timeLimitString;
                 if (ultimateBingo.gameTime == 0) {
                     timeLimitString = "Time Limit: Unlimited Time";
                 } else {
                     timeLimitString = "Time Limit: " + ultimateBingo.gameTime + " minutes";
                 }
-
 
                 if (ultimateBingo.currentGameMode.equalsIgnoreCase("traditional")) {
 
@@ -313,7 +370,6 @@ public class BingoCommand implements CommandExecutor {
                 } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("speedrun")) {
 
                     ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Speed run - Hunger/health resets with each item you tick off!");
-
 
                     if (ultimateBingo.currentFullCard) {
                         ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Get a full card to win! " + timeLimitString);
@@ -334,23 +390,23 @@ public class BingoCommand implements CommandExecutor {
             // Handle player teleportation and give bingo cards after the countdown
             onlinePlayers.forEach(player -> {
 
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 
-                        if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
-                            ultimateBingo.bingoFunctions.giveBingoCard(player);
-                            ultimateBingo.bingoCardActive = true;
+                    if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
+                        ultimateBingo.bingoFunctions.giveBingoCard(player);
+                        ultimateBingo.bingoCardActive = true;
 
-                            // Equip the player loadout inventory
-                            if (ultimateBingo.currentLoadoutType > 0) {
-                                ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.currentLoadoutType);
-                            }
-
-                            // Also give them night vision
-                            if (ultimateBingo.currentGameMode.equals("speedrun")) {
-                                player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
-                            }
+                        // Equip the player loadout inventory
+                        if (ultimateBingo.currentLoadoutType > 0) {
+                            ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.currentLoadoutType);
                         }
-                    }, 310); // 210 ticks = 10.5 seconds, just after the "GO!"
+
+                        // Also give them night vision
+                        if (ultimateBingo.currentGameMode.equals("speedrun")) {
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
+                        }
+                    }
+                }, 310); // 210 ticks = 10.5 seconds, just after the "GO!"
 
             });
         }
@@ -404,6 +460,7 @@ public class BingoCommand implements CommandExecutor {
             }
 
         }, 40L);  // Delay specified in ticks (40 ticks = 2 seconds)
+
     }
 
     public void stopBingo(Player sender, boolean gameCompleted) {
@@ -439,9 +496,9 @@ public class BingoCommand implements CommandExecutor {
         List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
         onlinePlayers.forEach(player -> {
 
-                        player.removePotionEffect(PotionEffectType.SLOW);
-                        player.setWalkSpeed(0.2f); // Default walk speed
-                        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+            player.removePotionEffect(PotionEffectType.SLOW);
+            player.setWalkSpeed(0.2f); // Default walk speed
+            player.removePotionEffect(PotionEffectType.NIGHT_VISION);
 
         });
 

@@ -37,6 +37,9 @@ public final class UltimateBingo extends JavaPlugin {
     public boolean playedSinceReboot = false;
     public Metrics metrics;
 
+    // Add Leaderboard field
+    private Leaderboard leaderboard;
+
     // Saved config for setting up games
     public String fullCard = "full card";
     public String difficulty;
@@ -80,6 +83,8 @@ public final class UltimateBingo extends JavaPlugin {
         cardTypes = new CardTypes(this);
         configFile = new ConfigFile(this);
 
+        // Initialize Leaderboard
+        leaderboard = new Leaderboard(this);
 
         getCommand("bingo").setExecutor(new BingoCommand(this, settingsManager, bingoManager));
         getCommand("bingo").setTabCompleter(new BingoCompleter());
@@ -118,6 +123,10 @@ public final class UltimateBingo extends JavaPlugin {
 
     public MaterialList getMaterialList(){
         return materialList;
+    }
+
+    public Leaderboard getLeaderboard() {
+        return leaderboard;
     }
 
     public BingoFunctions getBingoFunctions(){

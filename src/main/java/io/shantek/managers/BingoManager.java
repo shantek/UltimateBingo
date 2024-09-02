@@ -243,7 +243,7 @@ public class BingoManager{
                 player.sendMessage(ChatColor.GREEN + "You ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from your bingo card!");
 
                 if (ultimateBingo.currentGameMode.equals("speedrun")) {
-                    // Reset the players stats
+                    // Reset the player's stats
                     ultimateBingo.bingoFunctions.resetIndividualPlayer(player, false);
                 }
 
@@ -257,11 +257,9 @@ public class BingoManager{
                         if (!target.equals(player)) { // Exclude the player who triggered the event
                             if (ultimateBingo.currentRevealCards) {
                                 target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
-
                             } else {
                                 target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
                             }
-
                         }
                     }
                 }
@@ -272,12 +270,10 @@ public class BingoManager{
 
                 // If it's a full card, we'll check the entire card instead
                 if (ultimateBingo.currentFullCard) {
-                  if (ultimateBingo.cardTypes.checkFullCard(player)) {
-                      hasBingo = true;
-                  }
-
+                    if (ultimateBingo.cardTypes.checkFullCard(player)) {
+                        hasBingo = true;
+                    }
                 } else {
-
                     // Not a full card, check for traditional line bingo
                     switch (cardSize.toLowerCase()) {
                         case "small":
@@ -297,18 +293,41 @@ public class BingoManager{
                             break;
                     }
                 }
+
                 if (hasBingo) {
                     // Disable the game
                     ultimateBingo.bingoStarted = false;
 
-                    ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
-                    for (Player target : Bukkit.getOnlinePlayers()){
+// Update leaderboard: player gets a win
+                    ultimateBingo.getLeaderboard().addGameResult(
+                            player.getUniqueId(),
+                            cardSize,
+                            ultimateBingo.currentFullCard,
+                            ultimateBingo.currentDifficulty,
+                            ultimateBingo.currentGameMode,
+                            true
+                    );
 
+                    // Other active players get a non-win
+                    for (Player target : Bukkit.getOnlinePlayers()) {
+                        if (ultimateBingo.bingoFunctions.isActivePlayer(target) && !target.equals(player)) {
+                            ultimateBingo.getLeaderboard().addGameResult(
+                                    target.getUniqueId(),
+                                    cardSize,
+                                    ultimateBingo.currentFullCard,
+                                    ultimateBingo.currentDifficulty,
+                                    ultimateBingo.currentGameMode,
+                                    false
+                            );
+                        }
+                    }
+
+                    ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
+                    for (Player target : Bukkit.getOnlinePlayers()) {
                         if (ultimateBingo.bingoFunctions.isActivePlayer(target)) {
                             target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, 1.0f, 1.0f);
-
-                            target.sendTitle(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO!"
-                                    , ChatColor.GREEN.toString() + ChatColor.BOLD + "Woop woop!");
+                            target.sendTitle(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO!",
+                                    ChatColor.GREEN.toString() + ChatColor.BOLD + "Woop woop!");
                         }
                     }
                     ultimateBingo.bingoCommand.stopBingo(player, true);

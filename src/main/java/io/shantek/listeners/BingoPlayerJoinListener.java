@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -16,6 +17,25 @@ public class BingoPlayerJoinListener implements Listener {
 
     public BingoPlayerJoinListener(UltimateBingo ultimateBingo) {
         this.ultimateBingo = ultimateBingo;
+    }
+
+    @EventHandler
+    public void onDimensionChange(PlayerChangedWorldEvent event) {
+        Player player = event.getPlayer();
+        String toWorld = player.getWorld().getName();
+
+        // Check if multiworld server setting is enabled
+        if (ultimateBingo.multiWorldServer) {
+            // Check if the player teleported to the bingo world
+            if (toWorld.equalsIgnoreCase(ultimateBingo.bingoWorld)) {
+                // Check if bingo isn't active
+                if (!ultimateBingo.bingoStarted) {
+                    // Reset the player and their inventory
+                    ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
+                    player.sendMessage("You have entered the bingo world, but bingo is not active. Your inventory has been reset.");
+                }
+            }
+        }
     }
 
     @EventHandler
