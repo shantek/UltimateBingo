@@ -89,6 +89,14 @@ public final class UltimateBingo extends JavaPlugin {
         getCommand("bingo").setExecutor(new BingoCommand(this, settingsManager, bingoManager));
         getCommand("bingo").setTabCompleter(new BingoCompleter());
 
+        // Check if PlaceholderAPI is installed and register the placeholders
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new BingoPlaceholderExpansion(this).register();
+            getLogger().info("PlaceholderAPI detected, registering placeholders.");
+        } else {
+            getLogger().info("PlaceholderAPI not found, skipping placeholder registration.");
+        }
+
         // Register event listeners
         registerEventListeners();
         materialList.createMaterials();
