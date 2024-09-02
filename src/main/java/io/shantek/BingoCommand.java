@@ -95,10 +95,15 @@ public class BingoCommand implements CommandExecutor {
                     } else {
 
                       if (ultimateBingo.bingoStarted) {
-                          // Work out how long is left and display it here if the game is active
-                          timeLimitString = ultimateBingo.gameTime + " minutes";
+                          // Calculate remaining time
+                          long elapsedTime = System.currentTimeMillis() - ultimateBingo.gameStartTime;
+                          long remainingTimeMillis = (long) ultimateBingo.gameTime * 60 * 1000 - elapsedTime;
+                          long remainingMinutes = remainingTimeMillis / (60 * 1000);
 
-                        } else {
+                          // Work out how long is left and display it here if the game is active
+                          timeLimitString = ultimateBingo.gameTime + " minutes (" + remainingMinutes + " remaining)";
+
+                      } else {
                             // Game isn't active, just show the preset time limit
                             timeLimitString = ultimateBingo.gameTime + " minutes";
 
@@ -108,7 +113,11 @@ public class BingoCommand implements CommandExecutor {
 
                     // This may be removed in the near future and implemented in to the bingo card?
                     player.sendMessage(ChatColor.WHITE + "Bingo is currently set up with the following configuration:");
-                    player.sendMessage(ChatColor.GREEN + "Difficulty: " + ChatColor.YELLOW + ultimateBingo.currentDifficulty.toUpperCase());
+                    if (ultimateBingo.currentDifficulty == null) {
+                        player.sendMessage(ChatColor.GREEN + "Difficulty: " + ChatColor.YELLOW + "N/A");
+                    } else {
+                        player.sendMessage(ChatColor.GREEN + "Difficulty: " + ChatColor.YELLOW + ultimateBingo.currentDifficulty.toUpperCase());
+                    }
                     player.sendMessage(ChatColor.GREEN + "Card type: " + ChatColor.YELLOW + ultimateBingo.currentCardSize.toUpperCase() + "/" + (ultimateBingo.currentUniqueCard ? "UNIQUE" : "IDENTICAL"));
                     player.sendMessage(ChatColor.GREEN + "Game mode: " + ChatColor.YELLOW + ultimateBingo.currentGameMode.toUpperCase());
                     player.sendMessage(ChatColor.GREEN + "Win condition: " + ChatColor.YELLOW + (ultimateBingo.currentFullCard ? "FULL CARD" : "BINGO"));
