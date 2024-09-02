@@ -60,13 +60,7 @@ public class BingoManager{
         // Distribute unique cards to each player
         for (Player player : Bukkit.getOnlinePlayers()) {
 
-            boolean givePlayerCard = true;
-
-            // Check if multi world bingo is enabled and they're in the bingo world
-            givePlayerCard = ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase());
-
-
-            if (givePlayerCard) {
+            if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
                 UUID playerId = player.getUniqueId();
 
                 // Store the string for the card type
