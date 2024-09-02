@@ -31,14 +31,7 @@ public class BingoFunctions
     public void resetPlayers(){
         for (Player player : Bukkit.getOnlinePlayers()){
 
-            boolean isActivePlayer = true;
-
-            // Check if multi world bingo is enabled and they're in the bingo world
-            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                isActivePlayer = false;
-            }
-
-            if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+            if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
 
                 // Reset health to max health (20.0 is full health)
                 player.setHealth(20.0);
@@ -174,14 +167,7 @@ public class BingoFunctions
     public void giveBingoCardToAllPlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
 
-            boolean isActivePlayer = true;
-
-            // Check if multi world bingo is enabled and they're in the bingo world
-            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                isActivePlayer = false;
-            }
-
-            if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+            if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
                 giveBingoCard(player);
             }
         }
@@ -444,14 +430,7 @@ public class BingoFunctions
 
         for (Player player : players) {
 
-            boolean isActivePlayer = true;
-
-            // Check if multi world bingo is enabled and they're in the bingo world
-            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                isActivePlayer = false;
-            }
-
-            if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+            if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
 
                 Location safeLocation = findSafeLocation(world, center, radius, random, 20);
                 player.teleport(safeLocation);
@@ -530,14 +509,7 @@ public class BingoFunctions
 
             for (Player p : Bukkit.getOnlinePlayers()) {
 
-                boolean isActivePlayer = true;
-
-                // Check if multi world bingo is enabled and they're in the bingo world
-                if (ultimateBingo.multiWorldServer && !p.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                    isActivePlayer = false;
-                }
-
-                if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+                if (ultimateBingo.bingoFunctions.isActivePlayer(p)) {
                     p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
                 }
                             }
@@ -547,14 +519,7 @@ public class BingoFunctions
             ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "The game will end in 2 minutes!");
             for (Player p : Bukkit.getOnlinePlayers()) {
 
-                boolean isActivePlayer = true;
-
-                // Check if multi world bingo is enabled and they're in the bingo world
-                if (ultimateBingo.multiWorldServer && !p.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                    isActivePlayer = false;
-                }
-
-                if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+                if (ultimateBingo.bingoFunctions.isActivePlayer(p)) {
                     p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
                 }
             }
@@ -563,14 +528,7 @@ public class BingoFunctions
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "The game will end in 1 minute!");
             for (Player p : Bukkit.getOnlinePlayers()) {
-                boolean isActivePlayer = true;
-
-                // Check if multi world bingo is enabled and they're in the bingo world
-                if (ultimateBingo.multiWorldServer && !p.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                    isActivePlayer = false;
-                }
-
-                if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+                if (ultimateBingo.bingoFunctions.isActivePlayer(p)) {
                     p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
                 }
             }
@@ -585,14 +543,7 @@ public class BingoFunctions
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     // Play a tone sound effect at the player's location
 
-                    boolean isActivePlayer = true;
-
-                    // Check if multi world bingo is enabled and they're in the bingo world
-                    if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                        isActivePlayer = false;
-                    }
-
-                    if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+                    if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
                         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);
                     }
                 }
@@ -619,14 +570,7 @@ public class BingoFunctions
             ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.YELLOW + "You've just received a speed boost!");
             for (Player p : Bukkit.getOnlinePlayers()) {
 
-                boolean isActivePlayer = true;
-
-                // Check if multi world bingo is enabled and they're in the bingo world
-                if (ultimateBingo.multiWorldServer && !p.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                    isActivePlayer = false;
-                }
-
-                if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+                if (ultimateBingo.bingoFunctions.isActivePlayer(p)) {
 
                     p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
 
@@ -694,16 +638,26 @@ public class BingoFunctions
 
     //region Player notifications
 
+    public boolean isActivePlayer(Player player) {
+
+        boolean isActivePlayer = true;
+
+        // Check if multi world bingo is enabled and they're in the bingo world
+        if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+            isActivePlayer = false;
+        }
+
+        if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+            isActivePlayer = true;
+        }
+
+        return isActivePlayer;
+
+    }
+
   public void broadcastMessageToBingoPlayers(String message) {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            boolean isActivePlayer = true;
-
-            // Check if multi world bingo is enabled and they're in the bingo world
-            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                isActivePlayer = false;
-            }
-
-            if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+            if (isActivePlayer(player)) {
                 player.sendMessage(message);
             }
         }

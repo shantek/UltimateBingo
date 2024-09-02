@@ -45,14 +45,7 @@ public class BingoPlayerGUIManager {
         // Get all online players and populate the inventory
         for (Player player : Bukkit.getOnlinePlayers()) {
 
-            boolean isActivePlayer = true;
-
-            // Check if multi world bingo is enabled and they're in the bingo world
-            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                isActivePlayer = false;
-            }
-
-            if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+            if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
 
                 if (ultimateBingo.bingoManager.bingoGUIs.containsKey(player.getUniqueId())) {  // Check if the player has a bingo card
                     ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);

@@ -22,14 +22,7 @@ public class BingoPickupListener implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
 
-            boolean isActivePlayer = true;
-
-            // Check if multi world bingo is enabled and they're in the bingo world
-            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                isActivePlayer = false;
-            }
-
-            if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+            if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
 
                 if (ultimateBingo.bingoStarted) {
                     Material pickedItem = event.getItem().getItemStack().getType();

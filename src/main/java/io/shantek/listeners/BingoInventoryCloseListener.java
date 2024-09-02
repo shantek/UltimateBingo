@@ -48,14 +48,7 @@ public class BingoInventoryCloseListener implements Listener {
         if (ultimateBingo.bingoStarted) {
             Player player = (Player) event.getPlayer();
 
-            boolean isActivePlayer = true;
-
-            // Check if multi world bingo is enabled and they're in the bingo world
-            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                isActivePlayer = false;
-            }
-
-            if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+            if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
 
                 UUID uuid = player.getUniqueId();
                 Inventory inventory = event.getInventory();

@@ -24,14 +24,7 @@ public class BingoPlayerJoinListener implements Listener {
         // Get the player who just joined
         Player player = e.getPlayer();
 
-        boolean isActivePlayer = true;
-
-        // Check if multi world bingo is enabled and they're in the bingo world
-        if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-            isActivePlayer = false;
-        }
-
-        if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+        if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
 
             if (!ultimateBingo.playedSinceReboot) {
                 // A game hasn't been played since the reboot - Reset the player

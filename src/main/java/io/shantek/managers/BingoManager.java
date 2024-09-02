@@ -136,14 +136,7 @@ public class BingoManager{
         // Distribute unique shuffled cards to each player
         for (Player player : Bukkit.getOnlinePlayers()) {
 
-            boolean isActivePlayer = true;
-
-            // Check if multi world bingo is enabled and they're in the bingo world
-            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                isActivePlayer = false;
-            }
-
-            if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+            if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
 
                 UUID playerId = player.getUniqueId();
 
@@ -262,14 +255,7 @@ public class BingoManager{
 
                 for (Player target : Bukkit.getOnlinePlayers()) {
 
-                    boolean isActivePlayer = true;
-
-                    // Check if multi world bingo is enabled and they're in the bingo world
-                    if (ultimateBingo.multiWorldServer && !target.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                        isActivePlayer = false;
-                    }
-
-                    if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+                    if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
 
                         // PLAY FOR ALL PLAYERS
                         target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 5);
@@ -324,15 +310,7 @@ public class BingoManager{
                     ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
                     for (Player target : Bukkit.getOnlinePlayers()){
 
-
-                        boolean isActivePlayer = true;
-
-                        // Check if multi world bingo is enabled and they're in the bingo world
-                        if (ultimateBingo.multiWorldServer && !target.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                            isActivePlayer = false;
-                        }
-
-                        if (isActivePlayer || !ultimateBingo.multiWorldServer) {
+                        if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
                             target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, 1.0f, 1.0f);
 
                             target.sendTitle(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO!"
