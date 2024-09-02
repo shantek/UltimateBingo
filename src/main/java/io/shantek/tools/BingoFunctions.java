@@ -83,9 +83,14 @@ public class BingoFunctions
                 player.removePotionEffect(effect.getType());
             }
 
-            // Clear inventory
-            player.getInventory().clear();
+            // Double check they're in the correct world to avoid
+            // removing any actual inventory from another world
+            if (isActivePlayer(player)) {
 
+                // Clear inventory
+                player.getInventory().clear();
+
+            }
             // Clear armor
             player.getInventory().setArmorContents(new ItemStack[4]);
 

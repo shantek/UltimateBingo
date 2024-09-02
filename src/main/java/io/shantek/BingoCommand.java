@@ -323,29 +323,24 @@ public class BingoCommand implements CommandExecutor {
             // Handle player teleportation and give bingo cards after the countdown
             onlinePlayers.forEach(player -> {
 
-                boolean activePlayer = true;
-
-                // Check if multi world bingo is enabled and they're in the bingo world
-                if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                    activePlayer = false;
-                }
-                if (activePlayer) {
-
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                        ultimateBingo.bingoFunctions.giveBingoCard(player);
-                        ultimateBingo.bingoCardActive = true;
 
-                        // Equip the player loadout inventory
-                        if (ultimateBingo.currentLoadoutType > 0) {
-                            ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.currentLoadoutType);
-                        }
+                        if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
+                            ultimateBingo.bingoFunctions.giveBingoCard(player);
+                            ultimateBingo.bingoCardActive = true;
 
-                        // Also give them night vision
-                        if (ultimateBingo.currentGameMode.equals("speedrun")) {
-                            player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
+                            // Equip the player loadout inventory
+                            if (ultimateBingo.currentLoadoutType > 0) {
+                                ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.currentLoadoutType);
+                            }
+
+                            // Also give them night vision
+                            if (ultimateBingo.currentGameMode.equals("speedrun")) {
+                                player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
+                            }
                         }
                     }, 310); // 210 ticks = 10.5 seconds, just after the "GO!"
-                }
+
             });
         }
     }
