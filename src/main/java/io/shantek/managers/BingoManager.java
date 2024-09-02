@@ -249,7 +249,7 @@ public class BingoManager{
 
                 for (Player target : Bukkit.getOnlinePlayers()) {
 
-                    if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
+                    if (ultimateBingo.bingoFunctions.isActivePlayer(target)) {
 
                         // PLAY FOR ALL PLAYERS
                         target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 5);
@@ -304,7 +304,7 @@ public class BingoManager{
                     ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
                     for (Player target : Bukkit.getOnlinePlayers()){
 
-                        if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
+                        if (ultimateBingo.bingoFunctions.isActivePlayer(target)) {
                             target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, 1.0f, 1.0f);
 
                             target.sendTitle(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO!"
