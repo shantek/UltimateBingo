@@ -25,7 +25,7 @@ Old school bingo, tick off items to complete the game. You need to watch your hu
 Can't decide what to play? Why not use the random mode to let the plugin choose for you.
 
 ## Card Difficulty & Size
-The items used to populate your card are split in to 5 groups. Easy, Normal or Hard modes change the distribution used to generate your bingo cards. Choose between a Small (3x3), Medium (4x4) or Large (5x5) card to battle out your epic bingo games!
+The items used to populate your card are split into 5 groups. Easy, Normal or Hard modes change the distribution used to generate your bingo cards. Choose between a Small (3x3), Medium (4x4) or Large (5x5) card to battle out your epic bingo games!
 
 Both difficulty and card size also come with a Random option to help mix up your bingo games.
 
@@ -48,7 +48,7 @@ With this mode enabled, every time a player ticks an item off all the other play
 ## Time Limit
 Want to ensure you have some insane and fast fun? Why not try a timed game. Select from 5, 10, 15, 20, 30, 40, 50 or 60 minute games. If no one completes the win condition in this time, the game simply ends. Or why not try the Unlimited Time games, where players receive a speed boost after 20, 40 and 60 minutes of game play.
 
-## Player Loadout
+## Player Load-out
 Game kits help make your games more epic and cater to a wide variety of players. Select a kit to equip to all players at the start of the game.
 
 ### Naked Kit
