@@ -660,6 +660,17 @@ public class BingoFunctions
 
     }
 
+    public int countActivePlayers() {
+        int playerCount = 0;
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            // Check if the player has a generated bingo card
+            if (ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+                playerCount++;
+            }
+        }
+        return playerCount;
+    }
+
   public void broadcastMessageToBingoPlayers(String message) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (isActivePlayer(player)) {

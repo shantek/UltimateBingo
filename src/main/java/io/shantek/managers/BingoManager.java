@@ -298,27 +298,29 @@ public class BingoManager{
                     // Disable the game
                     ultimateBingo.bingoStarted = false;
 
-// Update leaderboard: player gets a win
-                    ultimateBingo.getLeaderboard().addGameResult(
-                            player.getUniqueId(),
-                            cardSize,
-                            ultimateBingo.currentFullCard,
-                            ultimateBingo.currentDifficulty,
-                            ultimateBingo.currentGameMode,
-                            true
-                    );
+                    if (ultimateBingo.bingoFunctions.countActivePlayers() >1 || ultimateBingo.countSoloGames) {
+                        // Update leaderboard: player gets a win
+                        ultimateBingo.getLeaderboard().addGameResult(
+                                player.getUniqueId(),
+                                cardSize,
+                                ultimateBingo.currentFullCard,
+                                ultimateBingo.currentDifficulty,
+                                ultimateBingo.currentGameMode,
+                                true
+                        );
 
-                    // Other active players get a non-win
-                    for (Player target : Bukkit.getOnlinePlayers()) {
-                        if (ultimateBingo.bingoFunctions.isActivePlayer(target) && !target.equals(player)) {
-                            ultimateBingo.getLeaderboard().addGameResult(
-                                    target.getUniqueId(),
-                                    cardSize,
-                                    ultimateBingo.currentFullCard,
-                                    ultimateBingo.currentDifficulty,
-                                    ultimateBingo.currentGameMode,
-                                    false
-                            );
+                        // Other active players get a non-win
+                        for (Player target : Bukkit.getOnlinePlayers()) {
+                            if (ultimateBingo.bingoFunctions.isActivePlayer(target) && !target.equals(player)) {
+                                ultimateBingo.getLeaderboard().addGameResult(
+                                        target.getUniqueId(),
+                                        cardSize,
+                                        ultimateBingo.currentFullCard,
+                                        ultimateBingo.currentDifficulty,
+                                        ultimateBingo.currentGameMode,
+                                        false
+                                );
+                            }
                         }
                     }
 
