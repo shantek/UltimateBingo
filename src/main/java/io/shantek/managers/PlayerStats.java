@@ -40,6 +40,7 @@ public class PlayerStats {
         return lossesByCategory.getOrDefault(key, 0);
     }
 
+
     public void setWins(String category, int value) {
         winsByCategory.put(category, value);
     }
@@ -62,5 +63,9 @@ public class PlayerStats {
 
     public int getTotalLosses() {
         return lossesByCategory.values().stream().mapToInt(Integer::intValue).sum();
+    }
+
+    public int getTotalPlayed() {
+        return winsByCategory.values().stream().mapToInt(Integer::intValue).sum() + lossesByCategory.values().stream().mapToInt(Integer::intValue).sum();
     }
 }

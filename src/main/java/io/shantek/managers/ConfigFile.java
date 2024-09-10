@@ -61,6 +61,7 @@ public class ConfigFile {
             ultimateBingo.uniqueCard = getString(config, "unique-card", "identical");
             ultimateBingo.consoleLogs = getBoolean(config, "console-logs", true);
             ultimateBingo.multiWorldServer = getBoolean(config, "multi-world-server", false);
+            ultimateBingo.countSoloGames = getBoolean(config, "count-solo-games", false);
             ultimateBingo.gameTime = getInt(config, "game-time", 0);
             ultimateBingo.loadoutType = getInt(config, "player-loadout", 0);
 
@@ -71,13 +72,13 @@ public class ConfigFile {
 
     private boolean checkForMissingKeys(FileConfiguration config) {
         List<String> keysToCheck = Arrays.asList(
-                "multi-world-server", "bingo-world", "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport", "reveal-cards", "game-time", "player-loadout");
+                "count-solo-games", "multi-world-server", "bingo-world", "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport", "reveal-cards", "game-time", "player-loadout");
         return keysToCheck.stream().anyMatch(key -> !config.contains(key));
     }
 
     private Map<String, Object> saveMissingKeyValues(FileConfiguration config) {
         List<String> keysToCheck = Arrays.asList(
-                "multi-world-server", "bingo-world", "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport", "reveal-cards", "game-time", "player-loadout");
+                "count-solo-games", "multi-world-server", "bingo-world", "full-card", "difficulty", "card-size", "unique-card", "console-logs", "game-mode", "respawn-teleport", "reveal-cards", "game-time", "player-loadout");
 
         Map<String, Object> missingKeyValues = new HashMap<>();
         keysToCheck.forEach(key -> {
@@ -149,6 +150,7 @@ public class ConfigFile {
             config.set("game-time", ultimateBingo.gameTime);
             config.set("player-loadout", ultimateBingo.loadoutType);
             config.set("multi-world-server", ultimateBingo.multiWorldServer);
+            config.set("count-solo-games", ultimateBingo.countSoloGames);
             config.set("bingo-world", ultimateBingo.bingoWorld);
 
             config.save(configFile);

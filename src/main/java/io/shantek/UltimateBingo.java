@@ -50,6 +50,7 @@ public final class UltimateBingo extends JavaPlugin {
     public int loadoutType = 1;
     public String bingoWorld = "default";
     public boolean multiWorldServer = false;
+    public boolean countSoloGames = false;
 
     // Current game configuration - Implemented to allow
     // random assignment of game setup

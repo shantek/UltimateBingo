@@ -59,7 +59,7 @@ public class BingoCommand implements CommandExecutor {
                             UUID playerUUID = stats.getPlayerUUID();
                             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerUUID);
                             String playerName = offlinePlayer.getName() != null ? offlinePlayer.getName() : playerUUID.toString();
-                            player.sendMessage(ChatColor.YELLOW + "#" + rank + ": " + playerName + " - " + stats.getTotalWins() + " wins, " + stats.getTotalLosses() + " losses");
+                            player.sendMessage(ChatColor.YELLOW + "#" + rank + ": " + playerName + " - " + stats.getTotalWins() + " wins, " + stats.getTotalPlayed() + " played");
                             rank++;
                             if (rank > 10) {
                                 break;
