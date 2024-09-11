@@ -8,6 +8,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.entity.Player;
 import io.shantek.UltimateBingo;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class EntityDamageListener implements Listener {
 
@@ -42,6 +44,11 @@ public class EntityDamageListener implements Listener {
                         // Give them a bingo card and the bingo loadout
                         ultimateBingo.bingoFunctions.giveBingoCard(player);
                         ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.currentLoadoutType);
+
+                        // Also give them night vision
+                        if (ultimateBingo.currentGameMode.equals("speedrun")) {
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
+                        }
 
                         // Broadcast message to all active players
                         ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(
