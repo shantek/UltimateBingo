@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -715,6 +716,60 @@ public class BingoFunctions
         }
     }
 
+
+
+    //endregion
+
+    //region Potion functionality
+
+    public void applyRandomNegativePotionToOtherPlayers(Player excludedPlayer, int durationInSeconds) {
+        // Define a list of negative potion effects
+        List<PotionEffectType> negativePotions = Arrays.asList(
+                PotionEffectType.SLOW,
+                PotionEffectType.SLOW_FALLING,
+                PotionEffectType.BLINDNESS,
+                PotionEffectType.SLOW_DIGGING,
+                PotionEffectType.HUNGER,
+                PotionEffectType.POISON,
+                PotionEffectType.LEVITATION
+
+        );
+
+        // Random instance to select a random potion
+        Random random = new Random();
+
+        // Pick a random potion effect from the list (applies the same effect to all players)
+        PotionEffectType randomPotion = negativePotions.get(random.nextInt(negativePotions.size()));
+
+        // Convert the potion name to a friendly format
+        String friendlyPotionName = randomPotion.getName().toLowerCase().replace('_', ' ');
+
+        // Loop through all online players
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            // Exclude the passed player and only process active players
+            if (!player.equals(excludedPlayer) && ultimateBingo.bingoFunctions.isActivePlayer(player)) {
+
+                // Remove all existing potion effects from the player
+                for (PotionEffect effect : player.getActivePotionEffects()) {
+                    player.removePotionEffect(effect.getType());
+                }
+
+                // Apply the selected potion effect for the given duration (in ticks, 20 ticks per second)
+                player.addPotionEffect(new PotionEffect(randomPotion, durationInSeconds * 20, 0));
+
+                // Notify the player about the potion they received
+                player.sendMessage(ChatColor.RED + "You've been affected by " + friendlyPotionName + " for " + durationInSeconds + " seconds!");
+
+                // Play the potion break sound to the player
+                player.playSound(player.getLocation(), Sound.ENTITY_SPLASH_POTION_BREAK, 1.0f, 1.0f);
+
+            }
+
+        }
+
+        // Notify the excluded player about the random potion effect applied to others
+        excludedPlayer.sendMessage(ChatColor.GREEN + "All other players have been affected by " + friendlyPotionName + " for " + durationInSeconds + " seconds.");
+    }
 
 
     //endregion

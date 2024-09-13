@@ -333,6 +333,28 @@ public class BingoManager{
                         }
                     }
                     ultimateBingo.bingoCommand.stopBingo(player, true);
+                } else {
+
+                    // Player doesn't have bingo - take any action we want while the game is still active
+
+
+                    if (ultimateBingo.currentGameMode.equalsIgnoreCase("brewdash") && ultimateBingo.bingoFunctions.countActivePlayers() > 1) {
+
+                        // Reset potion effects on current player
+                        for (PotionEffect effect : player.getActivePotionEffects()) {
+                            player.removePotionEffect(effect.getType());
+                        }
+
+                        // Apply potion effect to all other players
+                        if (ultimateBingo.currentDifficulty.equalsIgnoreCase("easy")) {
+                            ultimateBingo.bingoFunctions.applyRandomNegativePotionToOtherPlayers(player, 20);
+                        } else if (ultimateBingo.currentDifficulty.equalsIgnoreCase("normal")) {
+                            ultimateBingo.bingoFunctions.applyRandomNegativePotionToOtherPlayers(player, 40);
+                        } else {
+                            ultimateBingo.bingoFunctions.applyRandomNegativePotionToOtherPlayers(player, 60);
+                        }
+                    }
+
                 }
                 break;
             }

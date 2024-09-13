@@ -378,6 +378,15 @@ public class BingoCommand implements CommandExecutor {
                     } else {
                         ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Get a single row to win! " + timeLimitString);
                     }
+                } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("brewdash")) {
+
+                    ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Brew dash - Hit players with a random potion for each item you tick off!");
+
+                    if (ultimateBingo.currentFullCard) {
+                        ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Get a full card to win! " + timeLimitString);
+                    } else {
+                        ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Get a single row to win! " + timeLimitString);
+                    }
                 }
 
             }, 350);
