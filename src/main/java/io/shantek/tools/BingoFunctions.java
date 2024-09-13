@@ -310,10 +310,6 @@ public class BingoFunctions
                     Enchantment.PROTECTION_FALL, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.VANISHING_CURSE, Enchantment.BINDING_CURSE
             }, new int[]{4, 4, 1, 3, 1, 1}));
 
-            // Equip shield
-            ItemStack shield = new ItemStack(Material.SHIELD);
-            player.getInventory().setItemInOffHand(shield);
-
             // Give player their basic tools
             ItemStack fireworkStack = createFireworkRocket();
             player.getInventory().addItem(fireworkStack);
