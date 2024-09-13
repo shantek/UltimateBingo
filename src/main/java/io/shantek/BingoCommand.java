@@ -288,6 +288,8 @@ public class BingoCommand implements CommandExecutor {
                 loadoutType = "Boat Kit";
             } else if (ultimateBingo.currentLoadoutType == 3) {
                 loadoutType = "Flying Kit";
+            } else if (ultimateBingo.currentLoadoutType == 4) {
+                loadoutType = "Archer Kit";
             }
 
             // Store a reference to all online players

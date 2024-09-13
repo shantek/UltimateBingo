@@ -56,6 +56,8 @@ public class BingoGameGUIManager {
             gameLoadoutString = "Boat Kit";
         } else if (ultimateBingo.loadoutType == 3) {
             gameLoadoutString = "Flying Kit";
+        } else if (ultimateBingo.loadoutType == 4) {
+            gameLoadoutString = "Archer Kit";
         } else if (ultimateBingo.loadoutType == 50) {
             gameLoadoutString = "Random Kit";
         }
@@ -179,6 +181,9 @@ public class BingoGameGUIManager {
                 ultimateBingo.loadoutType = 3;
                 break;
             case 3:
+                ultimateBingo.loadoutType = 4;
+                break;
+            case 4:
                 ultimateBingo.loadoutType = 50;
                 break;
             case 50:
@@ -248,7 +253,6 @@ public class BingoGameGUIManager {
             currentInventory.setItem(3, createItem(setGUIIcon("uniqueCard"), "Card Type", ultimateBingo.uniqueCard.toUpperCase()));
             currentInventory.setItem(4, createItem(setGUIIcon("wincondition"), "Win Condition", ultimateBingo.fullCard.toUpperCase()));
             currentInventory.setItem(5, createItem(setGUIIcon("reveal"), "Reveal Cards", ultimateBingo.revealCards.toUpperCase()));
-            currentInventory.setItem(5, createItem(setGUIIcon("reveal"), "Reveal Cards", ultimateBingo.revealCards.toUpperCase()));
 
             // Work out the game time to display
             String gameTimeString;
@@ -267,9 +271,13 @@ public class BingoGameGUIManager {
                 gameLoadoutString = "Boat Kit";
             } else if (ultimateBingo.loadoutType == 3) {
                 gameLoadoutString = "Flying Kit";
+            } else if (ultimateBingo.loadoutType == 4) {
+                gameLoadoutString = "Archer Kit";
             } else if (ultimateBingo.loadoutType == 50) {
                 gameLoadoutString = "Random Kit";
             }
+
+
             currentInventory.setItem(7, createItem(setGUIIcon("loadout"), "Player Loadout", gameLoadoutString));
 
 
@@ -283,7 +291,7 @@ public class BingoGameGUIManager {
 
     public void setGameConfiguration() {
 
-        ultimateBingo.currentLoadoutType = ultimateBingo.bingoFunctions.validateOrDefaultInt(ultimateBingo.loadoutType, 4, 0);
+        ultimateBingo.currentLoadoutType = ultimateBingo.bingoFunctions.validateOrDefaultInt(ultimateBingo.loadoutType, 5, 0);
         ultimateBingo.currentDifficulty = ultimateBingo.bingoFunctions.validateOrDefault(ultimateBingo.difficulty, optionsMap.get("difficulty"), "normal");
         ultimateBingo.currentCardSize = ultimateBingo.bingoFunctions.validateOrDefault(ultimateBingo.cardSize, optionsMap.get("cardSize"), "medium");
         ultimateBingo.currentGameMode = ultimateBingo.bingoFunctions.validateOrDefault(ultimateBingo.gameMode, optionsMap.get("gameMode"), "traditional");
@@ -302,6 +310,7 @@ public class BingoGameGUIManager {
                 case 1 -> materialToDisplay = Material.WOODEN_PICKAXE; // Starter kit
                 case 2 -> materialToDisplay = Material.OAK_BOAT; // Boat kit
                 case 3 -> materialToDisplay = Material.FIREWORK_ROCKET; // Rocket kit
+                case 4 -> materialToDisplay = Material.BOW; // Rocket kit
                 case 50 -> materialToDisplay = Material.SHULKER_BOX; // Random kit
                 default -> materialToDisplay = Material.CRAFTING_TABLE; // Naked kit
             };

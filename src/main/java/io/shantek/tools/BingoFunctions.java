@@ -243,7 +243,7 @@ public class BingoFunctions
 
         if (loadout == 1) {
 
-            //region First loadout - Basic starter gear
+            //region 1st load-out - Basic starter gear
 
             player.getInventory().addItem(new ItemStack(Material.WOODEN_SWORD));
             player.getInventory().addItem(new ItemStack(Material.WOODEN_AXE));
@@ -256,7 +256,7 @@ public class BingoFunctions
 
         } else if (loadout == 2) {
 
-            //region First loadout - Boat
+            //region 2nd load-out - Boat
 
             // Create and set armor
             player.getInventory().setHelmet(createEnchantedArmor(Material.IRON_HELMET, new Enchantment[]{
@@ -292,7 +292,7 @@ public class BingoFunctions
 
         } else if (loadout == 3) {
 
-            //region Second loadout - Wings
+            //region 3rd load-out - Wings
 
             // Create and set armor
             player.getInventory().setHelmet(createEnchantedArmor(Material.NETHERITE_HELMET, new Enchantment[]{
@@ -329,6 +329,42 @@ public class BingoFunctions
 
             //endregion
 
+        } else if (loadout == 4) {
+
+            //region 4th load-out - Archer
+
+            // Create and set armor
+            player.getInventory().setHelmet(createEnchantedArmor(Material.IRON_HELMET, new Enchantment[]{
+                    Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.WATER_WORKER, Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.VANISHING_CURSE, Enchantment.BINDING_CURSE
+            }, new int[]{1, 1, 1, 1, 1, 1}));
+            player.getInventory().setChestplate(createEnchantedArmor(Material.IRON_CHESTPLATE, new Enchantment[]{
+                    Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.VANISHING_CURSE, Enchantment.BINDING_CURSE
+            }, new int[]{1, 1, 1, 1, 1}));
+            player.getInventory().setLeggings(createEnchantedArmor(Material.IRON_LEGGINGS, new Enchantment[]{
+                    Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.VANISHING_CURSE, Enchantment.BINDING_CURSE
+            }, new int[]{1, 1, 1, 1, 1}));
+            player.getInventory().setBoots(createEnchantedArmor(Material.IRON_BOOTS, new Enchantment[]{
+                    Enchantment.PROTECTION_FALL, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.VANISHING_CURSE, Enchantment.BINDING_CURSE
+            }, new int[]{1, 1, 1, 1, 1, 1}));
+
+            // Equip shield
+            ItemStack shield = new ItemStack(Material.SHIELD);
+            player.getInventory().setItemInOffHand(shield);
+
+            // Give player their basic tools
+            player.getInventory().addItem(createEnchantedItem(Material.IRON_SWORD, new Enchantment[]{Enchantment.DAMAGE_ALL, Enchantment.KNOCKBACK, Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS, Enchantment.SWEEPING_EDGE}, new int[]{1, 1, 1, 1, 1}));
+            player.getInventory().addItem(createEnchantedItem(Material.IRON_PICKAXE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.LOOT_BONUS_BLOCKS, Enchantment.DURABILITY}, new int[]{1, 1, 1}));
+            player.getInventory().addItem(createEnchantedItem(Material.IRON_AXE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.DURABILITY, Enchantment.MENDING, Enchantment.SILK_TOUCH}, new int[]{1, 1, 1, 1}));
+            player.getInventory().addItem(createEnchantedItem(Material.IRON_SHOVEL, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.DURABILITY, Enchantment.MENDING}, new int[]{1, 1, 1}));
+            player.getInventory().addItem(createEnchantedItem(Material.BOW, new Enchantment[]{Enchantment.ARROW_INFINITE, Enchantment.DURABILITY, Enchantment.ARROW_DAMAGE, Enchantment.ARROW_FIRE, Enchantment.ARROW_KNOCKBACK}, new int[]{1, 3, 5, 1, 2}));
+
+
+            // Add additional items
+            player.getInventory().addItem(new ItemStack(Material.ORANGE_BED));
+            player.getInventory().addItem(new ItemStack(Material.CRAFTING_TABLE, 1));
+            player.getInventory().addItem(new ItemStack(Material.JUNGLE_CHEST_BOAT, 1));
+            player.getInventory().addItem(new ItemStack(Material.ARROW, 64));
+            //endregion
         }
     }
 
