@@ -189,9 +189,7 @@ public class BingoCommand implements CommandExecutor {
 
                     player.openInventory(settingsGUI);
 
-                } else if (!player.hasPermission("shantek.ultimatebingo.start") && args[0].equalsIgnoreCase("start")
-                        || !player.hasPermission("shantek.ultimatebingo.stop") && args[0].equalsIgnoreCase("stop")
-                        || args[0].equalsIgnoreCase("settings") && !player.hasPermission("shantek.ultimatebingo.settings")) {
+                } else {
                     player.sendMessage(ChatColor.RED + "You do not have permission to do that!");
                 }
 
