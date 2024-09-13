@@ -321,7 +321,6 @@ public class BingoFunctions
             player.getInventory().addItem(createEnchantedItem(Material.NETHERITE_HOE, new Enchantment[]{Enchantment.DIG_SPEED, Enchantment.DURABILITY, Enchantment.MENDING}, new int[]{5, 3, 1}));
 
             // Add additional items
-            player.getInventory().addItem(new ItemStack(Material.PURPLE_BED));
             player.getInventory().addItem(new ItemStack(Material.CRAFTING_TABLE, 1));
 
             //endregion
