@@ -36,14 +36,27 @@ public class EntityDamageListener implements Listener {
                         // Prevent the death by canceling the damage event
                         event.setCancelled(true);
 
-                        // Clear their inventory and teleport them back to the spawn area
-                        ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
+
+                        boolean keepInventory = player.getWorld().getGameRuleValue(GameRule.KEEP_INVENTORY);
+
+                        // Equip them with fresh loadout gear after respawning, if keep inventory is off
+                        if (keepInventory) {
+
+                            // Reset the player health and hunger
+                            ultimateBingo.bingoFunctions.resetIndividualPlayer(player, false);
+
+                        } else {
+
+                            // Clear their inventory and teleport them back to the spawn area
+                            ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
+
+                            // Give them a bingo card and the bingo loadout
+                            ultimateBingo.bingoFunctions.giveBingoCard(player);
+                            ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.currentLoadoutType);
+                        }
+
                         player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 1.0f);
                         player.teleport(ultimateBingo.bingoSpawnLocation);
-
-                        // Give them a bingo card and the bingo loadout
-                        ultimateBingo.bingoFunctions.giveBingoCard(player);
-                        ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.currentLoadoutType);
 
                         // Also give them night vision
                         if (ultimateBingo.currentGameMode.equals("speedrun")) {
