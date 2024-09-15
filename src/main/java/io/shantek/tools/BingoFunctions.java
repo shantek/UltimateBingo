@@ -737,7 +737,7 @@ public class BingoFunctions
         PotionEffectType randomPotion = negativePotions.get(random.nextInt(negativePotions.size()));
 
         // Convert the potion name to a friendly format
-        String friendlyPotionName = randomPotion.getName().toLowerCase().replace('_', ' ');
+        String friendlyPotionName = randomPotion.getName().toLowerCase().replace('_', ' ').toUpperCase();
 
         // Loop through all online players
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -752,8 +752,11 @@ public class BingoFunctions
                 // Apply the selected potion effect for the given duration (in ticks, 20 ticks per second)
                 player.addPotionEffect(new PotionEffect(randomPotion, durationInSeconds * 20, 0));
 
-                // Notify the player about the potion they received
-                player.sendMessage(ChatColor.RED + "You've been affected by " + friendlyPotionName + " for " + durationInSeconds + " seconds!");
+                // Create the subtitle message
+                String subtitle = ChatColor.RED + friendlyPotionName + " for " + durationInSeconds + " seconds!";
+
+                // Send the title (empty) and subtitle to the player
+                player.sendTitle("", subtitle, 10, 70, 20);  // 10 ticks fade in, 70 ticks stay, 20 ticks fade out
 
                 // Play the potion break sound to the player
                 player.playSound(player.getLocation(), Sound.ENTITY_SPLASH_POTION_BREAK, 1.0f, 1.0f);
@@ -762,8 +765,11 @@ public class BingoFunctions
 
         }
 
-        // Notify the excluded player about the random potion effect applied to others
-        excludedPlayer.sendMessage(ChatColor.GREEN + "All other players have been affected by " + friendlyPotionName + " for " + durationInSeconds + " seconds.");
+        // Create the subtitle message
+        String subtitle = ChatColor.GREEN + friendlyPotionName + " for " + durationInSeconds + " seconds!";
+
+        // Send the title (empty) and subtitle to the player
+        excludedPlayer.sendTitle("", subtitle, 10, 70, 20);  // 10 ticks fade in, 70 ticks stay, 20 ticks fade out
     }
 
 
