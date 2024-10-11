@@ -1,7 +1,7 @@
 **NOTE: This plugin is intended to be used on a minigames or fresh server as player inventory is reset at the start and end of every game. DO NOT RUN THIS ON YOUR LIVE SMP SERVER!**
 
 [![License: GPL](https://img.shields.io/badge/license-GPL-blue.svg)](LICENSE)
-[![Discord](https://img.shields.io/discord/628396916639793152.svg?color=%237289da&label=discord)](https://shantek.co/discord)
+[![Discord](https://img.shields.io/discord/628396916639793152.svg?color=%237289da&label=discord)](https://shantek.co/discord) [![CodeFactor](https://www.codefactor.io/repository/github/shantek/ultimatebingo/badge)](https://www.codefactor.io/repository/github/shantek/ultimatebingo)
 
 ![Ultimate Bingo](https://cdn.modrinth.com/data/cached_images/84531613476ecfe43f1395c2bc048ad116089561.png)
 
