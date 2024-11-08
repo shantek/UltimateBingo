@@ -62,6 +62,7 @@ public class BingoCompleter implements TabCompleter {
             gameModes.add("traditional");
             gameModes.add("speedrun");
             gameModes.add("brewdash");
+            gameModes.add("group");
             return StringUtil.copyPartialMatches(args[4], gameModes, new ArrayList<>());
         }
 

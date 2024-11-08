@@ -376,6 +376,15 @@ public class BingoCommand implements CommandExecutor {
                     } else {
                         ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Get a single row to win! " + timeLimitString);
                     }
+                } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+
+                        ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Group mode - Work as a team to get bingo!");
+
+                        if (ultimateBingo.currentFullCard) {
+                            ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Get a full card to win! " + timeLimitString);
+                        } else {
+                            ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Get a single row to win! " + timeLimitString);
+                        }
                 } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("brewdash")) {
 
                     ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Brew dash - Hit players with a random potion for each item you tick off!");
@@ -411,7 +420,7 @@ public class BingoCommand implements CommandExecutor {
                         }
 
                         // Also give them night vision
-                        if (ultimateBingo.currentGameMode.equals("speedrun")) {
+                        if (ultimateBingo.currentGameMode.equals("speedrun") || ultimateBingo.currentGameMode.equals("group")) {
                             player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
                         }
                     }
