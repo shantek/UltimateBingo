@@ -79,11 +79,11 @@ public class BingoPlayerJoinListener implements Listener {
                 if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
                     Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateBingo, () -> {
                         player.sendMessage(ChatColor.GREEN + "A bingo game is currently in progress. To join in, head to the bingo world and type /bingo");
-                    }, 100);
+                    }, 200);
                 } else {
                     Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateBingo, () -> {
                         player.sendMessage(ChatColor.GREEN + "A bingo game is currently in progress. Type /bingo to join in!");
-                    }, 100);
+                    }, 200);
                 }
 
                 if (ultimateBingo.bingoStarted && ultimateBingo.bingoCardActive) {
