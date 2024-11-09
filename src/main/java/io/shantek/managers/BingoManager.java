@@ -303,7 +303,7 @@ public class BingoManager{
                 ultimateBingo.bingoFunctions.topUpFirstFireworkRocketsStack(player);
 
                 String removedUnderscore = completedMaterial.name().toLowerCase().replace('_', ' ');
-                player.sendMessage(ChatColor.GREEN + "You ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from your bingo card!");
+                player.sendMessage(ChatColor.GREEN + "You ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN);
 
                 if (ultimateBingo.currentGameMode.equals("speedrun") || ultimateBingo.currentGameMode.equals("group")) {
                     // Reset the player's stats

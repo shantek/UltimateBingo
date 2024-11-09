@@ -32,7 +32,7 @@ public class BingoPlayerJoinListener implements Listener {
                 if (!ultimateBingo.bingoStarted || !ultimateBingo.bingoFunctions.isPlayerInGame(player.getUniqueId())) {
                     // Reset the player and their inventory
                     ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
-                    player.sendMessage("You aren't in an active bingo game so your inventory has been reset.");
+                    player.sendMessage("You aren't in an active bingo game. Your inventory has been reset.");
                 }
             }
         }
