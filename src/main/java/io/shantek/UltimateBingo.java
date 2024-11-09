@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class UltimateBingo extends JavaPlugin {
@@ -61,6 +62,7 @@ public final class UltimateBingo extends JavaPlugin {
     public String currentGameMode = "traditional";
     public boolean currentRevealCards = true;
     public int currentLoadoutType = 1;
+    public Inventory groupInventory;
 
 
     // Very important this is never set to an item you have included in your bingo cards
