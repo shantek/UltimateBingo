@@ -20,7 +20,13 @@ public class CardTypes {
     public boolean checkSmallCardBingo(Player player) {
 
         UUID playerId = player.getUniqueId();
-        Inventory inv = ultimateBingo.bingoManager.getBingoGUIs().get(playerId);
+
+        Inventory inv;
+        if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+            inv = ultimateBingo.groupInventory;
+        } else {
+            inv = ultimateBingo.bingoManager.getBingoGUIs().get(playerId);
+        }
 
         if (ultimateBingo.currentFullCard) {
             // Check for a full card bingo instead of individual lines
@@ -56,7 +62,12 @@ public class CardTypes {
     public boolean checkMediumCardBingo(Player player) {
 
         UUID playerId = player.getUniqueId();
-        Inventory inv = ultimateBingo.bingoManager.getBingoGUIs().get(playerId);
+        Inventory inv;
+        if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+            inv = ultimateBingo.groupInventory;
+        } else {
+            inv = ultimateBingo.bingoManager.getBingoGUIs().get(playerId);
+        }
 
         for (int i : new int[]{10, 19, 28, 37}) {
             if (inv.getItem(i).getType() == ultimateBingo.tickedItemMaterial &&
@@ -93,7 +104,12 @@ public class CardTypes {
     public boolean checkLargeCardBingo(Player player) {
 
         UUID playerId = player.getUniqueId();
-        Inventory inv = ultimateBingo.bingoManager.getBingoGUIs().get(playerId);
+        Inventory inv;
+        if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+            inv = ultimateBingo.groupInventory;
+        } else {
+            inv = ultimateBingo.bingoManager.getBingoGUIs().get(playerId);
+        }
 
         for (int i : new int[]{10, 19, 28, 37, 46}) {
             if (inv.getItem(i).getType() == ultimateBingo.tickedItemMaterial &&
@@ -134,7 +150,12 @@ public class CardTypes {
 
     public boolean checkFullCard(Player player) {
         UUID playerId = player.getUniqueId();
-        Inventory inv = ultimateBingo.bingoManager.getBingoGUIs().get(playerId);
+        Inventory inv;
+        if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+            inv = ultimateBingo.groupInventory;
+        } else {
+            inv = ultimateBingo.bingoManager.getBingoGUIs().get(playerId);
+        }
 
         for (int i = 0; i < inv.getSize(); i++) {
             // Skip the check for slot 17
