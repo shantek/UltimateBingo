@@ -109,8 +109,7 @@ public class BingoCommand implements CommandExecutor {
                         player.sendMessage(ChatColor.YELLOW + "No players found for this category.");
                     }
                     return true;
-                }
-                else if (args[0].equalsIgnoreCase("gui") && player.hasPermission("shantek.ultimatebingo.play")) {
+                } else if (args[0].equalsIgnoreCase("gui") && player.hasPermission("shantek.ultimatebingo.play")) {
 
                     // Check if multi world bingo is enabled and they're in the bingo world
                     if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
@@ -203,8 +202,12 @@ public class BingoCommand implements CommandExecutor {
 
                     } else {
 
+                        if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+                            // They aren't in the game, let's give them a card and let them join
+                            ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
+                            ultimateBingo.bingoManager.joinGameInProgress(player);
 
-                        if (!ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+                        } else if (!ultimateBingo.bingoManager.checkHasBingoCard(player)) {
 
                             // They aren't in the game, let's give them a card and let them join
                             ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
@@ -276,7 +279,13 @@ public class BingoCommand implements CommandExecutor {
             }
 
             // Set game strings for countdown
-            String cardType = ultimateBingo.currentUniqueCard ? "UNIQUE" : "IDENTICAL";
+            String cardType;
+            if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+                // Always print shared for a group game
+                cardType = "SHARED";
+            } else {
+                cardType = ultimateBingo.currentUniqueCard ? "UNIQUE" : "IDENTICAL";
+            }
             String bingoType = ultimateBingo.currentFullCard ? "FULL CARD" : "SINGLE ROW";
             String revealType = ultimateBingo.currentRevealCards ? "ENABLED" : "DISABLED";
 
