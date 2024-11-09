@@ -97,6 +97,51 @@ public class BingoManager{
         }
     }
 
+    public void createGroupBingoCard() {
+        started = true;
+
+        // Determine difficulty level and set TOTAL_ITEMS based on it
+        int difficultyLevel;
+        switch (ultimateBingo.currentDifficulty.toLowerCase()) {
+            case "normal":
+                difficultyLevel = 2;
+                TOTAL_ITEMS = 21;
+                break;
+            case "hard":
+                difficultyLevel = 3;
+                TOTAL_ITEMS = 30;
+                break;
+            default:
+                difficultyLevel = 1; // Default to "easy"
+                TOTAL_ITEMS = 14;
+                break;
+        }
+
+        // Generate and shuffle materials for the card
+        List<Material> availableMaterials = generateMaterials(difficultyLevel);
+        Collections.shuffle(availableMaterials);
+
+        // Get slots based on the card size
+        int[] slots = determineSlotsBasedOnCardSize();
+
+
+        // Store the string for the card type
+        String cardInfo = ultimateBingo.currentUniqueCard ? "unique" : "identical";
+        cardInfo += ultimateBingo.currentFullCard ? "/full card" : "/single row";
+        cardInfo = "(" + cardInfo + ")";
+
+        // Create a new inventory for each player
+        ultimateBingo.groupInventory = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
+
+        // Populate the card inventory with selected materials
+        for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
+            Material material = availableMaterials.get(i);
+            ItemStack item = new ItemStack(material);
+            ultimateBingo.groupInventory.setItem(slots[i], item);
+        }
+
+    }
+
     public boolean checkHasBingoCard(Player player) {
         UUID playerId = player.getUniqueId();
         return bingoGUIs.containsKey(playerId);

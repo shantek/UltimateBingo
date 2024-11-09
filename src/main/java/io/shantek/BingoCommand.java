@@ -267,7 +267,9 @@ public class BingoCommand implements CommandExecutor {
             }
             ultimateBingo.getMaterialList().createMaterials();
 
-            if (ultimateBingo.currentUniqueCard) {
+            if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+                ultimateBingo.bingoManager.createGroupBingoCard();
+            } else if (ultimateBingo.currentUniqueCard) {
                 ultimateBingo.bingoManager.createUniqueBingoCards();
             } else {
                 ultimateBingo.bingoManager.createBingoCards();

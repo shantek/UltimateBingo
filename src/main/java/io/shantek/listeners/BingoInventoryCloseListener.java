@@ -59,7 +59,14 @@ public class BingoInventoryCloseListener implements Listener {
 
                 // Check if the inventory type is valid or if it's a special chest
                 if (isValidType || isSpecialChest) {
-                    Inventory bingoGUI = ultimateBingo.getBingoManager().getBingoGUIs().get(uuid);
+
+                    Inventory bingoGUI;
+
+                    if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+                        bingoGUI = ultimateBingo.groupInventory;
+                    } else {
+                        bingoGUI = ultimateBingo.getBingoManager().getBingoGUIs().get(uuid);
+                    }
                     Inventory playerInventory = player.getInventory();
 
                     if (bingoGUI != null) {
