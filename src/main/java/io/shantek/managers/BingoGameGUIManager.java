@@ -90,10 +90,10 @@ public class BingoGameGUIManager {
                 ultimateBingo.gameMode = "brewdash";
                 break;
             case "brewdash":
-                ultimateBingo.gameMode = "random";
+                ultimateBingo.gameMode = "group";
                 break;
             case "group":
-                ultimateBingo.gameMode = "group";
+                ultimateBingo.gameMode = "random";
                 break;
             case "random":
                 ultimateBingo.gameMode = "traditional";
