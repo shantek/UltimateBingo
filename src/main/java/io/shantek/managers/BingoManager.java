@@ -227,7 +227,15 @@ public class BingoManager{
 
     public void markItemAsComplete(Player player, Material completedMaterial) {
 
-        Inventory inv = getBingoGUIs().get(player.getUniqueId());
+        Inventory inv = null;
+
+        if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+            inv = ultimateBingo.groupInventory;
+
+        } else {
+            inv = getBingoGUIs().get(player.getUniqueId());
+        }
+
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack item = inv.getItem(i);
             if (item != null && item.getType() == completedMaterial) {
@@ -298,18 +306,8 @@ public class BingoManager{
                     // Disable the game
                     ultimateBingo.bingoStarted = false;
 
-                    if (ultimateBingo.bingoFunctions.countActivePlayers() >1 || ultimateBingo.countSoloGames) {
-                        // Update leaderboard: player gets a win
-                        ultimateBingo.getLeaderboard().addGameResult(
-                                player.getUniqueId(),
-                                cardSize,
-                                ultimateBingo.currentFullCard,
-                                ultimateBingo.currentDifficulty,
-                                ultimateBingo.currentGameMode,
-                                true
-                        );
-
-                        // Other active players get a non-win
+                    if (ultimateBingo.bingoFunctions.countActivePlayers() > 1 || ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+                        // All players get a win
                         for (Player target : Bukkit.getOnlinePlayers()) {
                             if (ultimateBingo.bingoFunctions.isActivePlayer(target) && !target.equals(player)) {
                                 ultimateBingo.getLeaderboard().addGameResult(
@@ -318,8 +316,34 @@ public class BingoManager{
                                         ultimateBingo.currentFullCard,
                                         ultimateBingo.currentDifficulty,
                                         ultimateBingo.currentGameMode,
-                                        false
+                                        true
                                 );
+                            }
+                        }
+                    } else {
+                        if (ultimateBingo.bingoFunctions.countActivePlayers() > 1 || ultimateBingo.countSoloGames) {
+                            // Update leaderboard: player gets a win
+                            ultimateBingo.getLeaderboard().addGameResult(
+                                    player.getUniqueId(),
+                                    cardSize,
+                                    ultimateBingo.currentFullCard,
+                                    ultimateBingo.currentDifficulty,
+                                    ultimateBingo.currentGameMode,
+                                    true
+                            );
+
+                            // Other active players get a non-win
+                            for (Player target : Bukkit.getOnlinePlayers()) {
+                                if (ultimateBingo.bingoFunctions.isActivePlayer(target) && !target.equals(player)) {
+                                    ultimateBingo.getLeaderboard().addGameResult(
+                                            target.getUniqueId(),
+                                            cardSize,
+                                            ultimateBingo.currentFullCard,
+                                            ultimateBingo.currentDifficulty,
+                                            ultimateBingo.currentGameMode,
+                                            false
+                                    );
+                                }
                             }
                         }
                     }
