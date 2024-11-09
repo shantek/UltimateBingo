@@ -290,7 +290,13 @@ public class BingoManager{
             if (item != null && item.getType() == completedMaterial) {
                 item.setType(ultimateBingo.tickedItemMaterial);
                 ItemMeta meta = item.getItemMeta();
-                meta.setDisplayName(ChatColor.GREEN + "Completed: " + completedMaterial.name());
+
+                if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+                    meta.setDisplayName(ChatColor.GREEN + player.getName() + ": " + completedMaterial.name());
+                } else {
+                    meta.setDisplayName(ChatColor.GREEN + "Completed: " + completedMaterial.name());
+                }
+
                 item.setItemMeta(meta);
 
                 // Top up their rockets if using the correct loadout
@@ -482,9 +488,7 @@ public class BingoManager{
 
     public void joinGameInProgress(Player player) {
 
-        if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
-
-        } else {
+        if (!ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
 
             UUID playerId = player.getUniqueId();
             // Check if the player already has a Bingo card
