@@ -537,7 +537,11 @@ public class BingoCommand implements CommandExecutor {
             ultimateBingo.bingoFunctions.despawnAllItems();
 
             // Give them a new bingo card to check the results, only if there are results to see
-            if (!bingoManager.getBingoGUIs().isEmpty()) {
+            if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+
+                ultimateBingo.bingoFunctions.giveBingoCardToAllPlayers();
+
+            } else if (!bingoManager.getBingoGUIs().isEmpty()) {
 
                 ultimateBingo.bingoFunctions.giveBingoCardToAllPlayers();
 
