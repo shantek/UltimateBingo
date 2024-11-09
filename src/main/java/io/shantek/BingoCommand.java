@@ -549,7 +549,10 @@ public class BingoCommand implements CommandExecutor {
     //region Opening bingo cards
 
     public void openBingo(Player sender) {
-        if (bingoManager.getBingoGUIs() != null && !bingoManager.getBingoGUIs().isEmpty()) {
+        if (ultimateBingo.currentGameMode.equalsIgnoreCase("group") && ultimateBingo.groupInventory != null) {
+            sender.openInventory(ultimateBingo.groupInventory);
+
+        } else if (bingoManager.getBingoGUIs() != null && !bingoManager.getBingoGUIs().isEmpty()) {
             if (bingoManager.getBingoGUIs().containsKey(sender.getUniqueId())) {
                 sender.openInventory(bingoManager.getBingoGUIs().get(sender.getUniqueId()));
             } else {
@@ -572,6 +575,7 @@ public class BingoCommand implements CommandExecutor {
 
         }
     }
+
 
     public void openBingoOtherPlayer(Player sender, Player otherPlayer) {
         // Playing the reveal mode, all good to allow this functionality
