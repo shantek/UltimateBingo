@@ -39,7 +39,14 @@ public class BingoPickupListener implements Listener {
                     allMaterials.addAll(materialListObject.impossible);
 
                     if (allMaterials.contains(pickedItem)) {
-                        Inventory bingoGUI = bingoGUIs.get(uuid);
+                        Inventory bingoGUI;
+
+                        if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+                            bingoGUI = ultimateBingo.groupInventory;
+                        } else {
+                            bingoGUI = bingoGUIs.get(uuid);
+                        }
+
                         if (bingoGUI != null) {
                             for (int i : ultimateBingo.bingoManager.getSlots()) {
                                 ItemStack bingoItem = bingoGUI.getItem(i);
