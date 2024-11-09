@@ -29,10 +29,10 @@ public class BingoPlayerJoinListener implements Listener {
             // Check if the player teleported to the bingo world
             if (toWorld.equalsIgnoreCase(ultimateBingo.bingoWorld)) {
                 // Check if bingo isn't active
-                if (!ultimateBingo.bingoStarted) {
+                if (!ultimateBingo.bingoStarted || !ultimateBingo.bingoFunctions.isPlayerInGame(player.getUniqueId())) {
                     // Reset the player and their inventory
                     ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
-                    player.sendMessage("You have entered the bingo world, but bingo is not active. Your inventory has been reset.");
+                    player.sendMessage("You aren't in an active bingo game so your inventory has been reset.");
                 }
             }
         }
@@ -44,7 +44,7 @@ public class BingoPlayerJoinListener implements Listener {
         // Get the player who just joined
         Player player = e.getPlayer();
 
-        if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
+        if (!ultimateBingo.bingoFunctions.isPlayerInGame(player.getUniqueId())) {
 
             if (!ultimateBingo.playedSinceReboot) {
                 // A game hasn't been played since the reboot - Reset the player
@@ -68,26 +68,35 @@ public class BingoPlayerJoinListener implements Listener {
                     ultimateBingo.bingoFunctions.giveBingoCard(player);
                 }
 
-            } else if (ultimateBingo.bingoStarted && !ultimateBingo.bingoFunctions.isPlayerInGame(player.getUniqueId())) {
+            } else {
 
                 // Check if bingo is active and if they have a card. If they don't,
                 // prompt them on how to join the game. Delay the message by 5 seconds
                 player.setWalkSpeed(0.2f);
                 player.removePotionEffect(PotionEffectType.SLOW);
 
-                Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateBingo, () -> {
-                    player.sendMessage(ChatColor.GREEN + "A bingo game is currently in progress. Type /bingo to join in!");
-                }, 100);
-            } else if (ultimateBingo.bingoStarted && ultimateBingo.bingoCardActive) {
-                player.setWalkSpeed(0.2f);
-                player.removePotionEffect(PotionEffectType.SLOW);
 
+                if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateBingo, () -> {
+                        player.sendMessage(ChatColor.GREEN + "A bingo game is currently in progress. To join in, head to the bingo world and type /bingo");
+                    }, 100);
+                } else {
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateBingo, () -> {
+                        player.sendMessage(ChatColor.GREEN + "A bingo game is currently in progress. Type /bingo to join in!");
+                    }, 100);
+                }
+
+                if (ultimateBingo.bingoStarted && ultimateBingo.bingoCardActive) {
+                    player.setWalkSpeed(0.2f);
+                    player.removePotionEffect(PotionEffectType.SLOW);
+
+                }
+
+                if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && (ultimateBingo.currentGameMode.equals("speedrun") || ultimateBingo.currentGameMode.equals("group"))) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
+                }
             }
 
-            if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && (ultimateBingo.currentGameMode.equals("speedrun") || ultimateBingo.currentGameMode.equals("group"))) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
-            }
         }
-
     }
 }
