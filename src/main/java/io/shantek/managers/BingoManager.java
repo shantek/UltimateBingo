@@ -126,7 +126,7 @@ public class BingoManager{
 
 
         // Store the string for the card type
-        String cardInfo = ultimateBingo.currentUniqueCard ? "unique" : "identical";
+        String cardInfo = "group";
         cardInfo += ultimateBingo.currentFullCard ? "/full card" : "/single row";
         cardInfo = "(" + cardInfo + ")";
 
@@ -481,43 +481,48 @@ public class BingoManager{
     }
 
     public void joinGameInProgress(Player player) {
-        UUID playerId = player.getUniqueId();
 
-        // Check if the player already has a Bingo card
-        if (bingoGUIs.containsKey(playerId)) {
-            player.sendMessage(ChatColor.YELLOW + "You already have a Bingo card.");
-            return;
-        }
+        if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
 
-        if (playerBingoCards.isEmpty()) {
-            player.sendMessage(ChatColor.RED + "No Bingo cards are available to clone. Please wait for the next round.");
-            return;
-        }
+        } else {
 
-        // Find the card with the fewest ticked off items
-        UUID idOfLeastTickedCard = null;
-        int fewestTickedItems = Integer.MAX_VALUE;
-        for (Map.Entry<UUID, List<ItemStack>> entry : playerBingoCards.entrySet()) {
-            int tickedItemsCount = ultimateBingo.bingoFunctions.countTickedItems(entry.getValue());
-            if (tickedItemsCount < fewestTickedItems) {
-                fewestTickedItems = tickedItemsCount;
-                idOfLeastTickedCard = entry.getKey();
+            UUID playerId = player.getUniqueId();
+            // Check if the player already has a Bingo card
+            if (bingoGUIs.containsKey(playerId)) {
+                player.sendMessage(ChatColor.YELLOW + "You already have a Bingo card.");
+                return;
             }
+
+            if (playerBingoCards.isEmpty()) {
+                player.sendMessage(ChatColor.RED + "No Bingo cards are available to clone. Please wait for the next round.");
+                return;
+            }
+
+            // Find the card with the fewest ticked off items
+            UUID idOfLeastTickedCard = null;
+            int fewestTickedItems = Integer.MAX_VALUE;
+            for (Map.Entry<UUID, List<ItemStack>> entry : playerBingoCards.entrySet()) {
+                int tickedItemsCount = ultimateBingo.bingoFunctions.countTickedItems(entry.getValue());
+                if (tickedItemsCount < fewestTickedItems) {
+                    fewestTickedItems = tickedItemsCount;
+                    idOfLeastTickedCard = entry.getKey();
+                }
+            }
+
+            if (idOfLeastTickedCard == null) {
+                player.sendMessage(ChatColor.RED + "No suitable Bingo card found.");
+                return;
+            }
+
+            // Clone the Bingo GUI and card list
+            Inventory originalGui = bingoGUIs.get(idOfLeastTickedCard);
+            Inventory clonedGui = ultimateBingo.bingoFunctions.cloneInventory(originalGui);
+            List<ItemStack> clonedCardList = new ArrayList<>(playerBingoCards.get(idOfLeastTickedCard));
+
+            // Assign the cloned GUI and card list to the new player
+            bingoGUIs.put(playerId, clonedGui);
+            playerBingoCards.put(playerId, clonedCardList);
         }
-
-        if (idOfLeastTickedCard == null) {
-            player.sendMessage(ChatColor.RED + "No suitable Bingo card found.");
-            return;
-        }
-
-        // Clone the Bingo GUI and card list
-        Inventory originalGui = bingoGUIs.get(idOfLeastTickedCard);
-        Inventory clonedGui = ultimateBingo.bingoFunctions.cloneInventory(originalGui);
-        List<ItemStack> clonedCardList = new ArrayList<>(playerBingoCards.get(idOfLeastTickedCard));
-
-        // Assign the cloned GUI and card list to the new player
-        bingoGUIs.put(playerId, clonedGui);
-        playerBingoCards.put(playerId, clonedCardList);
 
         player.sendMessage(ChatColor.GREEN + "You've been given an in-progress bingo card, good luck!");
         ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " has just joined bingo!");
@@ -531,6 +536,7 @@ public class BingoManager{
         if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && (ultimateBingo.currentGameMode.equals("speedrun") || ultimateBingo.currentGameMode.equals("group"))) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
         }
+
 
     }
 
