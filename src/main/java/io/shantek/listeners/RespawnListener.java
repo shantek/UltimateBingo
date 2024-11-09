@@ -27,7 +27,7 @@ public class RespawnListener implements Listener {
         if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
 
             // Only teleport the player back to bingo spawn if enabled in the settings
-            if (ultimateBingo.bingoStarted && ultimateBingo.respawnTeleport) {
+            if (ultimateBingo.bingoStarted && ultimateBingo.respawnTeleport && ultimateBingo.bingoFunctions.isPlayerInGame(player.getUniqueId())) {
                 // Delay the sendTitle message by 10 ticks
                 Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
                     player.sendTitle(ChatColor.YELLOW + "TELEPORTING", ChatColor.WHITE + "One Moment", 10, 40, 10);

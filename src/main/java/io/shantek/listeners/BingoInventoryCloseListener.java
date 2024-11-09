@@ -48,7 +48,7 @@ public class BingoInventoryCloseListener implements Listener {
         if (ultimateBingo.bingoStarted) {
             Player player = (Player) event.getPlayer();
 
-            if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
+            if (ultimateBingo.bingoFunctions.isActivePlayer(player) && ultimateBingo.bingoFunctions.isPlayerInGame(player.getUniqueId())) {
 
                 UUID uuid = player.getUniqueId();
                 Inventory inventory = event.getInventory();

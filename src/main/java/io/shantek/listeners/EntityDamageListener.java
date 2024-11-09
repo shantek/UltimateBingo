@@ -25,7 +25,7 @@ public class EntityDamageListener implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
 
-            if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
+            if (ultimateBingo.bingoFunctions.isActivePlayer(player) && ultimateBingo.bingoFunctions.isPlayerInGame(player.getUniqueId())) {
 
                 // Only teleport the player back to bingo spawn if enabled in the settings
                 if (ultimateBingo.bingoStarted && ultimateBingo.respawnTeleport) {

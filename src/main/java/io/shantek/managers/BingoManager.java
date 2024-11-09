@@ -528,7 +528,7 @@ public class BingoManager{
             playerBingoCards.put(playerId, clonedCardList);
         }
 
-        player.sendMessage(ChatColor.GREEN + "You've been given an in-progress bingo card, good luck!");
+        player.sendMessage(ChatColor.GREEN + "You joined the bingo game. Good luck!");
         ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " has just joined bingo!");
 
         // Give them a bingo card
@@ -540,6 +540,9 @@ public class BingoManager{
         if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && (ultimateBingo.currentGameMode.equals("speedrun") || ultimateBingo.currentGameMode.equals("group"))) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
         }
+
+        // Add them to the player list
+        ultimateBingo.bingoFunctions.addPlayer(player.getUniqueId());
 
 
     }

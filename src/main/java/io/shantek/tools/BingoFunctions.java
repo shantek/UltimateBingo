@@ -25,6 +25,7 @@ public class BingoFunctions
     }
 
     private Random random = new Random();
+    private HashMap<UUID, Boolean> playerMap = new HashMap<>();
 
     //region Resetting the players
 
@@ -101,6 +102,8 @@ public class BingoFunctions
 
         }
     }
+
+
 
     //endregion
 
@@ -772,6 +775,25 @@ public class BingoFunctions
         excludedPlayer.sendTitle("", subtitle, 10, 70, 20);  // 10 ticks fade in, 70 ticks stay, 20 ticks fade out
     }
 
+
+    //endregion
+
+    //region Player Tracking for Games
+
+    // Method to store a UUID in the map
+    public void addPlayer(UUID playerId) {
+        playerMap.put(playerId, true);
+    }
+
+    // Method to clear the map
+    public void clearPlayers() {
+        playerMap.clear();
+    }
+
+    // Method to check if a UUID is in the map
+    public boolean isPlayerInGame(UUID playerId) {
+        return playerMap.containsKey(playerId);
+    }
 
     //endregion
 }

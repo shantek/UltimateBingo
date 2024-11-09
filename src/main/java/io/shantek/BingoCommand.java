@@ -240,6 +240,9 @@ public class BingoCommand implements CommandExecutor {
 
         } else {
 
+            // Clear the player list
+            ultimateBingo.bingoFunctions.clearPlayers();
+
             // Clear any data prior to the new game
             bingoManager.clearData();
 
@@ -434,6 +437,9 @@ public class BingoCommand implements CommandExecutor {
                         if (ultimateBingo.currentGameMode.equals("speedrun") || ultimateBingo.currentGameMode.equals("group")) {
                             player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
                         }
+
+                        // Add them to the player list
+                        ultimateBingo.bingoFunctions.addPlayer(player.getUniqueId());
                     }
                 }, 310); // 210 ticks = 10.5 seconds, just after the "GO!"
 

@@ -68,7 +68,7 @@ public class BingoPlayerJoinListener implements Listener {
                     ultimateBingo.bingoFunctions.giveBingoCard(player);
                 }
 
-            } else if (ultimateBingo.bingoStarted && !ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+            } else if (ultimateBingo.bingoStarted && !ultimateBingo.bingoFunctions.isPlayerInGame(player.getUniqueId())) {
 
                 // Check if bingo is active and if they have a card. If they don't,
                 // prompt them on how to join the game. Delay the message by 5 seconds
