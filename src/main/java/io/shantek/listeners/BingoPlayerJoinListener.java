@@ -45,7 +45,7 @@ public class BingoPlayerJoinListener implements Listener {
         Player player = e.getPlayer();
 
 
-        if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+        if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase()) && ultimateBingo.bingoStarted) {
 
             if (!ultimateBingo.bingoFunctions.isPlayerInGame(player.getUniqueId())) {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateBingo, () -> {
