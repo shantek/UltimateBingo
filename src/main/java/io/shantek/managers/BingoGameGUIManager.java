@@ -35,7 +35,11 @@ public class BingoGameGUIManager {
         gameConfigInventory.setItem(0, createItem(setGUIIcon("gamemode"), "Game mode", ultimateBingo.gameMode));
         gameConfigInventory.setItem(1, createItem(setGUIIcon("difficulty"), "Difficulty", ultimateBingo.difficulty));
         gameConfigInventory.setItem(2, createItem(setGUIIcon("cardsize"), "Card Size", ultimateBingo.cardSize));
-        gameConfigInventory.setItem(3, createItem(setGUIIcon("uniqueCard"), "Card Type", ultimateBingo.uniqueCard.toUpperCase()));
+        if (!ultimateBingo.gameMode.equalsIgnoreCase("group")) {
+            gameConfigInventory.setItem(3, createItem(setGUIIcon("uniqueCard"), "Card Type", ultimateBingo.uniqueCard.toUpperCase()));
+        } else {
+            gameConfigInventory.setItem(3,null);
+        }
         gameConfigInventory.setItem(4, createItem(setGUIIcon("wincondition"), "Win Condition", ultimateBingo.fullCard.toUpperCase()));
         gameConfigInventory.setItem(5, createItem(setGUIIcon("reveal"), "Reveal Cards", ultimateBingo.revealCards.toUpperCase()));
 
@@ -256,7 +260,11 @@ public class BingoGameGUIManager {
             currentInventory.setItem(0, createItem(setGUIIcon("gamemode"), "Game mode", ultimateBingo.gameMode));
             currentInventory.setItem(1, createItem(setGUIIcon("difficulty"), "Difficulty", ultimateBingo.difficulty));
             currentInventory.setItem(2, createItem(setGUIIcon("cardsize"), "Card Size", ultimateBingo.cardSize));
-            currentInventory.setItem(3, createItem(setGUIIcon("uniqueCard"), "Card Type", ultimateBingo.uniqueCard.toUpperCase()));
+            if (!ultimateBingo.gameMode.equalsIgnoreCase("group")) {
+                currentInventory.setItem(3, createItem(setGUIIcon("uniqueCard"), "Card Type", ultimateBingo.uniqueCard.toUpperCase()));
+            } else {
+                currentInventory.setItem(3,null);
+            }
             currentInventory.setItem(4, createItem(setGUIIcon("wincondition"), "Win Condition", ultimateBingo.fullCard.toUpperCase()));
             currentInventory.setItem(5, createItem(setGUIIcon("reveal"), "Reveal Cards", ultimateBingo.revealCards.toUpperCase()));
 
