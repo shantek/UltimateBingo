@@ -44,18 +44,27 @@ public class BingoPlayerJoinListener implements Listener {
         // Get the player who just joined
         Player player = e.getPlayer();
 
-        if (!ultimateBingo.bingoFunctions.isPlayerInGame(player.getUniqueId())) {
 
+        if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+
+            if (!ultimateBingo.bingoFunctions.isPlayerInGame(player.getUniqueId())) {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateBingo, () -> {
+                    player.sendMessage(ChatColor.GREEN + "A bingo game is currently in progress. To join in, head to the bingo world and type /bingo");
+                }, 200);
+            }
+        }
+
+        if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
             if (!ultimateBingo.playedSinceReboot) {
                 // A game hasn't been played since the reboot - Reset the player
                 player.setWalkSpeed(0.2f);
                 player.removePotionEffect(PotionEffectType.SLOW);
                 ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
                 return;
-            }
 
-            // A game has been played since reboot - see what we need to do with the player
-            if (!ultimateBingo.bingoStarted) {
+            } else if (!ultimateBingo.bingoStarted) {
+
+                // A game has been played since reboot - see what we need to do with the player
                 player.setWalkSpeed(0.2f);
                 player.removePotionEffect(PotionEffectType.SLOW);
 
@@ -76,15 +85,10 @@ public class BingoPlayerJoinListener implements Listener {
                 player.removePotionEffect(PotionEffectType.SLOW);
 
 
-                if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateBingo, () -> {
-                        player.sendMessage(ChatColor.GREEN + "A bingo game is currently in progress. To join in, head to the bingo world and type /bingo");
-                    }, 200);
-                } else {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateBingo, () -> {
-                        player.sendMessage(ChatColor.GREEN + "A bingo game is currently in progress. Type /bingo to join in!");
-                    }, 200);
-                }
+                Bukkit.getScheduler().scheduleSyncDelayedTask(ultimateBingo, () -> {
+                    player.sendMessage(ChatColor.GREEN + "A bingo game is currently in progress. Type /bingo to join in!");
+                }, 200);
+
 
                 if (ultimateBingo.bingoStarted && ultimateBingo.bingoCardActive) {
                     player.setWalkSpeed(0.2f);
@@ -98,5 +102,7 @@ public class BingoPlayerJoinListener implements Listener {
             }
 
         }
+
     }
+
 }
