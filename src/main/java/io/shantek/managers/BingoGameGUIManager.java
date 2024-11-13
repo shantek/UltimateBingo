@@ -97,6 +97,9 @@ public class BingoGameGUIManager {
                 ultimateBingo.gameMode = "group";
                 break;
             case "group":
+                ultimateBingo.gameMode = "teams";
+                break;
+            case "teams":
                 ultimateBingo.gameMode = "random";
                 break;
             case "random":
