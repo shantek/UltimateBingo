@@ -23,7 +23,7 @@ public class BingoGameGUIManager {
         optionsMap = new HashMap<>();
         optionsMap.put("difficulty", new String[]{"easy", "normal", "hard"});
         optionsMap.put("cardSize", new String[]{"small", "medium", "large"});
-        optionsMap.put("gameMode", new String[]{"speedrun", "traditional", "brewdash", "group"});
+        optionsMap.put("gameMode", new String[]{"speedrun", "traditional", "brewdash", "group", "teams"});
         optionsMap.put("uniqueCard", new String[]{"unique", "identical"});
         optionsMap.put("fullCard", new String[]{"full card", "single row"});
         optionsMap.put("revealCards", new String[]{"enabled", "disabled"});
@@ -354,6 +354,8 @@ public class BingoGameGUIManager {
                 materialToDisplay = Material.DIAMOND_BOOTS;
             } else if (ultimateBingo.gameMode.equalsIgnoreCase("group")) {
                 materialToDisplay = Material.ENDER_CHEST;
+            } else if (ultimateBingo.gameMode.equalsIgnoreCase("teams")) {
+                materialToDisplay = Material.RED_WOOL;
             } else if (ultimateBingo.gameMode.equalsIgnoreCase("brewdash")) {
                     materialToDisplay = Material.POTION;
             } else if (ultimateBingo.gameMode.equalsIgnoreCase("random")) {

@@ -464,6 +464,12 @@ public class BingoManager{
         if (playerBingoCards != null) {
             playerBingoCards.clear();
         }
+
+        // Clear any old team or group inventories
+        ultimateBingo.groupInventory = null;
+        ultimateBingo.redTeamInventory = null;
+        ultimateBingo.blueTeamInventory = null;
+        ultimateBingo.yellowTeamInventory = null;
     }
 
     public void setBingoCards(int amount) {
