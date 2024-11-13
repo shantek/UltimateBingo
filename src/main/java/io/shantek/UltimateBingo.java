@@ -62,7 +62,14 @@ public final class UltimateBingo extends JavaPlugin {
     public String currentGameMode = "traditional";
     public boolean currentRevealCards = true;
     public int currentLoadoutType = 1;
+
+    // Inventory used for group game mode
     public Inventory groupInventory;
+
+    // Inventories used for teams mode
+    public Inventory blueTeamInventory;
+    public Inventory redTeamInventory;
+    public Inventory yellowTeamInventory;
 
 
     // Very important this is never set to an item you have included in your bingo cards
