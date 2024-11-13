@@ -418,8 +418,12 @@ public class BingoCommand implements CommandExecutor {
             ultimateBingo.playedSinceReboot = true;
 
             // Get all online players as a List and scatter/teleport them all close together
-            List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
-            ultimateBingo.bingoFunctions.safeScatterPlayers(players, ultimateBingo.bingoSpawnLocation, 5);
+            // Don't do this for a group game
+
+            if (!ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
+                List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+                ultimateBingo.bingoFunctions.safeScatterPlayers(players, ultimateBingo.bingoSpawnLocation, 5);
+            }
 
             // Handle player teleportation and give bingo cards after the countdown
             onlinePlayers.forEach(player -> {
