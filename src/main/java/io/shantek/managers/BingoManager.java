@@ -142,6 +142,93 @@ public class BingoManager{
 
     }
 
+    public void createTeamBingoCards() {
+        started = true;
+
+        // Determine difficulty level and set TOTAL_ITEMS based on it
+        int difficultyLevel;
+        switch (ultimateBingo.currentDifficulty.toLowerCase()) {
+            case "normal":
+                difficultyLevel = 2;
+                TOTAL_ITEMS = 21;
+                break;
+            case "hard":
+                difficultyLevel = 3;
+                TOTAL_ITEMS = 30;
+                break;
+            default:
+                difficultyLevel = 1; // Default to "easy"
+                TOTAL_ITEMS = 14;
+                break;
+        }
+
+        // Generate and shuffle materials for the card
+        List<Material> availableMaterials = generateMaterials(difficultyLevel);
+        Collections.shuffle(availableMaterials);
+
+        // Get slots based on the card size
+        int[] slots = determineSlotsBasedOnCardSize();
+
+
+        // Store the string for the card type
+        String cardInfo = ultimateBingo.currentUniqueCard ? "unique" : "identical";
+        cardInfo += ultimateBingo.currentFullCard ? "/full card" : "/single row";
+        cardInfo = "(" + cardInfo + ")";
+
+        // Create a new inventory for each team
+        ultimateBingo.redTeamInventory = Bukkit.createInventory(null, 54, ChatColor.RED.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
+        ultimateBingo.blueTeamInventory = Bukkit.createInventory(null, 54, ChatColor.BLUE.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
+        ultimateBingo.yellowTeamInventory = Bukkit.createInventory(null, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
+
+        // Populate the red team card
+        for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
+            Material material = availableMaterials.get(i);
+            ItemStack item = new ItemStack(material);
+            ultimateBingo.redTeamInventory.setItem(slots[i], item);
+        }
+
+        // Add the Spyglass to the last slot if the feature is enabled
+        if (ultimateBingo.currentRevealCards) {
+            ultimateBingo.redTeamInventory.setItem(17, ultimateBingo.bingoFunctions.createSpyglass()); // Add Spyglass to slot 53 (last slot)
+        }
+
+        if (!ultimateBingo.currentUniqueCard) {
+            // Cards are identical, copy this card over to Yellow and Blue
+            ultimateBingo.yellowTeamInventory = ultimateBingo.redTeamInventory;
+            ultimateBingo.blueTeamInventory = ultimateBingo.redTeamInventory;
+        } else {
+            // Cards are unique - shuffle the inventory and assign them
+
+            // Populate the Yellow team card
+            Collections.shuffle(availableMaterials);
+
+            for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
+                Material material = availableMaterials.get(i);
+                ItemStack item = new ItemStack(material);
+                ultimateBingo.yellowTeamInventory.setItem(slots[i], item);
+            }
+
+            // Add the Spyglass to the last slot if the feature is enabled
+            if (ultimateBingo.currentRevealCards) {
+                ultimateBingo.yellowTeamInventory.setItem(17, ultimateBingo.bingoFunctions.createSpyglass()); // Add Spyglass to slot 53 (last slot)
+            }
+
+            Collections.shuffle(availableMaterials);
+            // Populate the Blue team card
+            for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
+                Material material = availableMaterials.get(i);
+                ItemStack item = new ItemStack(material);
+                ultimateBingo.blueTeamInventory.setItem(slots[i], item);
+            }
+
+            // Add the Spyglass to the last slot if the feature is enabled
+            if (ultimateBingo.currentRevealCards) {
+                ultimateBingo.blueTeamInventory.setItem(17, ultimateBingo.bingoFunctions.createSpyglass()); // Add Spyglass to slot 53 (last slot)
+            }
+        }
+
+    }
+
     public boolean checkHasBingoCard(Player player) {
         UUID playerId = player.getUniqueId();
         if (ultimateBingo.gameMode.equalsIgnoreCase("group")) {
