@@ -845,11 +845,6 @@ public class BingoFunctions
 
         distributeUnassignedPlayers(unassignedPlayers, redTeam, yellowTeam, blueTeam);
 
-        // Print team assignments for testing
-        onlinePlayers.forEach(player -> {
-            String team = playerTeamsMap.getOrDefault(player.getUniqueId(), "None");
-            player.sendMessage("You are on the " + team + " team!");
-        });
     }
 
     private void distributeUnassignedPlayers(List<Player> unassignedPlayers, List<Player> redTeam, List<Player> yellowTeam, List<Player> blueTeam) {

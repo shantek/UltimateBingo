@@ -352,7 +352,17 @@ public class BingoCommand implements CommandExecutor {
                     }
                     // Final "GO!" message and chime, bold and green
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                        player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "GO!", "", 10, 20, 10);
+
+                        if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams") && ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("yellow")) {
+                            player.sendTitle(ChatColor.YELLOW + "" + ChatColor.BOLD + "GO YELLOW!", "", 10, 20, 10);
+                        } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams") && ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("red")) {
+                            player.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + "GO RED!", "", 10, 20, 10);
+                        } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams") && ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("blue")) {
+                            player.sendTitle(ChatColor.BLUE + "" + ChatColor.BOLD + "GO BLUE!", "", 10, 20, 10);
+                        } else {
+                            player.sendTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "GO!", "", 10, 20, 10);
+                        }
+
                         player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
 
                         // Unfreeze players
