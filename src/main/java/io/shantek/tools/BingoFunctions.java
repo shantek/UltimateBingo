@@ -232,9 +232,22 @@ public class BingoFunctions
 
     // Despawn all items on the ground at the start/end of the game
     public void despawnAllItems() {
-        for (World world : Bukkit.getWorlds()) {
-            for (Entity entity : world.getEntitiesByClass(Item.class)) {
-                entity.remove();
+
+        if (ultimateBingo.multiWorldServer && ultimateBingo.bingoWorld != null) {
+
+            for (World world : Bukkit.getWorlds()) {
+                if (world.getName().equalsIgnoreCase(ultimateBingo.bingoWorld)) {
+                    for (Entity entity : world.getEntitiesByClass(Item.class)) {
+                        entity.remove();
+                    }
+                }
+            }
+
+        } else {
+            for (World world : Bukkit.getWorlds()) {
+                for (Entity entity : world.getEntitiesByClass(Item.class)) {
+                    entity.remove();
+                }
             }
         }
     }
