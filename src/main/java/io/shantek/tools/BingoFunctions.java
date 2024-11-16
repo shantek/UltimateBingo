@@ -16,6 +16,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BingoFunctions
 {
@@ -955,6 +956,38 @@ public class BingoFunctions
 
         String message = messageBuilder.toString();
         playerToSend.sendMessage(message);
+    }
+
+    public boolean isRedTeamNotEmpty() {
+        return playerTeamsMap.containsValue("red");
+    }
+
+    public boolean isYellowTeamNotEmpty() {
+        return playerTeamsMap.containsValue("yellow");
+    }
+
+    public boolean isBlueTeamNotEmpty() {
+        return playerTeamsMap.containsValue("blue");
+
+    }
+
+    public String getRedTeamPlayerNames() {
+        return getPlayerNamesByTeam("red");
+    }
+
+    public String getYellowTeamPlayerNames() {
+        return getPlayerNamesByTeam("yellow");
+    }
+
+    public String getBlueTeamPlayerNames() {
+        return getPlayerNamesByTeam("blue");
+    }
+
+    private String getPlayerNamesByTeam(String teamColor) {
+        return Bukkit.getOnlinePlayers().stream()
+                .filter(player -> teamColor.equals(playerTeamsMap.get(player.getUniqueId())))
+                .map(Player::getName)
+                .collect(Collectors.joining(", "));
     }
 
     //endregion
