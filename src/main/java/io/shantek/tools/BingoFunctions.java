@@ -829,8 +829,10 @@ public class BingoFunctions
         onlinePlayers.forEach(player -> {
             boolean activePlayer = true;
             // Check if multi world bingo is enabled and they're in the bingo world
-            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                activePlayer = false;
+            if (ultimateBingo.multiWorldServer) {
+                if (!player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+                    activePlayer = false;
+                }
             }
 
             if (activePlayer) {

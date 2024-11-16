@@ -527,10 +527,13 @@ public class BingoCommand implements CommandExecutor {
             ultimateBingo.bingoFunctions.despawnAllItems();
 
             // Give them a new bingo card to check the results, only if there are results to see
-            if (!bingoManager.getBingoGUIs().isEmpty()) {
-
+            if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams") || ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
                 ultimateBingo.bingoFunctions.giveBingoCardToAllPlayers();
+            } else {
+                if (!bingoManager.getBingoGUIs().isEmpty()) {
 
+                    ultimateBingo.bingoFunctions.giveBingoCardToAllPlayers();
+                }
             }
 
         }, 40L);  // Delay specified in ticks (40 ticks = 2 seconds)
