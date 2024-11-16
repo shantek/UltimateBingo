@@ -586,7 +586,7 @@ public class BingoCommand implements CommandExecutor {
         // reset their inventory and state and despawn everything off the ground
         List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
         ultimateBingo.bingoFunctions.safeScatterPlayers(players, ultimateBingo.bingoSpawnLocation, 5);
-        ultimateBingo.bingoSpawnLocation = null;
+
 
         // Schedule a delayed task to run after 2 seconds (40 ticks)
         Bukkit.getScheduler().runTaskLater(ultimateBingo, () -> {
@@ -603,6 +603,9 @@ public class BingoCommand implements CommandExecutor {
                 ultimateBingo.bingoFunctions.giveBingoCardToAllPlayers();
 
             }
+
+            // Clear the previous spawn location
+            ultimateBingo.bingoSpawnLocation = null;
 
         }, 40L);  // Delay specified in ticks (40 ticks = 2 seconds)
     }

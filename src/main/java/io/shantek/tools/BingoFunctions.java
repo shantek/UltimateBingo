@@ -479,16 +479,18 @@ public class BingoFunctions
 
     // Method to scatter players and ensure they face the center horizontally
     public void safeScatterPlayers(List<Player> players, Location center, int radius) {
-        World world = center.getWorld();
-        Random random = new Random();
+        if (center != null) {
+            World world = center.getWorld();
+            Random random = new Random();
 
-        for (Player player : players) {
+            for (Player player : players) {
 
-            if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
+                if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
 
-                Location safeLocation = findSafeLocation(world, center, radius, random, 20);
-                player.teleport(safeLocation);
-                setFacing(player, center);
+                    Location safeLocation = findSafeLocation(world, center, radius, random, 20);
+                    player.teleport(safeLocation);
+                    setFacing(player, center);
+                }
             }
         }
     }
