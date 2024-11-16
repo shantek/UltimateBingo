@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class BingoPlayerGUIListener implements Listener {
@@ -75,28 +76,47 @@ public class BingoPlayerGUIListener implements Listener {
                     }
                 } else {
 
-                    // Ensure the event was triggered in the list of player bingo cards
-                    ItemStack clickedItem = e.getCurrentItem();
-                    if (clickedItem == null || clickedItem.getType() != Material.PLAYER_HEAD) {
-                        return; // Not a valid item, ignore the click
+                    if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
+
+                        // Ensure the event was triggered in the list of player bingo cards
+                        ItemStack clickedItem = e.getCurrentItem();
+                        if (clickedItem == null || clickedItem.getType() != Material.RED_WOOL || clickedItem.getType() != Material.BLUE_WOOL || clickedItem.getType() != Material.YELLOW_WOOL){
+                            return; // Not a valid item, ignore the click
+                        }
+
+                        if (clickedItem.getType() == Material.RED_WOOL) {
+                            ultimateBingo.bingoCommand.openBingoTeamCard(player, ultimateBingo.redTeamInventory);
+                        } else if (clickedItem.getType() == Material.BLUE_WOOL) {
+                            ultimateBingo.bingoCommand.openBingoTeamCard(player, ultimateBingo.redTeamInventory);
+                        } else if (clickedItem.getType() == Material.YELLOW_WOOL) {
+                            ultimateBingo.bingoCommand.openBingoTeamCard(player, ultimateBingo.redTeamInventory);
+                        }
+
+                    } else {
+
+                        // Ensure the event was triggered in the list of player bingo cards
+                        ItemStack clickedItem = e.getCurrentItem();
+                        if (clickedItem == null || clickedItem.getType() != Material.PLAYER_HEAD) {
+                            return; // Not a valid item, ignore the click
+                        }
+
+                        // Get the item's display name and strip color codes to retrieve the player's name
+                        String displayName = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
+
+                        // Check if a player with this name exists and is online
+                        Player targetPlayer = Bukkit.getPlayerExact(displayName);
+                        if (targetPlayer == null) {
+                            e.getWhoClicked().sendMessage(ChatColor.RED + "The player's bingo card you are trying to access does not exist or they are not online.");
+                            return; // No such player found or not online, ignore the click
+                        }
+
+                        // Close the current inventory
+                        e.getWhoClicked().closeInventory();
+
+                        // Call a method to open the bingo card of the target player
+                        ultimateBingo.bingoCommand.openBingoOtherPlayer(player, targetPlayer);
+
                     }
-
-                    // Get the item's display name and strip color codes to retrieve the player's name
-                    String displayName = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
-
-                    // Check if a player with this name exists and is online
-                    Player targetPlayer = Bukkit.getPlayerExact(displayName);
-                    if (targetPlayer == null) {
-                        e.getWhoClicked().sendMessage(ChatColor.RED + "The player's bingo card you are trying to access does not exist or they are not online.");
-                        return; // No such player found or not online, ignore the click
-                    }
-
-                    // Close the current inventory
-                    e.getWhoClicked().closeInventory();
-
-                    // Call a method to open the bingo card of the target player
-                    ultimateBingo.bingoCommand.openBingoOtherPlayer(player, targetPlayer);
-
                 }
             }
         }

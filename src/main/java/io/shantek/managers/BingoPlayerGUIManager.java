@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BingoPlayerGUIManager {
@@ -42,29 +43,71 @@ public class BingoPlayerGUIManager {
         // Create a 54-slot inventory with a custom title
         Inventory inventory = Bukkit.createInventory(null, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Player Bingo Cards");
 
-        // Get all online players and populate the inventory
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        // Do team cards and use wool
 
-            if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
+        if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
 
-                if (ultimateBingo.bingoManager.bingoGUIs.containsKey(player.getUniqueId())) {  // Check if the player has a bingo card
-                    ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
-                    SkullMeta meta = (SkullMeta) playerHead.getItemMeta();
-                    meta.setOwningPlayer(player);
+            if (ultimateBingo.bingoFunctions.isRedTeamNotEmpty()) {
+                ItemStack redTeam = new ItemStack(Material.RED_WOOL);
+                ItemMeta redMeta = redTeam.getItemMeta();
+                if (redMeta != null) {
+                    redMeta.setDisplayName(ChatColor.RED + "Red Team");
+                    redMeta.setLore(Arrays.asList(ultimateBingo.bingoFunctions.getRedTeamPlayerNames().split(", ")));
+                    redTeam.setItemMeta(redMeta);
 
-                    if (meta != null) {
-                        meta.setDisplayName(ChatColor.GREEN + player.getName());
-                        List<String> lore = new ArrayList<>();
-                        lore.add(ChatColor.GRAY + "Click to view " + player.getName() + "'s Bingo Card");
-                        meta.setLore(lore);  // Set lore
-                        playerHead.setItemMeta(meta);
+                    inventory.addItem(redTeam);
+                }
+            }
 
-                        int countCompleted = ultimateBingo.bingoFunctions.countCompleted(ultimateBingo.bingoManager.getBingoGUIs().get(player.getUniqueId()));
-                        if (countCompleted > 0) {
-                            playerHead.setAmount(countCompleted);
+            if (ultimateBingo.bingoFunctions.isBlueTeamNotEmpty()) {
+                ItemStack blueTeam = new ItemStack(Material.BLUE_WOOL);
+                ItemMeta blueMeta = blueTeam.getItemMeta();
+                if (blueMeta != null) {
+                    blueMeta.setDisplayName(ChatColor.BLUE + "Blue Team");
+                    blueMeta.setLore(Arrays.asList(ultimateBingo.bingoFunctions.getBlueTeamPlayerNames().split(", ")));
+                    blueTeam.setItemMeta(blueMeta);
+                    inventory.addItem(blueTeam);
+                }
+            }
+
+            if (ultimateBingo.bingoFunctions.isYellowTeamNotEmpty()) {
+                ItemStack yellowTeam = new ItemStack(Material.YELLOW_WOOL);
+                ItemMeta yellowMeta = yellowTeam.getItemMeta();
+                if (yellowMeta != null) {
+                    yellowMeta.setDisplayName(ChatColor.YELLOW + "Yellow Team");
+                    yellowMeta.setLore(Arrays.asList(ultimateBingo.bingoFunctions.getYellowTeamPlayerNames().split(", ")));
+                    yellowTeam.setItemMeta(yellowMeta);
+                    inventory.addItem(yellowTeam);
+                }
+            }
+
+        } else {
+
+
+            // Get all online players and populate the inventory
+            for (Player player : Bukkit.getOnlinePlayers()) {
+
+                if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
+
+                    if (ultimateBingo.bingoManager.bingoGUIs.containsKey(player.getUniqueId())) {  // Check if the player has a bingo card
+                        ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
+                        SkullMeta meta = (SkullMeta) playerHead.getItemMeta();
+                        meta.setOwningPlayer(player);
+
+                        if (meta != null) {
+                            meta.setDisplayName(ChatColor.GREEN + player.getName());
+                            List<String> lore = new ArrayList<>();
+                            lore.add(ChatColor.GRAY + "Click to view " + player.getName() + "'s Bingo Card");
+                            meta.setLore(lore);  // Set lore
+                            playerHead.setItemMeta(meta);
+
+                            int countCompleted = ultimateBingo.bingoFunctions.countCompleted(ultimateBingo.bingoManager.getBingoGUIs().get(player.getUniqueId()));
+                            if (countCompleted > 0) {
+                                playerHead.setAmount(countCompleted);
+                            }
+
+                            inventory.addItem(playerHead);  // Add the item to the inventory
                         }
-
-                        inventory.addItem(playerHead);  // Add the item to the inventory
                     }
                 }
             }
