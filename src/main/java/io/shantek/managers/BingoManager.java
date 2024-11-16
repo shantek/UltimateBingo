@@ -408,29 +408,28 @@ public class BingoManager {
                         if (!target.equals(player)) { // Exclude the player who triggered the event
                             if (ultimateBingo.currentRevealCards) {
                                 if (ultimateBingo.gameMode.equalsIgnoreCase("group")) {
-                                    target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from the group bingo card!");
+                                    target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.WHITE + " ticked off " + ChatColor.GREEN + removedUnderscore + ChatColor.WHITE + " from the group bingo card!");
                                 } else if (ultimateBingo.gameMode.equalsIgnoreCase("teams")) {
 
                                     if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("red")) {
 
-                                        target.sendMessage(ChatColor.RED + player.getName() + " ticked off " + ChatColor.RED + removedUnderscore + "!");
+                                        target.sendMessage(ChatColor.RED + player.getName() + ChatColor.WHITE + " ticked off " + ChatColor.RED + removedUnderscore);
 
                                     } else if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("blue")) {
 
-                                        target.sendMessage(ChatColor.BLUE + player.getName() + " ticked off " + ChatColor.BLUE + removedUnderscore + "!");
+                                        target.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.WHITE + " ticked off " + ChatColor.BLUE + removedUnderscore);
 
 
                                     } else if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("yellow")) {
 
-                                        target.sendMessage(ChatColor.YELLOW + player.getName() + " ticked off " + ChatColor.YELLOW + removedUnderscore + "!");
-
+                                        target.sendMessage(ChatColor.YELLOW + player.getName() + ChatColor.WHITE + " ticked off " + ChatColor.GREEN + removedUnderscore);
                                     }
 
                                 } else {
-                                    target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
+                                    target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.WHITE + " ticked off " + ChatColor.GREEN + removedUnderscore + ChatColor.WHITE + " from their bingo card!");
                                 }
                             } else {
-                                target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.GREEN + " ticked off a bingo item.");
+                                target.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.WHITE + " ticked off a bingo item.");
                             }
                         }
                     }
@@ -654,16 +653,16 @@ public class BingoManager {
 
             if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("red")) {
 
-                ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.RED + player.getName() + ChatColor.GREEN + " has just joined bingo!");
+                ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.RED + player.getName() + ChatColor.GREEN + " has just joined the " + ChatColor.RED + " RED " + ChatColor.GREEN + "team!");
 
             } else if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("blue")) {
 
-                ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.BLUE + player.getName() + ChatColor.GREEN + " has just joined bingo!");
+                ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.BLUE + player.getName() + ChatColor.GREEN + " has just joined the " + ChatColor.BLUE + " BLUE " + ChatColor.GREEN + "team!");
 
 
             } else if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("yellow")) {
 
-                ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.YELLOW + player.getName() + ChatColor.GREEN + " has just joined bingo!");
+                ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.YELLOW + player.getName() + ChatColor.GREEN + " has just joined the " + ChatColor.YELLOW + " YELLOW " + ChatColor.GREEN + "team!");
 
             }
 
