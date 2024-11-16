@@ -367,7 +367,8 @@ public class BingoManager{
 
         if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
             inv = ultimateBingo.groupInventory;
-
+        } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
+            inv = ultimateBingo.bingoFunctions.getTeamInventory(player);
         } else {
             inv = getBingoGUIs().get(player.getUniqueId());
         }
@@ -378,7 +379,7 @@ public class BingoManager{
                 item.setType(ultimateBingo.tickedItemMaterial);
                 ItemMeta meta = item.getItemMeta();
 
-                if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+                if (ultimateBingo.currentGameMode.equalsIgnoreCase("group") || ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
                     meta.setDisplayName(ChatColor.GREEN + player.getName() + ": " + completedMaterial.name());
                 } else {
                     meta.setDisplayName(ChatColor.GREEN + "Completed: " + completedMaterial.name());
@@ -408,6 +409,9 @@ public class BingoManager{
                             if (ultimateBingo.currentRevealCards) {
                                 if (ultimateBingo.gameMode.equalsIgnoreCase("group")) {
                                     target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from the group bingo card!");
+                                } else if (ultimateBingo.gameMode.equalsIgnoreCase("teams")) {
+                                    target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from the " + ultimateBingo.bingoFunctions.getTeam(player) + " card!");
+
                                 } else {
                                     target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
                                 }

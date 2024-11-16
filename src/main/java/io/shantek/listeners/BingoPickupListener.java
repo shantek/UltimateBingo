@@ -43,6 +43,10 @@ public class BingoPickupListener implements Listener {
 
                         if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
                             bingoGUI = ultimateBingo.groupInventory;
+                        } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
+
+                            bingoGUI = ultimateBingo.bingoFunctions.getTeamInventory(player);
+
                         } else {
                             bingoGUI = bingoGUIs.get(uuid);
                         }

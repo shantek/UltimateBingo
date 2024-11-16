@@ -796,4 +796,133 @@ public class BingoFunctions
     }
 
     //endregion
+
+    //region Team functionality
+
+    private Random teamRandom = new Random();
+    private HashMap<UUID, Boolean> activePlayersMap = new HashMap<>();
+    private HashMap<UUID, String> playerTeamsMap = new HashMap<>();
+
+    // Store a reference to all online players
+    public void assignTeams() {
+        List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
+        List<Player> redTeam = new ArrayList<>();
+        List<Player> yellowTeam = new ArrayList<>();
+        List<Player> blueTeam = new ArrayList<>();
+        List<Player> unassignedPlayers = new ArrayList<>();
+
+        // Display initial messages
+        onlinePlayers.forEach(player -> {
+            boolean activePlayer = true;
+            // Check if multi world bingo is enabled and they're in the bingo world
+            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+                activePlayer = false;
+            }
+
+            if (activePlayer) {
+                // Check the block below the player
+                Location locationBelow = player.getLocation().subtract(0, 1, 0);
+                Material blockStandingOn = locationBelow.getBlock().getType();
+                switch (blockStandingOn) {
+                    case BLUE_WOOL:
+                        blueTeam.add(player);
+                        playerTeamsMap.put(player.getUniqueId(), "blue");
+                        break;
+                    case RED_WOOL:
+                        redTeam.add(player);
+                        playerTeamsMap.put(player.getUniqueId(), "red");
+                        break;
+                    case YELLOW_WOOL:
+                        yellowTeam.add(player);
+                        playerTeamsMap.put(player.getUniqueId(), "yellow");
+                        break;
+                    default:
+                        unassignedPlayers.add(player);
+                }
+            }
+        });
+
+        distributeUnassignedPlayers(unassignedPlayers, redTeam, yellowTeam, blueTeam);
+
+        // Print team assignments for testing
+        onlinePlayers.forEach(player -> {
+            String team = playerTeamsMap.getOrDefault(player.getUniqueId(), "None");
+            player.sendMessage("You are in team: " + team);
+        });
+    }
+
+    private void distributeUnassignedPlayers(List<Player> unassignedPlayers, List<Player> redTeam, List<Player> yellowTeam, List<Player> blueTeam) {
+        for (Player player : unassignedPlayers) {
+            int redTeamSize = redTeam.size();
+            int yellowTeamSize = yellowTeam.size();
+            int blueTeamSize = blueTeam.size();
+
+            if (redTeamSize <= yellowTeamSize && redTeamSize <= blueTeamSize) {
+                redTeam.add(player);
+                playerTeamsMap.put(player.getUniqueId(), "red");
+            } else if (yellowTeamSize <= redTeamSize && yellowTeamSize <= blueTeamSize) {
+                yellowTeam.add(player);
+                playerTeamsMap.put(player.getUniqueId(), "yellow");
+            } else {
+                blueTeam.add(player);
+                playerTeamsMap.put(player.getUniqueId(), "blue");
+            }
+        }
+    }
+
+    // Method to get the team of a player
+    public String getTeam(Player player) {
+        return playerTeamsMap.getOrDefault(player.getUniqueId(), "None");
+    }
+
+    // Method to get the team inventory of a player
+    public Inventory getTeamInventory(Player player) {
+        String team = getTeam(player);
+        return switch (team.toLowerCase()) {
+            case "blue" -> ultimateBingo.blueTeamInventory;
+            case "red" -> ultimateBingo.redTeamInventory;
+            case "yellow" -> ultimateBingo.yellowTeamInventory;
+            default -> null; // or some default inventory
+        };
+    }
+
+    // Method to send a message to all active players with the list of active players and their teams
+    public void notifyActivePlayers(Player playerToSend) {
+        List<Player> activePlayers = new ArrayList<>();
+        StringBuilder messageBuilder = new StringBuilder("Active players in the game:\n");
+
+        // Build the list of active players and their teams
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            String team = playerTeamsMap.get(player.getUniqueId());
+            if (team != null) {
+                net.md_5.bungee.api.ChatColor color;
+                switch (team.toLowerCase()) {
+                    case "blue":
+                        color = net.md_5.bungee.api.ChatColor.BLUE;
+                        break;
+                    case "red":
+                        color = net.md_5.bungee.api.ChatColor.RED;
+                        break;
+                    case "yellow":
+                        color = net.md_5.bungee.api.ChatColor.YELLOW;
+                        break;
+                    default:
+                        color = net.md_5.bungee.api.ChatColor.WHITE;
+                        break;
+                }
+                messageBuilder.append(color).append(player.getName()).append(net.md_5.bungee.api.ChatColor.RESET).append(", ");
+                activePlayers.add(player);
+            }
+        });
+
+        // Trim last comma and space
+        if (messageBuilder.length() > 2) {
+            messageBuilder.setLength(messageBuilder.length() - 2);
+        }
+
+        String message = messageBuilder.toString();
+        playerToSend.sendMessage(message);
+    }
+
+    //endregion
 }

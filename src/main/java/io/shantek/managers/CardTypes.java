@@ -153,6 +153,10 @@ public class CardTypes {
         Inventory inv;
         if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
             inv = ultimateBingo.groupInventory;
+        } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
+
+            inv = ultimateBingo.bingoFunctions.getTeamInventory(player);
+
         } else {
             inv = ultimateBingo.bingoManager.getBingoGUIs().get(playerId);
         }

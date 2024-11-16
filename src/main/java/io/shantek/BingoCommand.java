@@ -277,6 +277,7 @@ public class BingoCommand implements CommandExecutor {
                 ultimateBingo.bingoManager.createGroupBingoCard();
             } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
                 ultimateBingo.bingoManager.createTeamBingoCards();
+                ultimateBingo.bingoFunctions.assignTeams();
             } else if (ultimateBingo.currentUniqueCard) {
                 ultimateBingo.bingoManager.createUniqueBingoCards();
             } else {
@@ -356,6 +357,10 @@ public class BingoCommand implements CommandExecutor {
                         // Unfreeze players
                         player.removePotionEffect(PotionEffectType.SLOW);
                         player.setWalkSpeed(0.2f); // Default walk speed
+
+                        if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
+                            ultimateBingo.bingoFunctions.notifyActivePlayers(player);
+                        }
                     }, 290); // 1.5 seconds after "1"
 
                 }
@@ -578,6 +583,18 @@ public class BingoCommand implements CommandExecutor {
     public void openBingo(Player sender) {
         if (ultimateBingo.currentGameMode.equalsIgnoreCase("group") && ultimateBingo.groupInventory != null) {
             sender.openInventory(ultimateBingo.groupInventory);
+
+        } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
+
+            Inventory teamInventory = ultimateBingo.bingoFunctions.getTeamInventory(sender);
+
+            if (teamInventory != null) {
+                sender.openInventory(teamInventory);
+            } else {
+                sender.sendMessage(ChatColor.RED + "No team inventory found. Are you in an active game?");
+
+            }
+
 
         } else if (bingoManager.getBingoGUIs() != null && !bingoManager.getBingoGUIs().isEmpty()) {
             if (bingoManager.getBingoGUIs().containsKey(sender.getUniqueId())) {
