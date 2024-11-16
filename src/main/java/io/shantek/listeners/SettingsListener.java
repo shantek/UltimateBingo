@@ -223,7 +223,7 @@ public class SettingsListener implements Listener {
         Inventory bingoItems = Bukkit.createInventory(player, 54, settingsManager.getDifficultyDisplay(difficulty));
 
         for (Material material : materialList.getMaterials().get(difficulty)){
-            ItemStack item = new ItemBuilder(material).withLore(ChatColor.GRAY + "LEFT-CLICK to Remove").build();
+            ItemStack item = new ItemBuilder(material).withLore(ChatColor.LIGHT_PURPLE + "LEFT-CLICK to Remove").build();
             bingoItems.addItem(item);
         }
         if (bingoItems.getItem(53) != null && !sentWarning){

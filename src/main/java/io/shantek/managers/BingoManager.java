@@ -69,7 +69,7 @@ public class BingoManager {
                 cardInfo = "(" + cardInfo + ")";
 
                 // Create a new inventory for each player
-                Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.DARK_GRAY + cardInfo);
+                Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.LIGHT_PURPLE + cardInfo);
 
                 // Populate the card inventory with selected materials
                 for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
@@ -131,7 +131,7 @@ public class BingoManager {
         cardInfo = "(" + cardInfo + ")";
 
         // Create a new inventory for each player
-        ultimateBingo.groupInventory = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.DARK_GRAY + cardInfo);
+        ultimateBingo.groupInventory = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.LIGHT_PURPLE + cardInfo);
 
         // Populate the card inventory with selected materials
         for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
@@ -176,9 +176,9 @@ public class BingoManager {
         cardInfo = "(" + cardInfo + ")";
 
         // Create a new inventory for each team
-        ultimateBingo.redTeamInventory = Bukkit.createInventory(null, 54, ChatColor.RED.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.DARK_GRAY + cardInfo);
-        ultimateBingo.blueTeamInventory = Bukkit.createInventory(null, 54, ChatColor.BLUE.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.DARK_GRAY + cardInfo);
-        ultimateBingo.yellowTeamInventory = Bukkit.createInventory(null, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.DARK_GRAY + cardInfo);
+        ultimateBingo.redTeamInventory = Bukkit.createInventory(null, 54, ChatColor.RED.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.LIGHT_PURPLE + cardInfo);
+        ultimateBingo.blueTeamInventory = Bukkit.createInventory(null, 54, ChatColor.BLUE.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.LIGHT_PURPLE + cardInfo);
+        ultimateBingo.yellowTeamInventory = Bukkit.createInventory(null, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.LIGHT_PURPLE + cardInfo);
 
         // Populate the red team card
         for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
@@ -422,7 +422,7 @@ public class BingoManager {
 
                                     } else if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("yellow")) {
 
-                                        target.sendMessage(ChatColor.YELLOW + player.getName() + ChatColor.WHITE + " ticked off " + ChatColor.GREEN + removedUnderscore);
+                                        target.sendMessage(ChatColor.YELLOW + player.getName() + ChatColor.WHITE + " ticked off " + ChatColor.YELLOW + removedUnderscore);
                                     }
 
                                 } else {
