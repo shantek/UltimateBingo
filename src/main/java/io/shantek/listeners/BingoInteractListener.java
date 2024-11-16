@@ -37,12 +37,13 @@ public class BingoInteractListener implements Listener {
             // Check if the player is holding the "Bingo card"
             if (itemInHand != null && itemInHand.getType() == ultimateBingo.bingoCardMaterial && itemInHand.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Bingo Card")) {
 
-                if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+                if (ultimateBingo.currentGameMode.equalsIgnoreCase("group") || ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
                     if (!ultimateBingo.bingoFunctions.isPlayerInGame(player.getUniqueId())) {
                         player.sendMessage(ChatColor.RED + "Type /bingo to join the game.");
                     } else {
                         ultimateBingo.bingoCommand.openBingo(player);
                     }
+
                 }
                 else if (ultimateBingo.bingoCardActive || (!ultimateBingo.bingoManager.getBingoGUIs().isEmpty() && ultimateBingo.bingoManager.checkHasBingoCard(player))) {
                     ultimateBingo.bingoCommand.openBingo(player);

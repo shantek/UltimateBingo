@@ -399,7 +399,16 @@ public class BingoCommand implements CommandExecutor {
                     }
                 } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
 
-                        ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Group mode - Work as a team to get bingo!");
+                    ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Group mode - Work as a team to get bingo!");
+
+                    if (ultimateBingo.currentFullCard) {
+                        ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Get a full card to win! " + timeLimitString);
+                    } else {
+                        ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Get a single row to win! " + timeLimitString);
+                    }
+                } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
+
+                        ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Team mode - Work as a team to get bingo!");
 
                         if (ultimateBingo.currentFullCard) {
                             ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GREEN + "Get a full card to win! " + timeLimitString);
@@ -563,7 +572,7 @@ public class BingoCommand implements CommandExecutor {
             ultimateBingo.bingoFunctions.despawnAllItems();
 
             // Give them a new bingo card to check the results, only if there are results to see
-            if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+            if (ultimateBingo.currentGameMode.equalsIgnoreCase("group") || ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
 
                 ultimateBingo.bingoFunctions.giveBingoCardToAllPlayers();
 
