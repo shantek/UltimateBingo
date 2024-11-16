@@ -202,10 +202,11 @@ public class BingoCommand implements CommandExecutor {
 
                     } else {
 
-                        if (ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+                        if (ultimateBingo.currentGameMode.equalsIgnoreCase("group") || ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
                             // They aren't in the game, let's give them a card and let them join
                             ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
                             ultimateBingo.bingoManager.joinGameInProgress(player);
+
 
                         } else if (!ultimateBingo.bingoManager.checkHasBingoCard(player)) {
 

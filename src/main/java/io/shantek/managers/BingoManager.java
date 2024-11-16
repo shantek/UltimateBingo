@@ -410,7 +410,21 @@ public class BingoManager {
                                 if (ultimateBingo.gameMode.equalsIgnoreCase("group")) {
                                     target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from the group bingo card!");
                                 } else if (ultimateBingo.gameMode.equalsIgnoreCase("teams")) {
-                                    target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from the " + ultimateBingo.bingoFunctions.getTeam(player) + " card!");
+
+                                    if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("red")) {
+
+                                        target.sendMessage(ChatColor.RED + player.getName() + " ticked off " + ChatColor.RED + removedUnderscore + "!");
+
+                                    } else if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("blue")) {
+
+                                        target.sendMessage(ChatColor.BLUE + player.getName() + " ticked off " + ChatColor.BLUE + removedUnderscore + "!");
+
+
+                                    } else if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("yellow")) {
+
+                                        target.sendMessage(ChatColor.YELLOW + player.getName() + " ticked off " + ChatColor.YELLOW + removedUnderscore + "!");
+
+                                    }
 
                                 } else {
                                     target.sendMessage(ChatColor.GREEN + player.getName() + " ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN + " from their bingo card!");
@@ -507,6 +521,16 @@ public class BingoManager {
                                         ChatColor.GREEN.toString() + ChatColor.BOLD + "Woop woop!");
                             }
                         }
+                    }
+                        else if (ultimateBingo.gameMode.equalsIgnoreCase("teams")) {
+                            ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " collected the last item! Well done, team!");
+                            for (Player target : Bukkit.getOnlinePlayers()) {
+                                if (ultimateBingo.bingoFunctions.isActivePlayer(target)) {
+                                    target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, 1.0f, 1.0f);
+                                    target.sendTitle(ultimateBingo.bingoFunctions.getTeam(player).toUpperCase() + " got BINGO!",
+                                            ChatColor.GREEN.toString() + ChatColor.BOLD + "Woop woop!");
+                                }
+                            }
                     } else {
                         ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " got BINGO! Nice work!");
                         for (Player target : Bukkit.getOnlinePlayers()) {
@@ -585,7 +609,7 @@ public class BingoManager {
 
     public void joinGameInProgress(Player player) {
 
-        if (!ultimateBingo.currentGameMode.equalsIgnoreCase("group")) {
+        if (!ultimateBingo.currentGameMode.equalsIgnoreCase("group") && !ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
 
             UUID playerId = player.getUniqueId();
             // Check if the player already has a Bingo card
@@ -628,11 +652,29 @@ public class BingoManager {
             // Pick a team and assign them to it
             ultimateBingo.bingoFunctions.assignPlayerToActiveTeam(player);
 
+            if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("red")) {
+
+                ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.RED + player.getName() + ChatColor.GREEN + " has just joined bingo!");
+
+            } else if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("blue")) {
+
+                ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.BLUE + player.getName() + ChatColor.GREEN + " has just joined bingo!");
+
+
+            } else if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("yellow")) {
+
+                ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.YELLOW + player.getName() + ChatColor.GREEN + " has just joined bingo!");
+
+            }
+
+
         }
         if (!ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
             player.sendMessage(ChatColor.GREEN + "You joined the bingo game. Good luck!");
+
+            ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " has just joined bingo!");
+
         }
-        ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " has just joined bingo!");
 
         // Give them a bingo card
         ultimateBingo.bingoFunctions.giveBingoCard(player);

@@ -872,7 +872,7 @@ public class BingoFunctions
 
     // Method to assign a player to an active team
     public void assignPlayerToActiveTeam(Player player) {
-        Map<String, Integer> teamSizes = new HashMap<>();
+        Map<String, Integer> teamSizes = new LinkedHashMap<>();
         teamSizes.put("red", 0);
         teamSizes.put("yellow", 0);
         teamSizes.put("blue", 0);
@@ -888,13 +888,16 @@ public class BingoFunctions
         teamSizes.entrySet().removeIf(entry -> entry.getValue() == 0);
 
         if (teamSizes.isEmpty()) {
-            // No existing players in any team, assign randomly or handle accordingly
+            // No existing players in any team, inform the player
             player.sendMessage(net.md_5.bungee.api.ChatColor.RED + "No active teams to join.");
             return;
         }
 
         // Find the team with the least players among the ones with at least one player
-        String teamToJoin = Collections.min(teamSizes.entrySet(), Map.Entry.comparingByValue()).getKey();
+        String teamToJoin = teamSizes.keySet().stream()
+                .min(Comparator.comparingInt(teamSizes::get))
+                .orElseThrow();
+
         playerTeamsMap.put(player.getUniqueId(), teamToJoin);
         player.sendMessage(net.md_5.bungee.api.ChatColor.GREEN + "You have been assigned to the " + teamToJoin + " team!");
         notifyActivePlayers(player);
