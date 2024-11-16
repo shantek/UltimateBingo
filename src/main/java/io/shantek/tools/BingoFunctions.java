@@ -847,7 +847,7 @@ public class BingoFunctions
         // Print team assignments for testing
         onlinePlayers.forEach(player -> {
             String team = playerTeamsMap.getOrDefault(player.getUniqueId(), "None");
-            player.sendMessage("You are in team: " + team);
+            player.sendMessage("You are on the " + team + " team!");
         });
     }
 
@@ -868,6 +868,36 @@ public class BingoFunctions
                 playerTeamsMap.put(player.getUniqueId(), "blue");
             }
         }
+    }
+
+    // Method to assign a player to an active team
+    public void assignPlayerToActiveTeam(Player player) {
+        Map<String, Integer> teamSizes = new HashMap<>();
+        teamSizes.put("red", 0);
+        teamSizes.put("yellow", 0);
+        teamSizes.put("blue", 0);
+
+        // Count the number of players in each team
+        playerTeamsMap.values().forEach(team -> {
+            if (teamSizes.containsKey(team)) {
+                teamSizes.put(team, teamSizes.get(team) + 1);
+            }
+        });
+
+        // Filter out the teams with no players
+        teamSizes.entrySet().removeIf(entry -> entry.getValue() == 0);
+
+        if (teamSizes.isEmpty()) {
+            // No existing players in any team, assign randomly or handle accordingly
+            player.sendMessage(net.md_5.bungee.api.ChatColor.RED + "No active teams to join.");
+            return;
+        }
+
+        // Find the team with the least players among the ones with at least one player
+        String teamToJoin = Collections.min(teamSizes.entrySet(), Map.Entry.comparingByValue()).getKey();
+        playerTeamsMap.put(player.getUniqueId(), teamToJoin);
+        player.sendMessage(net.md_5.bungee.api.ChatColor.GREEN + "You have been assigned to the " + teamToJoin + " team!");
+        notifyActivePlayers(player);
     }
 
     // Method to get the team of a player

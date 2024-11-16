@@ -12,7 +12,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
-public class BingoManager{
+public class BingoManager {
 
     Map<UUID, List<ItemStack>> playerBingoCards;
     Map<UUID, Inventory> bingoGUIs;
@@ -23,7 +23,7 @@ public class BingoManager{
     public boolean started;
     private BingoCommand bingoCommand;
 
-    public BingoManager(UltimateBingo ultimateBingo, BingoCommand bingoCommand){
+    public BingoManager(UltimateBingo ultimateBingo, BingoCommand bingoCommand) {
         this.ultimateBingo = ultimateBingo;
         this.bingoCommand = bingoCommand;
     }
@@ -231,7 +231,7 @@ public class BingoManager{
 
     public boolean checkHasBingoCard(Player player) {
         UUID playerId = player.getUniqueId();
-        if (ultimateBingo.gameMode.equalsIgnoreCase("group")) {
+        if (ultimateBingo.gameMode.equalsIgnoreCase("group") || ultimateBingo.gameMode.equalsIgnoreCase("teams")) {
             return true;
         } else {
             return bingoGUIs.containsKey(playerId);
@@ -547,7 +547,7 @@ public class BingoManager{
         }
     }
 
-    public void clearData(){
+    public void clearData() {
         if (bingoGUIs != null) {
             bingoGUIs.clear();
         }
@@ -623,9 +623,15 @@ public class BingoManager{
             // Assign the cloned GUI and card list to the new player
             bingoGUIs.put(playerId, clonedGui);
             playerBingoCards.put(playerId, clonedCardList);
-        }
 
-        player.sendMessage(ChatColor.GREEN + "You joined the bingo game. Good luck!");
+        } else if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
+            // Pick a team and assign them to it
+            ultimateBingo.bingoFunctions.assignPlayerToActiveTeam(player);
+
+        }
+        if (!ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
+            player.sendMessage(ChatColor.GREEN + "You joined the bingo game. Good luck!");
+        }
         ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " has just joined bingo!");
 
         // Give them a bingo card
@@ -643,7 +649,6 @@ public class BingoManager{
 
 
     }
-
 
 
 }
