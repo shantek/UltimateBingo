@@ -80,16 +80,16 @@ public class BingoPlayerGUIListener implements Listener {
 
                         // Ensure the event was triggered in the list of player bingo cards
                         ItemStack clickedItem = e.getCurrentItem();
-                        if (clickedItem == null || clickedItem.getType() != Material.RED_WOOL || clickedItem.getType() != Material.BLUE_WOOL || clickedItem.getType() != Material.YELLOW_WOOL){
+                        if (clickedItem == null){
                             return; // Not a valid item, ignore the click
                         }
 
                         if (clickedItem.getType() == Material.RED_WOOL) {
                             ultimateBingo.bingoCommand.openBingoTeamCard(player, ultimateBingo.redTeamInventory);
                         } else if (clickedItem.getType() == Material.BLUE_WOOL) {
-                            ultimateBingo.bingoCommand.openBingoTeamCard(player, ultimateBingo.redTeamInventory);
+                            ultimateBingo.bingoCommand.openBingoTeamCard(player, ultimateBingo.blueTeamInventory);
                         } else if (clickedItem.getType() == Material.YELLOW_WOOL) {
-                            ultimateBingo.bingoCommand.openBingoTeamCard(player, ultimateBingo.redTeamInventory);
+                            ultimateBingo.bingoCommand.openBingoTeamCard(player, ultimateBingo.yellowTeamInventory);
                         }
 
                     } else {
