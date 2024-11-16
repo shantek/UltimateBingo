@@ -23,7 +23,7 @@ public class BingoPlayerGUIManager {
     }
 
     public Inventory createPlayerGUI(Player player) {
-        Inventory gameConfigInventory = Bukkit.createInventory(player, 9, ChatColor.GOLD.toString() + ChatColor.BOLD + "Welcome to Ultimate Bingo");
+        Inventory gameConfigInventory = Bukkit.createInventory(player, 9, ChatColor.GOLD.toString() + ChatColor.DARK_GRAY + "Welcome to Ultimate Bingo");
 
         gameConfigInventory.setItem(0, createItem(ultimateBingo.bingoCardMaterial, "Replacement Bingo Card", "Win condition: " + ultimateBingo.fullCard.toUpperCase()));
 
@@ -41,11 +41,13 @@ public class BingoPlayerGUIManager {
 
     public Inventory setupPlayersBingoCardsInventory() {
         // Create a 54-slot inventory with a custom title
-        Inventory inventory = Bukkit.createInventory(null, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Player Bingo Cards");
+        Inventory inventory = null;
 
         // Do team cards and use wool
 
         if (ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
+            inventory = Bukkit.createInventory(null, 54, ChatColor.GOLD.toString() + ChatColor.DARK_GRAY + "Team Bingo Cards");
+
 
             if (ultimateBingo.bingoFunctions.isRedTeamNotEmpty()) {
                 ItemStack redTeam = new ItemStack(Material.RED_WOOL);
@@ -83,6 +85,7 @@ public class BingoPlayerGUIManager {
 
         } else {
 
+            inventory = Bukkit.createInventory(null, 54, ChatColor.GOLD.toString() + ChatColor.DARK_GRAY + "Player Bingo Cards");
 
             // Get all online players and populate the inventory
             for (Player player : Bukkit.getOnlinePlayers()) {

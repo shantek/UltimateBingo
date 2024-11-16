@@ -36,7 +36,7 @@ public class BingoPlayerGUIListener implements Listener {
         if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
 
             // Ensure the event was triggered in the Bingo configuration GUI
-            if (e.getView().getTitle().equals(ChatColor.GOLD.toString() + ChatColor.BOLD + "Welcome to Ultimate Bingo")) {
+            if (e.getView().getTitle().contains("Welcome to Ultimate Bingo")) {
                 e.setCancelled(true);  // Prevent dragging items
 
                 int slot = e.getRawSlot();
@@ -55,7 +55,7 @@ public class BingoPlayerGUIListener implements Listener {
                     }
                 }
 
-            } else if (e.getView().getTitle().contains("Player Bingo Cards")) {
+            } else if (e.getView().getTitle().contains("Player Bingo Cards") || (e.getView().getTitle().contains("Team Bingo Cards"))) {
 
                 // Prevent any items from being dragged
                 e.setCancelled(true);

@@ -69,7 +69,7 @@ public class BingoManager {
                 cardInfo = "(" + cardInfo + ")";
 
                 // Create a new inventory for each player
-                Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
+                Inventory bingoGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.DARK_GRAY + cardInfo);
 
                 // Populate the card inventory with selected materials
                 for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
@@ -131,7 +131,7 @@ public class BingoManager {
         cardInfo = "(" + cardInfo + ")";
 
         // Create a new inventory for each player
-        ultimateBingo.groupInventory = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
+        ultimateBingo.groupInventory = Bukkit.createInventory(null, 54, ChatColor.GREEN.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.DARK_GRAY + cardInfo);
 
         // Populate the card inventory with selected materials
         for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
@@ -176,9 +176,9 @@ public class BingoManager {
         cardInfo = "(" + cardInfo + ")";
 
         // Create a new inventory for each team
-        ultimateBingo.redTeamInventory = Bukkit.createInventory(null, 54, ChatColor.RED.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
-        ultimateBingo.blueTeamInventory = Bukkit.createInventory(null, 54, ChatColor.BLUE.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
-        ultimateBingo.yellowTeamInventory = Bukkit.createInventory(null, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo" + ChatColor.BLACK + " " + ChatColor.GOLD + cardInfo);
+        ultimateBingo.redTeamInventory = Bukkit.createInventory(null, 54, ChatColor.RED.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.DARK_GRAY + cardInfo);
+        ultimateBingo.blueTeamInventory = Bukkit.createInventory(null, 54, ChatColor.BLUE.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.DARK_GRAY + cardInfo);
+        ultimateBingo.yellowTeamInventory = Bukkit.createInventory(null, 54, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo" + " " + ChatColor.DARK_GRAY + cardInfo);
 
         // Populate the red team card
         for (int i = 0; i < slots.length && i < availableMaterials.size(); i++) {
@@ -194,8 +194,8 @@ public class BingoManager {
 
         if (!ultimateBingo.currentUniqueCard) {
             // Cards are identical, copy this card over to Yellow and Blue
-            ultimateBingo.yellowTeamInventory = ultimateBingo.redTeamInventory;
-            ultimateBingo.blueTeamInventory = ultimateBingo.redTeamInventory;
+            ultimateBingo.bingoFunctions.copyInventoryContents(ultimateBingo.redTeamInventory, ultimateBingo.blueTeamInventory);
+            ultimateBingo.bingoFunctions.copyInventoryContents(ultimateBingo.redTeamInventory, ultimateBingo.yellowTeamInventory);
         } else {
             // Cards are unique - shuffle the inventory and assign them
 

@@ -990,5 +990,11 @@ public class BingoFunctions
                 .collect(Collectors.joining(", "));
     }
 
+    public void copyInventoryContents(Inventory source, Inventory destination) {
+        for (int i = 0; i < source.getSize(); i++) {
+            destination.setItem(i, source.getItem(i) == null ? null : source.getItem(i).clone());
+        }
+    }
+
     //endregion
 }
