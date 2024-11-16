@@ -435,10 +435,18 @@ public class BingoCommand implements CommandExecutor {
             // Get all online players as a List and scatter/teleport them all close together
             // Don't do this for a group game
 
+            /*
             if (!ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
                 List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
                 ultimateBingo.bingoFunctions.safeScatterPlayers(players, ultimateBingo.bingoSpawnLocation, 5);
             }
+            */
+
+            // Will change this to safe scatter in teams in an update
+            List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+            ultimateBingo.bingoFunctions.safeScatterPlayers(players, ultimateBingo.bingoSpawnLocation, 5);
+
+
 
             // Handle player teleportation and give bingo cards after the countdown
             onlinePlayers.forEach(player -> {
@@ -648,6 +656,19 @@ public class BingoCommand implements CommandExecutor {
 
         }
 
+    }
+
+    public void openBingoTeamCard(Player sender, Inventory inventory) {
+
+        if (inventory == null) {
+            sender.sendMessage(ChatColor.RED + "No team inventory found. Are you in an active game?");
+        } else {
+            // Close their existing inventory
+            sender.closeInventory();
+
+            // Open the desired team inventory
+            sender.openInventory(inventory);
+        }
     }
 
     //endregion
