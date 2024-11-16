@@ -393,7 +393,7 @@ public class BingoManager {
                 String removedUnderscore = completedMaterial.name().toLowerCase().replace('_', ' ');
                 player.sendMessage(ChatColor.GREEN + "You ticked off " + ChatColor.GOLD + removedUnderscore + ChatColor.GREEN);
 
-                if (ultimateBingo.currentGameMode.equals("speedrun") || ultimateBingo.currentGameMode.equals("group")) {
+                if (ultimateBingo.currentGameMode.equals("speedrun") || ultimateBingo.currentGameMode.equals("group") || ultimateBingo.currentGameMode.equals("teams")) {
                     // Reset the player's stats
                     ultimateBingo.bingoFunctions.resetIndividualPlayer(player, false);
                 }
@@ -515,17 +515,31 @@ public class BingoManager {
                         ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " collected the last item! Well done, team!");
                         for (Player target : Bukkit.getOnlinePlayers()) {
                             if (ultimateBingo.bingoFunctions.isActivePlayer(target)) {
-                                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, 1.0f, 1.0f);
+                                target.playSound(target.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
                                 target.sendTitle("BINGO!",
                                         ChatColor.GREEN.toString() + ChatColor.BOLD + "Woop woop!");
                             }
                         }
                     }
                         else if (ultimateBingo.gameMode.equalsIgnoreCase("teams")) {
-                            ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " collected the last item! Well done, team!");
+
+                            if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("red")) {
+                                ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.RED + player.getName() + ChatColor.WHITE + " collected the last item! Well done, team " + ChatColor.RED + "RED" + ChatColor.WHITE + "!");
+
+                            } else if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("yellow")) {
+                                ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.YELLOW + player.getName() + ChatColor.WHITE + " collected the last item! Well done, team " + ChatColor.YELLOW + "YELLOW" + ChatColor.WHITE + "!");
+
+                            } else if (ultimateBingo.bingoFunctions.getTeam(player).equalsIgnoreCase("blue")) {
+                                ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.BLUE + player.getName() + ChatColor.WHITE + " collected the last item! Well done, team " + ChatColor.BLUE + "BLUE" + ChatColor.WHITE + "!");
+
+                            } else {
+                                ultimateBingo.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.GOLD + player.getName() + ChatColor.GREEN + " collected the last item! Well done, team!");
+
+                            }
+
                             for (Player target : Bukkit.getOnlinePlayers()) {
                                 if (ultimateBingo.bingoFunctions.isActivePlayer(target)) {
-                                    target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, 1.0f, 1.0f);
+                                    target.playSound(target.getLocation(), Sound.ENTITY_GHAST_SCREAM, 1.0f, 1.0f);
                                     target.sendTitle(ultimateBingo.bingoFunctions.getTeam(player).toUpperCase() + " got BINGO!",
                                             ChatColor.GREEN.toString() + ChatColor.BOLD + "Woop woop!");
                                 }
@@ -681,7 +695,7 @@ public class BingoManager {
         // Give them their loadout gear
         ultimateBingo.bingoFunctions.equipLoadoutGear(player, ultimateBingo.currentLoadoutType);
 
-        if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && (ultimateBingo.currentGameMode.equals("speedrun") || ultimateBingo.currentGameMode.equals("group"))) {
+        if (ultimateBingo.bingoStarted && ultimateBingo.bingoManager.checkHasBingoCard(player) && (ultimateBingo.currentGameMode.equals("speedrun") || ultimateBingo.currentGameMode.equalsIgnoreCase("teams") || ultimateBingo.currentGameMode.equals("group"))) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false, true));
         }
 

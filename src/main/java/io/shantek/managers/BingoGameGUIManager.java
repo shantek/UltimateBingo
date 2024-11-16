@@ -31,7 +31,7 @@ public class BingoGameGUIManager {
 
 
     public Inventory createGameGUI(Player player) {
-        Inventory gameConfigInventory = Bukkit.createInventory(player, 9, ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo Configuration");
+        Inventory gameConfigInventory = Bukkit.createInventory(player, 9, ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD + "Bingo Configuration");
         gameConfigInventory.setItem(0, createItem(setGUIIcon("gamemode"), "Game mode", ultimateBingo.gameMode));
         gameConfigInventory.setItem(1, createItem(setGUIIcon("difficulty"), "Difficulty", ultimateBingo.difficulty));
         gameConfigInventory.setItem(2, createItem(setGUIIcon("cardsize"), "Card Size", ultimateBingo.cardSize));

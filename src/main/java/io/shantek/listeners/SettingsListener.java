@@ -43,7 +43,7 @@ public class SettingsListener implements Listener {
         if (ultimateBingo.bingoFunctions.isActivePlayer(player)) {
 
             // Ensure the event was triggered in the Bingo configuration GUI
-            if (e.getView().getTitle().equals(ChatColor.GOLD.toString() + ChatColor.BOLD + "Bingo Configuration")) {
+            if (e.getView().getTitle().contains("Bingo Configuration")) {
                 e.setCancelled(true);  // Prevent dragging items
 
                 int slot = e.getRawSlot();
