@@ -28,6 +28,11 @@ public class BingoManager {
         this.bingoCommand = bingoCommand;
     }
 
+    // Method to set the BingoCommand later
+    public void setBingoCommand(BingoCommand bingoCommand) {
+        this.bingoCommand = bingoCommand;
+    }
+
     public void createBingoCards() {
         started = true;
         playerBingoCards = new HashMap<>();

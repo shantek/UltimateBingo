@@ -1008,5 +1008,178 @@ public class BingoFunctions
         }
     }
 
+    public String toggleGameMode() {
+        switch (ultimateBingo.gameMode.toLowerCase()) {
+            case "traditional":
+                ultimateBingo.gameMode = "speedrun";
+                break;
+            case "speedrun":
+                ultimateBingo.gameMode = "brewdash";
+                break;
+            case "brewdash":
+                ultimateBingo.gameMode = "group";
+                break;
+            case "group":
+                ultimateBingo.gameMode = "teams";
+                break;
+            case "teams":
+                ultimateBingo.gameMode = "random";
+                break;
+            case "random":
+                ultimateBingo.gameMode = "traditional";
+                break;
+
+        }
+
+        return ultimateBingo.gameMode;
+    }
+
+    public String toggleDifficulty() {
+        switch (ultimateBingo.difficulty.toLowerCase()) {
+            case "easy":
+                ultimateBingo.difficulty = "normal";
+                break;
+            case "normal":
+                ultimateBingo.difficulty = "hard";
+                break;
+            case "hard":
+                ultimateBingo.difficulty = "random";
+                break;
+            case "random":
+                ultimateBingo.difficulty = "easy";
+                break;
+        }
+
+        return ultimateBingo.difficulty;
+    }
+
+    public String toggleCardSize() {
+        switch (ultimateBingo.cardSize.toLowerCase()) {
+            case "small":
+                ultimateBingo.cardSize = "medium";
+                break;
+            case "medium":
+                ultimateBingo.cardSize = "large";
+                break;
+            case "large":
+                ultimateBingo.cardSize = "random";
+                break;
+            case "random":
+                ultimateBingo.cardSize = "small";
+                break;
+        }
+
+        return ultimateBingo.cardSize;
+    }
+
+    public int toggleLoadout() {
+        switch (ultimateBingo.loadoutType) {
+            case 0:
+                ultimateBingo.loadoutType = 1;
+                break;
+            case 1:
+                ultimateBingo.loadoutType = 2;
+                break;
+            case 2:
+                ultimateBingo.loadoutType = 3;
+                break;
+            case 3:
+                ultimateBingo.loadoutType = 4;
+                break;
+            case 4:
+                ultimateBingo.loadoutType = 50;
+                break;
+            case 50:
+                ultimateBingo.loadoutType = 0;
+                break;
+
+        }
+
+        return ultimateBingo.loadoutType;
+    }
+
+    public String toggleFullCard() {
+
+        switch (ultimateBingo.fullCard) {
+            case "full card":
+                ultimateBingo.fullCard = "single row";
+                break;
+            case "single row":
+                ultimateBingo.fullCard = "random";
+                break;
+            case "random":
+                ultimateBingo.fullCard = "full card";
+                break;
+        }
+
+        return ultimateBingo.fullCard;
+    }
+
+    public String toggleUnique() {
+        switch (ultimateBingo.uniqueCard) {
+            case "unique":
+                ultimateBingo.uniqueCard = "identical";
+                break;
+            case "identical":
+                ultimateBingo.uniqueCard = "random";
+                break;
+            case "random":
+                ultimateBingo.uniqueCard = "unique";
+                break;
+        }
+
+        return ultimateBingo.uniqueCard;
+    }
+
+    public String toggleReveal() {
+        switch (ultimateBingo.revealCards) {
+            case "enabled":
+                ultimateBingo.revealCards = "disabled";
+                break;
+            case "disabled":
+                ultimateBingo.revealCards = "random";
+                break;
+            case "random":
+                ultimateBingo.revealCards = "enabled";
+                break;
+        }
+
+        return ultimateBingo.revealCards;
+    }
+
+    public int toggleTimeLimit() {
+        switch (ultimateBingo.gameTime) {
+            case 0:
+                ultimateBingo.gameTime = 5;
+                break;
+            case 5:
+                ultimateBingo.gameTime = 10;
+                break;
+            case 10:
+                ultimateBingo.gameTime = 15;
+                break;
+            case 15:
+                ultimateBingo.gameTime = 20;
+                break;
+            case 20:
+                ultimateBingo.gameTime = 30;
+                break;
+            case 30:
+                ultimateBingo.gameTime = 40;
+                break;
+            case 40:
+                ultimateBingo.gameTime = 50;
+                break;
+            case 50:
+                ultimateBingo.gameTime = 60;
+                break;
+            case 60:
+                ultimateBingo.gameTime = 0;
+                break;
+        }
+
+        return ultimateBingo.gameTime;
+    }
+
     //endregion
 }

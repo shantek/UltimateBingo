@@ -12,9 +12,18 @@ import java.util.List;
 
 public class BingoCompleter implements TabCompleter {
 
+    private static final List<String> SETTINGS_OPTIONS = List.of(
+            "GameMode", "Difficulty", "CardSize", "Loadout",
+            "RevealCards", "WinCondition", "CardType", "TimeLimit", "startbutton"
+    );
+
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] args) {
-        if (args.length == 1 && commandSender instanceof Player player) {
+        if (!(commandSender instanceof Player player)) {
+            return null;
+        }
+
+        if (args.length == 1) {
             List<String> complete = new ArrayList<>();
             if (player.hasPermission("shantek.ultimatebingo.start")) {
                 complete.add("gui");
@@ -26,6 +35,9 @@ public class BingoCompleter implements TabCompleter {
                 complete.add("settings");
                 complete.add("reload");
             }
+            if (player.isOp()) {
+                complete.add("set");
+            }
 
             complete.add("info");
             complete.add("card");
@@ -36,34 +48,34 @@ public class BingoCompleter implements TabCompleter {
 
         if (args.length == 2 && args[0].equalsIgnoreCase("card")) {
             List<String> playerNames = new ArrayList<>();
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                playerNames.add(player.getName());
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                playerNames.add(onlinePlayer.getName());
             }
             return StringUtil.copyPartialMatches(args[1], playerNames, new ArrayList<>());
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("leaderboard")) {
-            List<String> cardSizes = new ArrayList<>();
-            cardSizes.add("small");
-            cardSizes.add("medium");
-            cardSizes.add("large");
+        }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("leaderboard")) {
+            List<String> cardSizes = List.of("small", "medium", "large");
             return StringUtil.copyPartialMatches(args[1], cardSizes, new ArrayList<>());
-        } else if (args.length == 3 && args[0].equalsIgnoreCase("leaderboard")) {
-            List<String> winConditions = new ArrayList<>();
-            winConditions.add("single");
-            winConditions.add("full");
+        }
+
+        if (args.length == 3 && args[0].equalsIgnoreCase("leaderboard")) {
+            List<String> winConditions = List.of("single", "full");
             return StringUtil.copyPartialMatches(args[2], winConditions, new ArrayList<>());
-        } else if (args.length == 4 && args[0].equalsIgnoreCase("leaderboard")) {
-            List<String> difficulties = new ArrayList<>();
-            difficulties.add("easy");
-            difficulties.add("normal");
-            difficulties.add("hard");
+        }
+
+        if (args.length == 4 && args[0].equalsIgnoreCase("leaderboard")) {
+            List<String> difficulties = List.of("easy", "normal", "hard");
             return StringUtil.copyPartialMatches(args[3], difficulties, new ArrayList<>());
-        } else if (args.length == 5 && args[0].equalsIgnoreCase("leaderboard")) {
-            List<String> gameModes = new ArrayList<>();
-            gameModes.add("traditional");
-            gameModes.add("speedrun");
-            gameModes.add("brewdash");
-            gameModes.add("group");
+        }
+
+        if (args.length == 5 && args[0].equalsIgnoreCase("leaderboard")) {
+            List<String> gameModes = List.of("traditional", "speedrun", "brewdash", "group", "teams");
             return StringUtil.copyPartialMatches(args[4], gameModes, new ArrayList<>());
+        }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("set") && player.isOp()) {
+            return StringUtil.copyPartialMatches(args[1], SETTINGS_OPTIONS, new ArrayList<>());
         }
 
         return null;

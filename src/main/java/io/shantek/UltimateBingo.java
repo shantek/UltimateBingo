@@ -16,6 +16,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
+
 public final class UltimateBingo extends JavaPlugin {
     public BingoManager bingoManager;
     private MaterialList materialList;
@@ -38,9 +40,11 @@ public final class UltimateBingo extends JavaPlugin {
     public boolean playedSinceReboot = false;
     public Metrics metrics;
 
+    private SettingsManager settingsManager;
+    private InGameConfigManager inGameConfigManager;
+
     // Add Leaderboard field
     private Leaderboard leaderboard;
-
     // Saved config for setting up games
     public String fullCard = "full card";
     public String difficulty;
@@ -83,23 +87,33 @@ public final class UltimateBingo extends JavaPlugin {
         // Save the instance of the plugin
         instance = this;
 
-        SettingsManager settingsManager = new SettingsManager(this);
-        bingoManager = new BingoManager(this, new BingoCommand(this, settingsManager, bingoManager));
-        bingoCommand = new BingoCommand(this, settingsManager, bingoManager);
+        // Initialize managers in the correct order
+        settingsManager = new SettingsManager(this);
+        inGameConfigManager = new InGameConfigManager(this);
+
+        // Initialize BingoManager first without BingoCommand
+        bingoManager = new BingoManager(this, null); // Temporarily set null for BingoCommand
+
+        // Now initialize BingoCommand and pass the actual bingoManager reference
+        bingoCommand = new BingoCommand(this, settingsManager, bingoManager, inGameConfigManager);
+
+        // Set the BingoCommand reference in BingoManager
+        bingoManager.setBingoCommand(bingoCommand);
+
+        // Continue with other managers
         materialList = new MaterialList(this);
         bingoGameGUIManager = new BingoGameGUIManager(this);
         bingoPlayerGUIManager = new BingoPlayerGUIManager(this);
         bingoFunctions = new BingoFunctions(this);
         cardTypes = new CardTypes(this);
         configFile = new ConfigFile(this);
-
-        // Initialize Leaderboard
         leaderboard = new Leaderboard(this);
 
-        getCommand("bingo").setExecutor(new BingoCommand(this, settingsManager, bingoManager));
+        // Register commands
+        getCommand("bingo").setExecutor(bingoCommand);
         getCommand("bingo").setTabCompleter(new BingoCompleter());
 
-        // Check if PlaceholderAPI is installed and register the placeholders
+        // Check if PlaceholderAPI is installed and register placeholders
         if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new BingoPlaceholderExpansion(this).register();
             getLogger().info("PlaceholderAPI detected, registering placeholders.");
@@ -107,17 +121,13 @@ public final class UltimateBingo extends JavaPlugin {
             getLogger().info("PlaceholderAPI not found, skipping placeholder registration.");
         }
 
-        // Register event listeners
         registerEventListeners();
-        materialList.createMaterials();
 
-        // Check if the data folder already exists, create if it doesn't
+        // Ensure game settings exist
         configFile.checkforDataFolder();
-
-        // Load the game configuration
         configFile.reloadConfigFile();
 
-        // Register bstats
+        // Register bStats
         int pluginId = 21982;
         Metrics metrics = new Metrics(this, pluginId);
     }
@@ -133,6 +143,7 @@ public final class UltimateBingo extends JavaPlugin {
         SettingsManager settingsManager = new SettingsManager(this);
         Bukkit.getPluginManager().registerEvents(new SettingsListener(materialList, settingsManager, bingoGameGUIManager, this), this);
         Bukkit.getPluginManager().registerEvents(new BingoPlayerGUIListener(materialList, bingoPlayerGUIManager, this), this);
+        Bukkit.getPluginManager().registerEvents(new BingoSignListener(this, inGameConfigManager), this);
     }
 
     public BingoManager getBingoManager() {
@@ -153,8 +164,10 @@ public final class UltimateBingo extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        bingoManager.clearData();
-        bingoManager.started = false;
+        if (bingoManager != null) {
+            bingoManager.clearData();
+        }
+        bingoStarted = false;
         instance = null;
     }
 
