@@ -60,7 +60,7 @@ public class BingoCommand implements CommandExecutor {
                 }
 
                 Block targetBlock = player.getTargetBlockExact(5);
-                if (targetBlock == null || (!targetBlock.getType().name().contains("SIGN") && targetBlock.getType() != Material.STONE_BUTTON)) {
+                if (targetBlock == null || (!targetBlock.getType().name().contains("SIGN") && !targetBlock.getType().name().contains("BUTTON"))) {
                     player.sendMessage(ChatColor.RED + "You must be looking at a valid sign or button!");
                     return true;
                 }
