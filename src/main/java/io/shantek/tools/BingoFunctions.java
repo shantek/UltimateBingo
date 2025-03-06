@@ -2,6 +2,10 @@ package io.shantek.tools;
 
 import io.shantek.UltimateBingo;
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -15,6 +19,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,6 +29,10 @@ public class BingoFunctions
     UltimateBingo ultimateBingo;
     public BingoFunctions(UltimateBingo ultimateBingo){
         this.ultimateBingo = ultimateBingo;
+
+        this.configFile = new File(ultimateBingo.getDataFolder(), "ingameconfig.yml");
+        this.config = YamlConfiguration.loadConfiguration(configFile);
+        loadSignData();
     }
 
     private Random random = new Random();
@@ -1179,6 +1189,180 @@ public class BingoFunctions
         }
 
         return ultimateBingo.gameTime;
+    }
+
+    //endregion
+
+    //region Sign Controls
+
+    public void updateSetting(String setting, Player player) {
+
+        switch (setting.toLowerCase()) {
+
+            case "gamemode":
+                updateSign(setting, toggleGameMode());
+                break;
+            case "difficulty":
+                updateSign(setting, toggleDifficulty());
+                break;
+            case "cardsize":
+                updateSign(setting, toggleCardSize());
+                break;
+            case "loadout":
+                updateLoadoutSign(setting, String.valueOf(toggleLoadout()));
+                break;
+            case "revealcards":
+                updateSign(setting, toggleReveal());
+                break;
+            case "wincondition":
+                updateSign(setting, toggleFullCard());
+                break;
+            case "cardtype":
+                updateSign(setting, toggleUnique());
+                break;
+            case "timelimit":
+                updateSign(setting, String.valueOf(toggleTimeLimit()));
+                break;
+        }
+
+    }
+
+    public void updateLoadoutSign(String setting, String textToUpdate) {
+        if (!signLocations.containsKey(setting)) return;
+        Location loc = signLocations.get(setting);
+        Block block = loc.getBlock();
+        if (!(block.getState() instanceof Sign)) return;
+
+        String textMode = null;
+        if (textToUpdate.equals("0")) {
+            textMode = "NAKED KIT";
+        } else if (textToUpdate.equals("1")) {
+            textMode = "STARTER KIT";
+        } else if (textToUpdate.equals("2")) {
+            textMode = "BOAT KIT";
+        } else if (textToUpdate.equals("3")) {
+            textMode = "FLYING KIT";
+        } else if (textToUpdate.equals("4")) {
+            textMode = "ARCHER KIT";
+        } else if (textToUpdate.equals("50")) {
+            textMode = "RANDOM";
+        }
+
+        if (textMode != null) {
+            Sign sign = (Sign) block.getState();
+            sign.setLine(1, ChatColor.BOLD + ChatColor.GOLD.toString() + setting.toUpperCase());
+            sign.setLine(2, ChatColor.WHITE + textMode.toUpperCase());
+
+            sign.setGlowingText(false);
+            sign.update();
+        }
+    }
+
+    public void updateSign(String setting, String textToUpdate) {
+        if (!signLocations.containsKey(setting)) return;
+        Location loc = signLocations.get(setting);
+        Block block = loc.getBlock();
+        if (!(block.getState() instanceof Sign)) return;
+
+        if (textToUpdate != null) {
+            Sign sign = (Sign) block.getState();
+            sign.setLine(1, ChatColor.BOLD + ChatColor.GOLD.toString() + setting.toUpperCase());
+            sign.setLine(2, ChatColor.WHITE + textToUpdate.toUpperCase());
+
+            sign.setGlowingText(false);
+            sign.update();
+        }
+    }
+
+
+    public String getSettingValue(String setting) {
+        return switch (setting.toLowerCase()) {
+            case "gamemode" -> ultimateBingo.gameMode;
+            case "difficulty" -> ultimateBingo.difficulty;
+            case "cardsize" -> ultimateBingo.cardSize;
+            case "loadout" -> String.valueOf(ultimateBingo.loadoutType);
+            case "revealcards" -> ultimateBingo.revealCards;
+            case "wincondition" -> ultimateBingo.fullCard;
+            case "cardtype" -> ultimateBingo.uniqueCard;
+            case "timelimit" -> ultimateBingo.gameTime == 0 ? "Unlimited" : ultimateBingo.gameTime + " min";
+            default -> "";
+        };
+    }
+
+    public void updateAllSigns() {
+        for (Map.Entry<String, Location> entry : signLocations.entrySet()) {
+            String setting = entry.getKey();
+            Location loc = entry.getValue();
+            Block block = loc.getBlock();
+
+            // Skip if block is not a sign
+            if (!(block.getState() instanceof Sign)) {
+                continue;
+            }
+
+            if (setting.equalsIgnoreCase("loadout")) {
+                updateLoadoutSign(setting, getSettingValue(setting));
+            } else {
+                // Get the correct setting value and update the sign
+                updateSign(setting, getSettingValue(setting));
+            }
+        }
+    }
+
+    public String locationToString(Location loc) {
+        return loc == null ? "" : loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
+    }
+
+    private final File configFile;
+    private final FileConfiguration config;
+    public final Map<String, Location> signLocations = new HashMap<>();
+    public Location startButtonLocation;
+
+    private void loadSignData() {
+        if (!configFile.exists()) {
+            saveSignData();
+            return;
+        }
+
+        if (config.contains("signs")) {
+            for (String key : config.getConfigurationSection("signs").getKeys(false)) {
+                Location loc = parseLocation(config.getString("signs." + key));
+                if (loc != null) {
+                    signLocations.put(key, loc);
+                }
+            }
+        }
+
+        // Load button location correctly
+        if (config.contains("button.startbutton")) {
+            startButtonLocation = parseLocation(config.getString("button.startbutton"));
+            ultimateBingo.getLogger().info("Loaded start button at: " + startButtonLocation);
+        } else {
+            ultimateBingo.getLogger().warning("No start button found in config!");
+        }
+    }
+
+
+    private void saveSignData() {
+        for (Map.Entry<String, Location> entry : signLocations.entrySet()) {
+            config.set("signs." + entry.getKey(), locationToString(entry.getValue()));
+        }
+        config.set("startbutton", locationToString(startButtonLocation));
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            ultimateBingo.getLogger().warning("Failed to save ingameconfig.yml");
+        }
+    }
+
+    private Location parseLocation(String locString) {
+        if (locString == null || locString.isEmpty()) return null;
+        String[] parts = locString.split(",");
+        if (parts.length != 4) return null;
+        return new Location(Bukkit.getWorld(parts[0]),
+                Double.parseDouble(parts[1]),
+                Double.parseDouble(parts[2]),
+                Double.parseDouble(parts[3]));
     }
 
     //endregion

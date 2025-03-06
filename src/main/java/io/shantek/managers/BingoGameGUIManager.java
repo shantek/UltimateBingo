@@ -297,6 +297,8 @@ public class BingoGameGUIManager {
 
             currentInventory.setItem(7, createItem(setGUIIcon("loadout"), "Player Loadout", gameLoadoutString));
 
+            // Update all the game config signs if they exist
+            ultimateBingo.bingoFunctions.updateAllSigns();
 
         } else {
             // If not viewing the Bingo configuration, open it
