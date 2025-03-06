@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class BingoSignListener implements Listener {
@@ -45,14 +46,24 @@ public class BingoSignListener implements Listener {
             return;
         }
 
-        for (String key : config.getConfigurationSection("signs").getKeys(false)) {
-            Location loc = parseLocation(config.getString("signs." + key));
-            if (loc != null) {
-                signLocations.put(key, loc);
+        if (config.contains("signs")) {
+            for (String key : config.getConfigurationSection("signs").getKeys(false)) {
+                Location loc = parseLocation(config.getString("signs." + key));
+                if (loc != null) {
+                    signLocations.put(key, loc);
+                }
             }
         }
-        startButtonLocation = parseLocation(config.getString("startbutton"));
+
+        // Load button location correctly
+        if (config.contains("button.startbutton")) {
+            startButtonLocation = parseLocation(config.getString("button.startbutton"));
+            plugin.getLogger().info("Loaded start button at: " + startButtonLocation);
+        } else {
+            plugin.getLogger().warning("No start button found in config!");
+        }
     }
+
 
     private void saveSignData() {
         for (Map.Entry<String, Location> entry : signLocations.entrySet()) {
@@ -86,6 +97,7 @@ public class BingoSignListener implements Listener {
         Block block = event.getClickedBlock();
         if (block == null) return;
 
+
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 
             if (block.getState() instanceof Sign sign) {
@@ -105,10 +117,41 @@ public class BingoSignListener implements Listener {
             }
         }
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && block.getLocation().equals(startButtonLocation)) {
-            event.setCancelled(true);
-            player.sendMessage(ChatColor.YELLOW + "Game will start in 5 seconds...");
-            Bukkit.getScheduler().runTaskLater(plugin, () -> plugin.bingoCommand.startBingo(player), 100L);
+        if (player.hasPermission("shantek.bingo.signs")) {
+            if (block.getType().name().endsWith("_BUTTON") && startButtonLocation != null) {
+                Location clickedLocation = block.getLocation();
+
+                // Debugging: Print locations for checking
+                player.sendMessage(ChatColor.YELLOW + "DEBUG: Clicked Button Location: " + clickedLocation);
+                player.sendMessage(ChatColor.YELLOW + "DEBUG: Config Button Location: " + startButtonLocation);
+
+                // Ensure startButtonLocation has a valid world before comparing
+                if (startButtonLocation.getWorld() == null || clickedLocation.getWorld() == null) {
+                    return;
+                }
+
+                // Normalize locations to block coordinates (ignore decimal precision)
+                if (Objects.equals(clickedLocation.getWorld(), startButtonLocation.getWorld()) &&
+                        clickedLocation.getBlockX() == startButtonLocation.getBlockX() &&
+                        clickedLocation.getBlockY() == startButtonLocation.getBlockY() &&
+                        clickedLocation.getBlockZ() == startButtonLocation.getBlockZ()) {
+
+                    if (!plugin.bingoButtonActive) {
+                        player.sendMessage(ChatColor.RED + "A bingo game is already active!");
+                    } else {
+                        event.setCancelled(true);
+                        player.sendMessage(ChatColor.YELLOW + "Game will start in 5 seconds...");
+
+                        plugin.bingoButtonActive = false;
+
+                        // Start game with delay
+                        Bukkit.getScheduler().runTaskLater(plugin, () -> plugin.bingoCommand.startBingo(player), 100L);
+                    }
+                }
+            }
+
+
+
         }
     }
 
@@ -126,7 +169,7 @@ public class BingoSignListener implements Listener {
                 updateSign(setting, plugin.bingoFunctions.toggleCardSize());
                 break;
             case "loadout":
-                updateSign(setting, String.valueOf(plugin.bingoFunctions.toggleLoadout()));
+                updateLoadoutSign(setting, String.valueOf(plugin.bingoFunctions.toggleLoadout()));
                 break;
             case "revealcards":
                 updateSign(setting, plugin.bingoFunctions.toggleReveal());
@@ -144,6 +187,36 @@ public class BingoSignListener implements Listener {
 
     }
 
+    private void updateLoadoutSign(String setting, String textToUpdate) {
+        if (!signLocations.containsKey(setting)) return;
+        Location loc = signLocations.get(setting);
+        Block block = loc.getBlock();
+        if (!(block.getState() instanceof Sign)) return;
+
+        String textMode = null;
+        if (textToUpdate.equals("0")) {
+            textMode = "NAKED KIT";
+        } else if (textToUpdate.equals("1")) {
+            textMode = "STARTER KIT";
+        } else if (textToUpdate.equals("2")) {
+            textMode = "BOAT KIT";
+        } else if (textToUpdate.equals("3")) {
+            textMode = "FLYING KIT";
+        } else if (textToUpdate.equals("4")) {
+            textMode = "ARCHER KIT";
+        } else if (textToUpdate.equals("50")) {
+            textMode = "RANDOM";
+        }
+
+        Sign sign = (Sign) block.getState();
+        sign.setLine(1, ChatColor.BOLD + ChatColor.GOLD.toString() + setting.toUpperCase());
+        sign.setLine(2, ChatColor.WHITE + textMode.toUpperCase());
+
+        sign.setGlowingText(false);
+        sign.update();
+    }
+
+
     private void updateSign(String setting, String textToUpdate) {
         if (!signLocations.containsKey(setting)) return;
         Location loc = signLocations.get(setting);
@@ -153,6 +226,8 @@ public class BingoSignListener implements Listener {
         Sign sign = (Sign) block.getState();
         sign.setLine(1, ChatColor.BOLD + ChatColor.GOLD.toString() + setting.toUpperCase());
         sign.setLine(2, ChatColor.WHITE + textToUpdate.toUpperCase());
+
+        sign.setGlowingText(false);
         sign.update();
     }
 

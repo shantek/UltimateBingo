@@ -14,7 +14,7 @@ public class BingoCompleter implements TabCompleter {
 
     private static final List<String> SETTINGS_OPTIONS = List.of(
             "GameMode", "Difficulty", "CardSize", "Loadout",
-            "RevealCards", "WinCondition", "CardType", "TimeLimit", "startbutton"
+            "RevealCards", "WinCondition", "CardType", "TimeLimit", "StartButton"
     );
 
     @Override

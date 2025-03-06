@@ -67,6 +67,8 @@ public final class UltimateBingo extends JavaPlugin {
     public boolean currentRevealCards = true;
     public int currentLoadoutType = 1;
 
+    public boolean bingoButtonActive = true;
+
     // Inventory used for group game mode
     public Inventory groupInventory;
 
