@@ -367,9 +367,11 @@ public class BingoCommand implements CommandExecutor {
             */
 
             // Will change this to safe scatter in teams in an update
-            List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
-            ultimateBingo.bingoFunctions.safeScatterPlayers(players, ultimateBingo.bingoSpawnLocation, 5);
 
+            if (!Objects.equals(ultimateBingo.currentGameMode, "teams")) {
+                List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+                ultimateBingo.bingoFunctions.safeScatterPlayers(players, ultimateBingo.bingoSpawnLocation, 5);
+            }
 
 
             // Handle player teleportation and give bingo cards after the countdown
