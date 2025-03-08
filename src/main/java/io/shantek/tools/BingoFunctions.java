@@ -1318,7 +1318,7 @@ public class BingoFunctions
     public final Map<String, Location> signLocations = new HashMap<>();
     public Location startButtonLocation;
 
-    private void loadSignData() {
+    public void loadSignData() {
         if (!configFile.exists()) {
             saveSignData();
             return;
