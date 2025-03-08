@@ -1275,6 +1275,16 @@ public class BingoFunctions
 
             if (setting.equalsIgnoreCase("WINCONDITION")) {
                 sign.setLine(1, "§6" + "WIN CONDITION");
+            } else if (setting.equalsIgnoreCase("GAMEMODE")) {
+                sign.setLine(1, "§6" + "GAME MODE");
+            } else if (setting.equalsIgnoreCase("CARDSIZE")) {
+                sign.setLine(1, "§6" + "CARD SIZE");
+            } else if (setting.equalsIgnoreCase("REVEALCARDS")) {
+                sign.setLine(1, "§6" + "REVEAL CARDS");
+            } else if (setting.equalsIgnoreCase("CARDTYPE")) {
+                sign.setLine(1, "§6" + "CARD TYPE");
+            } else if (setting.equalsIgnoreCase("TIMELIMIT")) {
+                sign.setLine(1, "§6" + "TIME LIMIT");
             } else {
                 sign.setLine(1, "§6" + setting.toUpperCase());
             }
