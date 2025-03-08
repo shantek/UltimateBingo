@@ -72,41 +72,51 @@ public class BingoCommand implements CommandExecutor {
                 String settingName = args[1];
                 Location targetLocation = targetBlock.getLocation();
 
-                if (settingOptions.containsKey(settingName)) {
-                    ultimateBingo.inGameConfigManager.saveSignLocation(settingName, targetLocation);
-                    player.sendMessage(ChatColor.GREEN + "Sign for " + settingName + " set successfully!");
-                    ultimateBingo.inGameConfigManager.loadSignLocations();
-                } else if (settingName.equalsIgnoreCase("startbutton")) {
-                    ultimateBingo.inGameConfigManager.saveButtonLocation(targetLocation);
-                    player.sendMessage(ChatColor.GREEN + "Start button set successfully!");
-                    ultimateBingo.inGameConfigManager.loadSignLocations();
-                } else {
-                    player.sendMessage(ChatColor.RED + "Invalid setting name.");
+                boolean validSign = true;
+                for (Map.Entry<String, Location> entry : ultimateBingo.bingoFunctions.signLocations.entrySet()) {
+                    if (targetBlock.getLocation().equals(entry.getValue())) {
+
+                        player.sendMessage(ChatColor.YELLOW + "Sign already used for " + entry.getKey());
+                        validSign = false;
+                    }
+                }
+                if (validSign) {
+                    if (settingOptions.containsKey(settingName)) {
+                        ultimateBingo.inGameConfigManager.saveSignLocation(settingName, targetLocation);
+                        player.sendMessage(ChatColor.GREEN + "Sign for " + settingName + " set successfully!");
+                        ultimateBingo.inGameConfigManager.loadSignLocations();
+                    } else if (settingName.equalsIgnoreCase("startbutton")) {
+                        ultimateBingo.inGameConfigManager.saveButtonLocation(targetLocation);
+                        player.sendMessage(ChatColor.GREEN + "Start button set successfully!");
+                        ultimateBingo.inGameConfigManager.loadSignLocations();
+                    } else {
+                        player.sendMessage(ChatColor.RED + "Invalid setting name.");
+                    }
                 }
                 return true;
 
             } else if (args[0].equalsIgnoreCase("remove") && player.hasPermission("shantek.ultimatebingo.settings")) {
-                    if (args.length < 2) {
-                        player.sendMessage(ChatColor.RED + "Usage: /bingo remove <signType|startbutton>");
-                        return true;
-                    }
-
-                    String settingName = args[1];
-
-                    if (settingName.equalsIgnoreCase("startbutton")) {
-                        if (ultimateBingo.bingoFunctions.startButtonLocation == null) {
-                            player.sendMessage(ChatColor.RED + "The start button hasn't been set up.");
-                        } else {
-                            ultimateBingo.bingoFunctions.removeButton();
-                            player.sendMessage(ChatColor.GREEN + "The start button has been removed.");
-                        }
-                    } else if (ultimateBingo.bingoFunctions.signLocations.containsKey(settingName)) {
-                        ultimateBingo.bingoFunctions.removeSign(settingName);
-                        player.sendMessage(ChatColor.GREEN + "The sign for " + settingName + " has been removed.");
-                    } else {
-                        player.sendMessage(ChatColor.RED + "The sign for " + settingName + " hasn't been set up.");
-                    }
+                if (args.length < 2) {
+                    player.sendMessage(ChatColor.RED + "Usage: /bingo remove <signType|startbutton>");
                     return true;
+                }
+
+                String settingName = args[1];
+
+                if (settingName.equalsIgnoreCase("startbutton")) {
+                    if (ultimateBingo.bingoFunctions.startButtonLocation == null) {
+                        player.sendMessage(ChatColor.RED + "The start button hasn't been set up.");
+                    } else {
+                        ultimateBingo.bingoFunctions.removeButton();
+                        player.sendMessage(ChatColor.GREEN + "The start button has been removed.");
+                    }
+                } else if (ultimateBingo.bingoFunctions.signLocations.containsKey(settingName)) {
+                    ultimateBingo.bingoFunctions.removeSign(settingName);
+                    player.sendMessage(ChatColor.GREEN + "The sign for " + settingName + " has been removed.");
+                } else {
+                    player.sendMessage(ChatColor.RED + "The sign for " + settingName + " hasn't been set up.");
+                }
+                return true;
 
             } else if (args[0].equalsIgnoreCase("reload") && player.hasPermission("shantek.ultimatebingo.settings")) {
                 ultimateBingo.configFile.reloadConfigFile();
