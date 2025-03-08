@@ -1355,6 +1355,21 @@ public class BingoFunctions
         }
     }
 
+    public void removeSign(String setting) {
+        if (!signLocations.containsKey(setting)) return;
+
+        signLocations.remove(setting);
+        config.set("signs." + setting, null);
+        saveSignData();
+    }
+
+    public void removeButton() {
+        startButtonLocation = null;
+        config.set("button.startbutton", null);
+        saveSignData();
+    }
+
+
     private Location parseLocation(String locString) {
         if (locString == null || locString.isEmpty()) return null;
         String[] parts = locString.split(",");

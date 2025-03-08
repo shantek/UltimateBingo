@@ -82,6 +82,30 @@ public class BingoCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "Invalid setting name.");
                 }
                 return true;
+
+            } else if (args[0].equalsIgnoreCase("remove") && player.hasPermission("shantek.ultimatebingo.settings")) {
+                    if (args.length < 2) {
+                        player.sendMessage(ChatColor.RED + "Usage: /bingo remove <signType|startbutton>");
+                        return true;
+                    }
+
+                    String settingName = args[1];
+
+                    if (settingName.equalsIgnoreCase("startbutton")) {
+                        if (ultimateBingo.bingoFunctions.startButtonLocation == null) {
+                            player.sendMessage(ChatColor.RED + "The start button hasn't been set up.");
+                        } else {
+                            ultimateBingo.bingoFunctions.removeButton();
+                            player.sendMessage(ChatColor.GREEN + "The start button has been removed.");
+                        }
+                    } else if (ultimateBingo.bingoFunctions.signLocations.containsKey(settingName)) {
+                        ultimateBingo.bingoFunctions.removeSign(settingName);
+                        player.sendMessage(ChatColor.GREEN + "The sign for " + settingName + " has been removed.");
+                    } else {
+                        player.sendMessage(ChatColor.RED + "The sign for " + settingName + " hasn't been set up.");
+                    }
+                    return true;
+
             } else if (args[0].equalsIgnoreCase("reload") && player.hasPermission("shantek.ultimatebingo.settings")) {
                 ultimateBingo.configFile.reloadConfigFile();
                 player.sendMessage(ChatColor.GREEN + "Bingo config file reloaded.");

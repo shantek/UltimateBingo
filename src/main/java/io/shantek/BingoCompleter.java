@@ -78,6 +78,10 @@ public class BingoCompleter implements TabCompleter {
             return StringUtil.copyPartialMatches(args[1], SETTINGS_OPTIONS, new ArrayList<>());
         }
 
+        if (args.length == 2 && args[0].equalsIgnoreCase("remove") && player.isOp()) {
+            return StringUtil.copyPartialMatches(args[1], SETTINGS_OPTIONS, new ArrayList<>());
+        }
+
         return null;
     }
 }
