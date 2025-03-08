@@ -37,6 +37,7 @@ public class BingoCompleter implements TabCompleter {
             }
             if (player.isOp()) {
                 complete.add("set");
+                complete.add("remove");
             }
 
             complete.add("info");
