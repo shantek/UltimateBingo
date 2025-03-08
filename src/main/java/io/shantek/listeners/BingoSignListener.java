@@ -5,6 +5,7 @@ import io.shantek.managers.InGameConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -46,13 +47,18 @@ public class BingoSignListener implements Listener {
                 for (Map.Entry<String, Location> entry : plugin.bingoFunctions.signLocations.entrySet()) {
                     if (block.getLocation().equals(entry.getValue())) {
 
-                        if (player.hasPermission("shantek.bingo.signs")) {
+                        // If the player is OP and has glow ink sac, allow glowing
+                        if (player.isOp() && player.getInventory().getItemInMainHand().getType() == Material.GLOW_INK_SAC) {
+                            return;
+
+                        } else if (player.hasPermission("shantek.bingo.signs")) {
                             plugin.bingoFunctions.updateSetting(entry.getKey(), player);
+                            event.setCancelled(true);
                         } else {
                             player.sendMessage(ChatColor.RED + "You do not have permission to change settings!");
+                            event.setCancelled(true);
                         }
-                        event.setCancelled(true);
-                        return;
+
                     }
                 }
             }

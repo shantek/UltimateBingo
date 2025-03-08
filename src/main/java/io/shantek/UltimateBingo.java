@@ -41,7 +41,7 @@ public final class UltimateBingo extends JavaPlugin {
     public Metrics metrics;
 
     private SettingsManager settingsManager;
-    private InGameConfigManager inGameConfigManager;
+    public InGameConfigManager inGameConfigManager;
 
     // Add Leaderboard field
     private Leaderboard leaderboard;
@@ -91,7 +91,6 @@ public final class UltimateBingo extends JavaPlugin {
 
         // Initialize managers in the correct order
         settingsManager = new SettingsManager(this);
-        inGameConfigManager = new InGameConfigManager(this);
 
         // Initialize BingoManager first without BingoCommand
         bingoManager = new BingoManager(this, null); // Temporarily set null for BingoCommand
@@ -110,6 +109,7 @@ public final class UltimateBingo extends JavaPlugin {
         cardTypes = new CardTypes(this);
         configFile = new ConfigFile(this);
         leaderboard = new Leaderboard(this);
+        inGameConfigManager = new InGameConfigManager(this);
 
         // Register commands
         getCommand("bingo").setExecutor(bingoCommand);
@@ -132,6 +132,7 @@ public final class UltimateBingo extends JavaPlugin {
         // Register bStats
         int pluginId = 21982;
         Metrics metrics = new Metrics(this, pluginId);
+
     }
 
     private void registerEventListeners() {

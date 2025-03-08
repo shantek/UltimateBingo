@@ -37,6 +37,10 @@ public class BingoFunctions
 
     private Random random = new Random();
     private HashMap<UUID, Boolean> playerMap = new HashMap<>();
+    private final File configFile;
+    private final FileConfiguration config;
+    public final Map<String, Location> signLocations = new HashMap<>();
+    public Location startButtonLocation;
 
     //region Resetting the players
 
@@ -1253,7 +1257,6 @@ public class BingoFunctions
             sign.setLine(1, ChatColor.BOLD + ChatColor.GOLD.toString() + setting.toUpperCase());
             sign.setLine(2, ChatColor.WHITE + textMode.toUpperCase());
 
-            sign.setGlowingText(false);
             sign.update();
         }
     }
@@ -1269,7 +1272,6 @@ public class BingoFunctions
             sign.setLine(1, ChatColor.BOLD + ChatColor.GOLD.toString() + setting.toUpperCase());
             sign.setLine(2, ChatColor.WHITE + textToUpdate.toUpperCase());
 
-            sign.setGlowingText(false);
             sign.update();
         }
     }
@@ -1313,11 +1315,6 @@ public class BingoFunctions
         return loc == null ? "" : loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
     }
 
-    private final File configFile;
-    private final FileConfiguration config;
-    public final Map<String, Location> signLocations = new HashMap<>();
-    public Location startButtonLocation;
-
     public void loadSignData() {
         if (!configFile.exists()) {
             saveSignData();
@@ -1342,6 +1339,29 @@ public class BingoFunctions
         }
     }
 
+    public void reloadSignDataSilent() {
+        if (!configFile.exists()) {
+            return; // If the file doesn't exist, do nothing silently
+        }
+
+        // Clear current in-memory sign locations
+        signLocations.clear();
+
+        // Load updated sign locations
+        if (config.contains("signs")) {
+            for (String key : config.getConfigurationSection("signs").getKeys(false)) {
+                Location loc = parseLocation(config.getString("signs." + key));
+                if (loc != null) {
+                    signLocations.put(key, loc);
+                }
+            }
+        }
+
+        // Load updated start button location
+        startButtonLocation = config.contains("button.startbutton")
+                ? parseLocation(config.getString("button.startbutton"))
+                : null;
+    }
 
     private void saveSignData() {
         for (Map.Entry<String, Location> entry : signLocations.entrySet()) {

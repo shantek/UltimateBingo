@@ -10,17 +10,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class InGameConfigManager {
 
     private final UltimateBingo plugin;
     private final File configFile;
     private FileConfiguration config;
-
-    private final Map<String, Location> signLocations = new HashMap<>();
-    private Location startButtonLocation;
 
     public InGameConfigManager(UltimateBingo plugin) {
         this.plugin = plugin;
@@ -60,7 +55,7 @@ public class InGameConfigManager {
         for (String key : signsSection.getKeys(false)) {
             Location loc = parseLocation(config.getString("signs." + key));
             if (loc != null) {
-                signLocations.put(key, loc);
+                plugin.bingoFunctions.signLocations.put(key, loc);
             }
         }
     }
@@ -68,28 +63,32 @@ public class InGameConfigManager {
     private void loadButtonLocation() {
         String value = config.getString("button.startbutton");
         if (value != null && !value.isEmpty()) {
-            startButtonLocation = parseLocation(value);
+            plugin.bingoFunctions.startButtonLocation = parseLocation(value);
         }
     }
 
     public void saveSignLocation(String name, Location location) {
-        signLocations.put(name, location);
+        plugin.bingoFunctions.signLocations.put(name, location);
         config.set("signs." + name, serializeLocation(location));
         saveConfig();
+
+        loadSignLocations();
     }
 
     public void saveButtonLocation(Location location) {
-        startButtonLocation = location;
+        plugin.bingoFunctions.startButtonLocation = location;
         config.set("button.startbutton", serializeLocation(location));
         saveConfig();
+
+        loadSignLocations();
     }
 
     public Location getSignLocation(String name) {
-        return signLocations.get(name);
+        return plugin.bingoFunctions.signLocations.get(name);
     }
 
     public Location getStartButtonLocation() {
-        return startButtonLocation;
+        return plugin.bingoFunctions.startButtonLocation;
     }
 
     private String serializeLocation(Location location) {

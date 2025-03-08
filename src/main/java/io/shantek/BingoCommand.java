@@ -73,13 +73,13 @@ public class BingoCommand implements CommandExecutor {
                 Location targetLocation = targetBlock.getLocation();
 
                 if (settingOptions.containsKey(settingName)) {
-                    inGameConfigManager.saveSignLocation(settingName, targetLocation);
+                    ultimateBingo.inGameConfigManager.saveSignLocation(settingName, targetLocation);
                     player.sendMessage(ChatColor.GREEN + "Sign for " + settingName + " set successfully!");
-                    ultimateBingo.bingoFunctions.loadSignData();
+                    ultimateBingo.inGameConfigManager.loadSignLocations();
                 } else if (settingName.equalsIgnoreCase("startbutton")) {
-                    inGameConfigManager.saveButtonLocation(targetLocation);
+                    ultimateBingo.inGameConfigManager.saveButtonLocation(targetLocation);
                     player.sendMessage(ChatColor.GREEN + "Start button set successfully!");
-                    ultimateBingo.bingoFunctions.loadSignData();
+                    ultimateBingo.inGameConfigManager.loadSignLocations();
                 } else {
                     player.sendMessage(ChatColor.RED + "Invalid setting name.");
                 }
