@@ -1254,8 +1254,11 @@ public class BingoFunctions
 
         if (textMode != null) {
             Sign sign = (Sign) block.getState();
-            sign.setLine(1, ChatColor.BOLD + ChatColor.GOLD.toString() + setting.toUpperCase());
-            sign.setLine(2, ChatColor.WHITE + textMode.toUpperCase());
+            sign.setLine(1, "§6" + setting.toUpperCase());
+            sign.setLine(2, "§f" + textMode.toUpperCase());
+
+            sign.setColor(DyeColor.WHITE);
+            sign.setGlowingText(true);
 
             sign.update();
         }
@@ -1269,9 +1272,16 @@ public class BingoFunctions
 
         if (textToUpdate != null) {
             Sign sign = (Sign) block.getState();
-            sign.setLine(1, ChatColor.BOLD + ChatColor.GOLD.toString() + setting.toUpperCase());
-            sign.setLine(2, ChatColor.WHITE + textToUpdate.toUpperCase());
 
+            if (setting.equalsIgnoreCase("WINCONDITION")) {
+                sign.setLine(1, "§6" + "WIN CONDITION");
+            } else {
+                sign.setLine(1, "§6" + setting.toUpperCase());
+            }
+            sign.setLine(2, "§f" + textToUpdate.toUpperCase());
+
+            sign.setGlowingText(true);
+            sign.setColor(DyeColor.WHITE);
             sign.update();
         }
     }
