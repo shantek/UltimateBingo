@@ -47,12 +47,13 @@ public class BingoSignListener implements Listener {
                 for (Map.Entry<String, Location> entry : plugin.bingoFunctions.signLocations.entrySet()) {
                     if (block.getLocation().equals(entry.getValue())) {
 
-                        // If the player is OP and has glow ink sac, allow glowing
-                        if (player.isOp() && player.getInventory().getItemInMainHand().getType() == Material.GLOW_INK_SAC) {
-                            return;
+                        if (player.hasPermission("shantek.bingo.signs")) {
 
-                        } else if (player.hasPermission("shantek.bingo.signs")) {
-                            plugin.bingoFunctions.updateSetting(entry.getKey(), player);
+                            if (!plugin.bingoButtonActive) {
+                                player.sendMessage(ChatColor.RED + "A bingo game is already active!");
+                            } else {
+                                plugin.bingoFunctions.updateSetting(entry.getKey(), player);
+                            }
                             event.setCancelled(true);
                         } else {
                             player.sendMessage(ChatColor.RED + "You do not have permission to change settings!");
