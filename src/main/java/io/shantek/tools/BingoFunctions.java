@@ -1225,7 +1225,7 @@ public class BingoFunctions
                 updateSign(setting, toggleUnique());
                 break;
             case "timelimit":
-                updateSign(setting, String.valueOf(toggleTimeLimit()));
+                updateTimeLimitSign(setting, String.valueOf(toggleTimeLimit()));
                 break;
         }
 
@@ -1283,12 +1283,48 @@ public class BingoFunctions
                 sign.setLine(1, "§6" + "REVEAL CARDS");
             } else if (setting.equalsIgnoreCase("CARDTYPE")) {
                 sign.setLine(1, "§6" + "CARD TYPE");
-            } else if (setting.equalsIgnoreCase("TIMELIMIT")) {
-                sign.setLine(1, "§6" + "TIME LIMIT");
             } else {
                 sign.setLine(1, "§6" + setting.toUpperCase());
             }
             sign.setLine(2, "§f" + textToUpdate.toUpperCase());
+
+            sign.setGlowingText(true);
+            sign.setColor(DyeColor.WHITE);
+            sign.update();
+        }
+    }
+
+    public void updateTimeLimitSign(String setting, String textToUpdate) {
+        if (!signLocations.containsKey(setting)) return;
+        Location loc = signLocations.get(setting);
+        Block block = loc.getBlock();
+        if (!(block.getState() instanceof Sign)) return;
+
+        if (textToUpdate != null) {
+            Sign sign = (Sign) block.getState();
+
+            if (setting.equalsIgnoreCase("WINCONDITION")) {
+                sign.setLine(1, "§6" + "WIN CONDITION");
+            } else if (setting.equalsIgnoreCase("GAMEMODE")) {
+                sign.setLine(1, "§6" + "GAME MODE");
+            } else if (setting.equalsIgnoreCase("CARDSIZE")) {
+                sign.setLine(1, "§6" + "CARD SIZE");
+            } else if (setting.equalsIgnoreCase("REVEALCARDS")) {
+                sign.setLine(1, "§6" + "REVEAL CARDS");
+            } else if (setting.equalsIgnoreCase("CARDTYPE")) {
+                sign.setLine(1, "§6" + "CARD TYPE");
+            } else if (setting.equalsIgnoreCase("TIMELIMIT")) {
+                sign.setLine(1, "§6" + "TIME LIMIT");
+            } else {
+                sign.setLine(1, "§6" + "TIME LIMIT");
+            }
+
+            if (textToUpdate.equalsIgnoreCase("0")) {
+                sign.setLine(2, "§f" + "UNLIMITED");
+            } else {
+                sign.setLine(2, "§f" + textToUpdate.toUpperCase() + " MINS");
+            }
+
 
             sign.setGlowingText(true);
             sign.setColor(DyeColor.WHITE);
