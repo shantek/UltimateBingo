@@ -89,6 +89,8 @@ As the team mode uses yellow, red and blue wool blocks - It's recommended to pla
 The game also comes with the ability to configure and start games using signs and a button. This needs to be set up by an OP. To allow a game to be fully configurable, please down 8 signs and a button - these can be any signs and any button.
 While looking at the sign, use the **/bingo set** command to set each sign, followed by the sign type. For example, to set up a game mode sign, look at a sign and type **/bingo set GameMode**. You can configure the following signs and buttons:
 
+Please note: If you want to allow your players to configure games using the signs and button, be sure to give them the shantek.ultimatebingo.signs permission node.
+
 >**CardSize:**
 >Toggles between small, medium and large cards
 
