@@ -9,3 +9,20 @@ softdepend: [PlaceholderAPI]
 commands:
   bingo:
     description: Opens your current bingo cards, add start or stop to start or stop bingo. Configure settings with settings
+
+permissions:
+  shantek.ultimatebingo.start:
+    description: Allows players to start games using the start command
+    default: op
+
+  shantek.ultimatebingo.stop:
+    description: Allows players to stop games using the stop command
+    default: op
+
+  shantek.ultimatebingo.settings:
+    description: Allows players to add/remove items from the game
+    default: op
+
+  shantek.ultimatebingo.signs:
+    description: Allows players to configure and start games with in game signs.
+    default: op
