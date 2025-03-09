@@ -47,7 +47,7 @@ public class BingoSignListener implements Listener {
                 for (Map.Entry<String, Location> entry : plugin.bingoFunctions.signLocations.entrySet()) {
                     if (block.getLocation().equals(entry.getValue())) {
 
-                        if (player.hasPermission("shantek.bingo.signs")) {
+                        if (player.hasPermission("shantek.ultimatebingo.signs")) {
 
                             if (!plugin.bingoButtonActive) {
                                 player.sendMessage(ChatColor.RED + "A bingo game is already active!");
@@ -65,7 +65,7 @@ public class BingoSignListener implements Listener {
             }
         }
 
-        if (player.hasPermission("shantek.bingo.signs")) {
+        if (player.hasPermission("shantek.ultimatebingo.signs")) {
             if (block.getType().name().endsWith("_BUTTON") && plugin.bingoFunctions.startButtonLocation != null) {
                 Location clickedLocation = block.getLocation();
 
