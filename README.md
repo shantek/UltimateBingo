@@ -144,6 +144,18 @@ Want to remove or relocate a sign? You can do so by using the /bingo remove comm
 
 >**shantek.ultimatebingo.signs** - Allow players to interact with signs and buttons to configure and start games
 
+## Placeholder API Leaderboard Support
+
+With the addition of a leaderboard, placeholder api support has also been added. This is ideal for setting up a scoreboard hologram. Easily display the top 10 players on your leaderboard using the following placeholders:
+
+>%ultimatebingo_overall_?_name%
+> 
+>%ultimatebingo_overall_?_score%
+
+Replace ? with the position you with to display. For example, if you wanted to show the name and score of first place, you'd use the following placeholders:
+
+>%ultimatebingo_overall_1_name% - %ultimatebingo_overall_1_score%
+
 
 ## External Links
 
