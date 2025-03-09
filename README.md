@@ -76,7 +76,7 @@ Game kits help make your games more epic and cater to a wide variety of players.
 
 >#### Boat Kit
 >![Boat Kit](https://cdn.modrinth.com/data/cached_images/e2dfbda6a22366838c9d78638257e26c9e7d386e.png)
->A little more high end, equiped with low level enchanted iron gear, shield, boat, bed and crafting cupboard - you're ready to jump straight in to exploring!
+>A little more high end, equipped with low level enchanted iron gear, shield, boat, bed and crafting cupboard - you're ready to jump straight in to exploring!
 
 >#### Flying Kit
 >![Flying Kit](https://cdn.modrinth.com/data/cached_images/a03074d612937330316294f03f507336f4745c25.png)
