@@ -183,6 +183,7 @@ public class BingoCommand implements CommandExecutor {
                 } else {
                     player.sendMessage(ChatColor.YELLOW + "Bingo isn't currently running!");
                 }
+
             } else if (args[0].equalsIgnoreCase("settings") && player.hasPermission("shantek.ultimatebingo.settings")) {
                 ultimateBingo.getMaterialList().createMaterials();
                 Inventory settingsGUI = settingsManager.createSettingsGUI(player);
@@ -192,23 +193,23 @@ public class BingoCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "You do not have permission to do that!");
                 return true;
             }
-        }
-
-        if (ultimateBingo.bingoStarted && ultimateBingo.bingoCardActive) {
-            if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
-                player.sendMessage(ChatColor.RED + "This command can only be run while in the bingo world.");
-            } else {
-                if (ultimateBingo.currentGameMode.equalsIgnoreCase("group") || ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
-                    ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
-                    ultimateBingo.bingoManager.joinGameInProgress(player);
-                } else if (!ultimateBingo.bingoManager.checkHasBingoCard(player)) {
-                    ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
-                    ultimateBingo.bingoManager.joinGameInProgress(player);
+        } else {
+            if (ultimateBingo.bingoStarted && ultimateBingo.bingoCardActive) {
+                if (ultimateBingo.multiWorldServer && !player.getWorld().getName().equalsIgnoreCase(ultimateBingo.bingoWorld.toLowerCase())) {
+                    player.sendMessage(ChatColor.RED + "This command can only be run while in the bingo world.");
+                } else {
+                    if (ultimateBingo.currentGameMode.equalsIgnoreCase("group") || ultimateBingo.currentGameMode.equalsIgnoreCase("teams")) {
+                        ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
+                        ultimateBingo.bingoManager.joinGameInProgress(player);
+                    } else if (!ultimateBingo.bingoManager.checkHasBingoCard(player)) {
+                        ultimateBingo.bingoFunctions.resetIndividualPlayer(player, true);
+                        ultimateBingo.bingoManager.joinGameInProgress(player);
+                    }
+                    player.openInventory(ultimateBingo.bingoPlayerGUIManager.createPlayerGUI(player));
                 }
-                player.openInventory(ultimateBingo.bingoPlayerGUIManager.createPlayerGUI(player));
+            } else if (!ultimateBingo.bingoStarted) {
+                player.sendMessage(ChatColor.RED + "Bingo hasn't started yet!");
             }
-        } else if (!ultimateBingo.bingoStarted) {
-            player.sendMessage(ChatColor.RED + "Bingo hasn't started yet!");
         }
         return false;
     }
