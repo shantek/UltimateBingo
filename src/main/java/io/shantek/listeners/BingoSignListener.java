@@ -84,7 +84,7 @@ public class BingoSignListener implements Listener {
                         player.sendMessage(ChatColor.RED + "A bingo game is already active!");
                     } else {
                         event.setCancelled(true);
-                        player.sendMessage(ChatColor.YELLOW + "Game will start in 5 seconds...");
+                        plugin.bingoFunctions.broadcastMessageToBingoPlayers(ChatColor.YELLOW + "Game will start in 5 seconds...");
 
                         plugin.bingoButtonActive = false;
 
