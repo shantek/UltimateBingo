@@ -521,6 +521,7 @@ public class BingoCommand implements CommandExecutor {
                     ultimateBingo.bingoFunctions.giveBingoCardToAllPlayers();
                 }
             }
+            ultimateBingo.bingoButtonActive = true;
 
         }, 40L);  // Delay specified in ticks (40 ticks = 2 seconds)
 
