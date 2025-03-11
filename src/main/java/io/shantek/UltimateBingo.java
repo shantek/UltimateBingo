@@ -133,6 +133,8 @@ public final class UltimateBingo extends JavaPlugin {
         int pluginId = 21982;
         Metrics metrics = new Metrics(this, pluginId);
 
+        // Set signs to the correct values
+        bingoFunctions.updateAllSigns();
     }
 
     private void registerEventListeners() {
