@@ -1,7 +1,7 @@
 [![License: GPL](https://img.shields.io/badge/license-GPL-blue.svg)](LICENSE)
 [![Discord](https://img.shields.io/discord/628396916639793152.svg?color=%237289da&label=discord)](https://shantek.co/discord)
 [![CodeFactor](https://www.codefactor.io/repository/github/shantek/ultimatebingo/badge)](https://www.codefactor.io/repository/github/shantek/ultimatebingo)
-![Plugin Usage Stats](https://bstats.org/signatures/bukkit/Ultimate%20Bingo.svg)
+[![Modrinth](https://img.shields.io/badge/Modrinth-Ultimate%20Bingo-green?logo=modrinth)](https://modrinth.com/plugin/ultimatebingo)
 
 <img src="https://cdn.modrinth.com/data/cached_images/84531613476ecfe43f1395c2bc048ad116089561.png" alt="Ultimate Bingo Banner" />
 
@@ -145,3 +145,7 @@ Easily create leaderboard holograms using these placeholders:
 
 Distributed under the **GNU General Public License v3.0**  
 _This project is based on [Mega Bingo by Elmer Lion](https://github.com/ElmerLion/megabingo)_
+
+---
+
+![Plugin Usage Stats](https://bstats.org/signatures/bukkit/Ultimate%20Bingo.svg)
