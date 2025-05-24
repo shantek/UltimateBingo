@@ -79,11 +79,14 @@ jobs:
 
       - name: Notify Discord
         run: |
+          BUILD_NUMBER=${{ env.BUILD_NUMBER }}
+          FILENAME="UltimateBingo-build-${BUILD_NUMBER}.jar"
           JSON_PAYLOAD=$(jq -n \
-            --arg title "UltimateBingo - Release #${{ env.BUILD_NUMBER }}" \
+            --arg title "UltimateBingo - Release #$BUILD_NUMBER" \
             --arg desc "${{ env.CHANGELOG }}" \
-            --arg url "https://github.com/${{ github.repository }}/releases/tag/build-${{ env.BUILD_NUMBER }}" \
-            --arg download "https://github.com/${{ github.repository }}/releases/download/build-${{ env.BUILD_NUMBER }}/UltimateBingo-build-${{ env.BUILD_NUMBER }}.jar" \
+            --arg url "https://github.com/${{ github.repository }}/releases/tag/build-${BUILD_NUMBER}" \
+            --arg download "https://github.com/${{ github.repository }}/releases/download/build-${BUILD_NUMBER}/$FILENAME" \
+            --arg filename "$FILENAME" \
             --arg thumb "https://cdn.modrinth.com/data/R3lqEeTT/06dda0c7f1e496e976fb97cb27d02d3e61cef995.jpeg" \
             '{
               "embeds": [{
@@ -94,7 +97,11 @@ jobs:
                 "fields": [
                   {
                     "name": "Download",
-                    "value": "[UltimateBingo-build-\($BUILD_NUMBER).jar](\($download))"
+                    "value": "[\($filename)](\($download))"
+                  },
+                  {
+                    "name": "Releases",
+                    "value": "[View All Releases](https://www.github.com/shantek/UltimateBingo/releases)"
                   }
                 ],
                 "thumbnail": { "url": $thumb },
