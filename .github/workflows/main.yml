@@ -69,7 +69,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: build-${{ env.BUILD_NUMBER }}
-          name: Release #${{ env.BUILD_NUMBER }}
+          name: Release ${{ env.BUILD_NUMBER }}
           body: ${{ env.CHANGELOG }}
           draft: false
           prerelease: false
