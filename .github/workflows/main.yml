@@ -2,19 +2,18 @@ name: Build project and create GitHub Release
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   pull_request:
-    branches:
-      - master
+    branches: [master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Fetch all history for all tags and branches
+          fetch-depth: 0
 
       - name: Set up JDK 16
         uses: actions/setup-java@v2
@@ -52,8 +51,6 @@ jobs:
           LAST_TAG=$(git describe --tags --abbrev=0 $(git rev-list --tags --max-count=1))
           COMMIT_MESSAGES=$(git log $LAST_TAG..HEAD --pretty=format:"- %s")
           echo "COMMIT_MESSAGES<<EOF" >> $GITHUB_ENV
-          echo "Full Changelog:" >> $GITHUB_ENV
-          echo "" >> $GITHUB_ENV
           echo "$COMMIT_MESSAGES" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
@@ -61,30 +58,51 @@ jobs:
         if: env.TAG_EXISTS == 'false'
         run: mvn package -B
 
-      - name: List files in target directory
+      - name: Rename .jar to include version
         if: env.TAG_EXISTS == 'false'
-        run: ls -al ./target/
+        run: |
+          mv ./target/UltimateBingo*.jar ./target/UltimateBingo-${{ env.VERSION }}.jar
 
-      - name: Create Release
+      - name: Create GitHub Release
         if: env.TAG_EXISTS == 'false'
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ env.VERSION }}
-          release_name: Release ${{ env.VERSION }}
+          name: Release v${{ env.VERSION }}
           body: ${{ env.COMMIT_MESSAGES }}
           draft: false
           prerelease: false
+          files: ./target/UltimateBingo-${{ env.VERSION }}.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
-      - name: Upload Release Asset
+      - name: Notify Discord
         if: env.TAG_EXISTS == 'false'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/UltimateBingo-${{ env.VERSION }}.jar
-          asset_name: UltimateBingo-${{ env.VERSION }}.jar
-          asset_content_type: application/java-archive
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          JSON_PAYLOAD=$(jq -n \
+            --arg title "UltimateBingo - Release v${{ env.VERSION }}" \
+            --arg desc "${{ env.COMMIT_MESSAGES }}" \
+            --arg url "https://github.com/${{ github.repository }}/releases/tag/v${{ env.VERSION }}" \
+            --arg download "https://github.com/${{ github.repository }}/releases/download/v${{ env.VERSION }}/UltimateBingo-${{ env.VERSION }}.jar" \
+            '{
+              "embeds": [{
+                "title": $title,
+                "url": $url,
+                "description": $desc,
+                "color": 7506394,
+                "fields": [
+                  {
+                    "name": "Download",
+                    "value": "[Click here](\($download))"
+                  }
+                ],
+                "footer": { "text": "Shantek • GitHub Release" },
+                "timestamp": (now | todate)
+              }]
+            }')
+
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "$JSON_PAYLOAD" \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
