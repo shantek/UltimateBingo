@@ -114,3 +114,6 @@ jobs:
                -X POST \
                -d "$JSON_PAYLOAD" \
                ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: Trigger WordPress GitHub Releases Sync
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" "${{ secrets.WORDPRESS_SYNC_URL }}"
