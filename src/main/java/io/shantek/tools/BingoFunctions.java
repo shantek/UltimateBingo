@@ -229,7 +229,14 @@ public class BingoFunctions
             // Multi-world: only affect the bingo world
             World bingoWorld = Bukkit.getWorld(ultimateBingo.bingoWorld);
             if (bingoWorld != null) {
-                bingoWorld.setTime(0);
+                if (bingoWorld.getEnvironment() == World.Environment.NORMAL) {
+                    try {
+                        bingoWorld.setTime(0);
+                    } catch (IllegalArgumentException ignored) {
+                        // Custom NORMAL world without a clock, skip
+                    }
+                }
+
                 bingoWorld.setStorm(false);
                 bingoWorld.setThundering(false);
                 bingoWorld.setWeatherDuration(0);
@@ -237,7 +244,13 @@ public class BingoFunctions
         } else {
             // Single world: affect all worlds
             for (World world : Bukkit.getWorlds()) {
-                world.setTime(0);
+                if (world.getEnvironment() == World.Environment.NORMAL) {
+                    try {
+                        world.setTime(0);
+                    } catch (IllegalArgumentException ignored) {
+                        // Custom NORMAL world without a clock, skip
+                    }
+                }
                 world.setStorm(false);
                 world.setThundering(false);
                 world.setWeatherDuration(0);
